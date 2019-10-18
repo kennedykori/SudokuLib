@@ -9,21 +9,61 @@
 plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'
+    // Apply the jacoco plugin to aid in test coverage
+    id 'jacoco'
+    // Apply the maven publish plugin
+    id 'maven-publish'
+    // Apply the bintray plugin 
+    id "com.jfrog.bintray" version "1.8.4"
 }
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+group = 'com.kori_47'
+version = '1.0.0'
 
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    mavenLocal()
 }
 
 dependencies {
-    // This dependency is exported to consumers, that is to say found on their compile classpath.
-    api 'org.apache.commons:commons-math3:3.6.1'
-
-    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-    implementation 'com.google.guava:guava:28.0-jre'
+    //Use events
+    implementation 'com.kori_47:events:1.0.0'
+	
+    // Use utils
+    implementation 'com.kori_47:utils:1.0'
 
     // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+    }
+}
+
+jacocoTestReport {
+    reports {
+        csv.enabled false
+        html.enabled true
+        xml.enabled true
+    }
+}
+
+// Configure sources JAR
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
+}
+
+// Configure javadoc Jar
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
 }
