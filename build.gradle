@@ -21,7 +21,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 group = 'com.kori_47'
-version = '1.0.0'
+version = '0.1.0'
 
 repositories {
     // Use jcenter for resolving dependencies.
@@ -35,7 +35,7 @@ dependencies {
     implementation 'com.kori_47:events:1.0.0'
 	
     // Use utils
-    implementation 'com.kori_47:utils:1.0'
+    implementation 'com.kori_47:utils:1.1.0'
 
     // Use JUnit test framework
     testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
