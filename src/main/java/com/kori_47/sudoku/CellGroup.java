@@ -24,7 +24,7 @@ public interface CellGroup<V> extends Formattable, Iterable<V>, Spliterator<V> {
 	 * 
 	 * @param cellId the id of the {@code Cell} to return.
 	 * 
-	 * @return an {@link Optional} describing a {@code Cell} with the given cell id, or an empty if no such 
+	 * @return an {@code Optional} describing a {@code Cell} with the given cell id, or an empty if no such 
 	 * {@code Cell} exists in this {@code CellGroup}.
 	 * 
 	 * @throws NullPointerException if {@code cellId} is {@code null}.
