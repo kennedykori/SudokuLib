@@ -4,7 +4,10 @@
 package com.kori_47.sudoku;
 
 /**
- * @author Kennedy Kori
+ * An object that creates new {@link Cell cells}. Using cell factories avoids hardwiring and
+ * enables clients to use special {@code Cell} subclasses.
+ * 
+ * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *
  * @since Oct 19, 2019, 12:57:40 AM
  */
@@ -12,7 +15,7 @@ package com.kori_47.sudoku;
 public interface CellFactory<V> {
 	
 	/**
-	 * Should return a new {@code Cell} with the given {@code Symbol} and x and y coordinates.
+	 * Should return a new {@link Cell} with the given {@link Symbol} and x and y coordinates.
 	 * 
 	 * @param x the x coordinate that the new {@code Cell} should have.
 	 * @param y the y coordinate that the new {@code Cell} should have.
@@ -21,5 +24,4 @@ public interface CellFactory<V> {
 	 * @return the newly created cell.
 	 */
 	Cell<V> createCell(int x, int y, Symbol<V> symbol);
-
 }
