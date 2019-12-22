@@ -20,7 +20,7 @@ import java.util.Spliterator;
  *
  * @since Oct 17, 2019, 2:50:14 AM
  */
-public interface CellGroup<V> extends Formattable, Iterable<V>, Spliterator<V> {
+public interface CellGroup<V> extends Formattable, Iterable<V>, Spliterator<V>, Comparable<CellGroup<V>> {
 
 	/**
 	 * Returns an {@link Optional} describing a {@code Cell} with the given cell id, or an empty if no such 
