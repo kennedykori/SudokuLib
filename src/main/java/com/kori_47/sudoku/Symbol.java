@@ -3,6 +3,8 @@
  */
 package com.kori_47.sudoku;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * This represents a LatinSquare symbol, i.e the values used to fill a LatinSquare's cells. 
  * Each {@code Symbol} has an id which is a positive integer with zero being the id of the empty 
@@ -28,6 +30,9 @@ public interface Symbol<V> extends Comparable<Symbol<V>> {
      *         {@code 0} if this {@code Symbol} is less than the argument
      *         {@code Symbol}; and a value greater than {@code 0} if this
      *         {@code Symbol} is greater than the argument {@code Symbol}.
+     * 
+     * @throws NullPointerException if {@code other} is {@code null}.
+     * 
      * @implSpec
      * The default implementation performs comparison based on the {@link #id() ids}
      * of the two symbols. That is, the implementation is equivalent to:
@@ -38,7 +43,7 @@ public interface Symbol<V> extends Comparable<Symbol<V>> {
 	 */
 	@Override
 	default int compareTo(Symbol<V> other) {
-		return Integer.compare(id(), other.id());
+		return Integer.compare(id(), requireNonNull(other, "other cannot be null.").id());
 	}
 	
 	/**
