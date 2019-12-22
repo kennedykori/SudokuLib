@@ -34,7 +34,7 @@ import java.util.Set;
  *
  * @since Oct 17, 2019, 12:38:39 AM
  */
-public interface Cell<V> extends Formattable {
+public interface Cell<V> extends Formattable, Comparable<Cell<V>> {
 	
 	/**
 	 * Changes the {@link Symbol} of this cell to a new value. If this is an initial cell, then this call 
