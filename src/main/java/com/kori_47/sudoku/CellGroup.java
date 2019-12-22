@@ -13,7 +13,9 @@ import java.util.Optional;
 /**
  * This represents a logical ordering of a group of cells in a {@link LatinSquare}. Each {@code CellGroup}
  * in a complete {@code LatinSquare} should contain each of the {@link Symbol symbols} in the {@code LatinSquare}
- * exactly once. Examples of {@code CellGroup}s are Rows and Columns.
+ * exactly once. Examples of {@code CellGroup}s are {@link Row} and {@link Column}.
+ * 
+ * @param <V> the type of value held by the {@link Symbol}s supported by the {@link Cell}s in this {@link CellGroup}.
  * 
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *

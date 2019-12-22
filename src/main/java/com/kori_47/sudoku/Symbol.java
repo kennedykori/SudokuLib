@@ -6,15 +6,16 @@ package com.kori_47.sudoku;
 import static java.util.Objects.requireNonNull;
 
 /**
- * This represents a LatinSquare symbol, i.e the values used to fill a LatinSquare's cells. 
- * Each {@code Symbol} has an id which is a positive integer with zero being the id of the empty 
- * symbol, i.e the symbol used to represent a cell that has not yet being filled. The {@link #id()} 
- * method returns the id of a symbol and the {@link #value()} method returns the value of a symbol.
+ * This represents a {@link LatinSquare} symbol, i.e the values used to fill a {@code LatinSquare}'s 
+ * {@link Cell cells}. 
+ * Each {@code Symbol} has an {@link #id() id} which is a positive integer with zero being the {@code id}
+ * of the empty {@code Symbol}. That is, the {@code Symbol} used to denote that a {@code Cell} has not yet
+ * being filled by player. The {@link #id()} method returns the identifier of a {@code Symbol} and the
+ * {@link #value()} method returns the value of a {@code Symbol}.
  * 
- * @param <T> the type of value that this symbol represents. E.g {@code Integer} for integer values 
- * and {@code String} for letter values.
+ * @param <V> the type of value that this {@code Symbol} supports. 
  * 
- * @author Kennedy Kori
+ * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *
  * @since Oct 17, 2019, 12:15:56 AM
  */

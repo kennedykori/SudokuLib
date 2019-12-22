@@ -32,6 +32,8 @@ import java.util.Set;
  * for the cell and are typically populated by the player.
  * </p>
  * 
+ * @param <V> the type of value held by the {@code Symbol}s supported by this {@code Cell}.
+ * 
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *
  * @since Oct 17, 2019, 12:38:39 AM
