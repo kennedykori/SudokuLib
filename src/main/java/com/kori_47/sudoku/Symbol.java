@@ -21,7 +21,7 @@ import static java.util.Objects.requireNonNull;
 public interface Symbol<V> extends Comparable<Symbol<V>> {
 	
 	/**
-	 * Performs order and equality comparisons on two {@link Symbol}s.
+	 * Performs order and equality comparisons on two {@code Symbol}s.
 	 * 
 	 * @param other another symbol to compare to this one.
 	 * 
