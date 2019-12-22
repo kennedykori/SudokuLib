@@ -3,6 +3,8 @@
  */
 package com.kori_47.sudoku;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Optional;
 import java.util.Set;
 
@@ -35,6 +37,76 @@ import java.util.Set;
  * @since Oct 17, 2019, 12:38:39 AM
  */
 public interface Cell<V> extends Formattable, Comparable<Cell<V>> {
+
+	/**
+	 * Performs order and equality comparisons on two {@code Cell}s.
+	 * 
+	 * @param other another {@code Cell} to compare to this one.
+	 * 
+	 * @return the value {@code 0} if this {@code Cell} is
+     *         equal to the argument {@code Cell}; a value less than
+     *         {@code 0} if this {@code Cell} is less than the argument
+     *         {@code Cell}; and a value greater than {@code 0} if this
+     *         {@code Cell} is greater than the argument {@code Cell}.
+     * 
+     * @throws NullPointerException if {@code other} is {@code null}.
+     * 
+     * @implSpec
+     * The default implementation performs comparison based on the {@link #x() x}
+     * and {@link #y() y} coordinates of the two {@code Cell}s with the {@code y}
+     * coordinate having more weight over the {@code x} coordinate. Consider the
+     * following:
+     * 
+     * <p>
+     * Assume we have a {@code Cell} implementation {@code CellImp} with the following
+     * constructor:
+     * <pre> 
+     * <code>
+     * public CellImp(int x, int y) {
+     * 	this.x = x; // where x is the x coordinate of this cell
+     * 	this.y = y; // where y is the y coordinate of this cell
+     * }
+     * </code>
+     * </pre>
+     * 
+     * Then consider the following code snippet:
+     * 
+     * <pre> {@code
+	 * CellImp<V> a = new CellImp<>(2, 3);
+	 * CellImp<V> b = new CellImp<>(3, 2);
+	 * CellImp<V> c = new CellImp<>(3, 3);
+	 * CellImp<V> d = new CellImp<>(2, 0);
+	 * CellImp<V> e = new CellImp<>(2, 0);
+	 * 
+	 * System.out.println(a.compare(b));
+	 * System.out.println(a.compare(c));
+	 * System.out.println(b.compare(c));
+	 * System.out.println(c.compare(d));
+	 * System.out.println(e.compare(d));
+	 * }
+	 * </pre>
+	 * 
+	 * Then the code snippet above should produce the following output:
+	 * <pre> {@code
+	 * 1
+	 * -1
+	 * -1
+	 * 0
+	 * }
+	 * </pre>
+	 * 
+	 * where {@code 1} can be any positive {@code Integer} and {@code -1} can be
+	 * any negative {@code Integer}.
+	 * </p>
+	 */
+	@Override
+	default int compareTo(Cell<V> other) {
+		// TODO Needs further testing to ensure the comparison gives excepted results 
+		requireNonNull(other, "other cannot be null.");
+		return Integer.compare(
+				Integer.compare(y(), other.y()),
+				Integer.compare(x(), other.x()));
+	}
 	
 	/**
 	 * Changes the {@link Symbol} of this cell to a new value. If this is an initial cell, then this call 
