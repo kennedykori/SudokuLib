@@ -4,9 +4,23 @@
 package com.kori_47.sudoku;
 
 /**
- * This represents a LatinSquare node that can be formatted to different formats.
+ * This represents a {@link LatinSquare} <i>element</i> that can be formatted to show its representation
+ * based on a combination of the following properties:
+ * <ul>
+ *   <li> The x coordinate of the element or of it's elements if this is a container element that has
+ *        elements with an x coordinate. </li>
+ *   <li> The y coordinate of the element or of it's elements if this is a container element that has
+ *        elements with a y coordinate. </li>
+ *   <li> The id of the {@link Symbol} contained by this element or of it's elements if this is a container
+ *        element that has elements which hold or contain {@code Symbol}s. </li>
+ *   <li> The value of the {@link Symbol} contained by this element or of it's elements if this is a container
+ *        element that has elements which hold or contain {@code Symbol}s. </li>
+ * </ul>
  * 
- * @author Kennedy Kori
+ * Examples of {@code Formattable}s are {@link Cell} and any {@link CellGroup} implementation including 
+ * {@code LatinSquare}.
+ * 
+ * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *
  * @since Oct 17, 2019, 1:21:10 AM
  */
