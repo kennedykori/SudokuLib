@@ -5,10 +5,13 @@ package com.kori_47.sudoku;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.Iterator;
+
 import static com.kori_47.utils.ObjectUtils.requireInRange;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Spliterator;
 
 /**
  * This represents a logical ordering of a group of cells in a {@link LatinSquare}. Each {@code CellGroup}
@@ -21,7 +24,7 @@ import java.util.Optional;
  *
  * @since Oct 17, 2019, 2:50:14 AM
  */
-public interface CellGroup<V> extends Formattable, Iterable<V>, Comparable<CellGroup<V>> {
+public interface CellGroup<V> extends Formattable, Iterable<Cell<V>>, Comparable<CellGroup<V>> {
 
 	/**
 	 * Returns an {@link Optional} describing a {@code Cell} with the given cell id, or an empty if no such 
@@ -77,6 +80,40 @@ public interface CellGroup<V> extends Formattable, Iterable<V>, Comparable<CellG
 				.filter(cell -> cell.x() == x)
 				.filter(cell -> cell.y() == y)
 				.findFirst();
+	}
+
+	/**
+	 * Returns an iterator over the {@link Cell}s in this {@code CellGroup}.
+	 * 
+	 * @return an iterator over the {@code Cell}s in this {@code CellGroup}.
+	 * 
+	 * @implSpec
+	 * The default implementation is equivalent to, for this {@code cellGroup}:
+	 * <pre> {@code
+	 * return cellGroup.cells().values().iterator();
+	 * }
+	 * </pre>
+	 */
+	@Override
+	default Iterator<Cell<V>> iterator() {
+		return cells().values().iterator();
+	}
+
+	/**
+	 * Creates and returns a {@link Spliterator} over the {@link Cell}s in this {@code CellGroup}.
+	 * 
+	 * @return a {@code Spliterator} over the {@code Cell}s in this {@code CellGroup}.
+	 * 
+	 * @implSpec
+	 * The default implementation is equivalent to, for this {@code cellGroup}:
+	 * <pre> {@code
+	 * return cellGroup.cells().values().spliterator();
+	 * }
+	 * </pre>
+	 */
+	@Override
+	default Spliterator<Cell<V>> spliterator() {
+		return cells().values().spliterator();
 	}
 	
 	/**
