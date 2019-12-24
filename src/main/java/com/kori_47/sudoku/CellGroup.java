@@ -27,6 +27,66 @@ import java.util.Spliterator;
 public interface CellGroup<V> extends Formattable, Iterable<Cell<V>>, Comparable<CellGroup<V>> {
 
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toXY(CellGroup)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toXY() {
+		return FormattableUtils.toXY(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toXYV(CellGroup)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toXYV() {
+		return FormattableUtils.toXYV(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toXYI(CellGroup)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toXYI() {
+		return FormattableUtils.toXYI(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toV(CellGroup)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toV() {
+		return FormattableUtils.toV(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toI(CellGroup)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toI() {
+		return FormattableUtils.toI(this);
+	}
+	
+	/**
 	 * Returns an {@link Optional} describing a {@code Cell} with the given cell id, or an empty if no such 
 	 * {@code Cell} exists in this {@code CellGroup}.
 	 * 
