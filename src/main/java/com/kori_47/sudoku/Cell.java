@@ -41,6 +41,66 @@ import java.util.Set;
 public interface Cell<V> extends Formattable, Comparable<Cell<V>> {
 
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toXY(Cell)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toXY() {
+		return FormattableUtils.toXY(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toXYV(Cell)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toXYV() {
+		return FormattableUtils.toXYV(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toXYI(Cell)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toXYI() {
+		return FormattableUtils.toXYI(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toV(Cell)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toV() {
+		return FormattableUtils.toV(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toI(Cell)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toI() {
+		return FormattableUtils.toI(this);
+	}
+
+	/**
 	 * Performs order and equality comparisons on two {@code Cell}s.
 	 * 
 	 * @param other another {@code Cell} to compare to this one.
