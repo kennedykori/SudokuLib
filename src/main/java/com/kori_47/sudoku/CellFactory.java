@@ -4,8 +4,13 @@
 package com.kori_47.sudoku;
 
 /**
- * An object that creates new {@link Cell cells}. Using cell factories avoids hardwiring and
+ * An object that creates new {@link Cell}s. Using cell factories avoids hardwiring and
  * enables clients to use special {@code Cell} subclasses.
+ * 
+ * <p>This is a functional interface whose functional method is {@link #createCell(int, int, Symbol)}.
+ * 
+ * @param <V> the type of value held by the {@link Symbol}s supported by the {@code Cell}s created
+ * using this {@code CellFactory}.
  * 
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *
@@ -21,7 +26,7 @@ public interface CellFactory<V> {
 	 * @param y the y coordinate that the new {@code Cell} should have.
 	 * @param symbol the {@code Symbol} to assign to the new {@code Cell}.
 	 * 
-	 * @return the newly created cell.
+	 * @return the newly created {@code Cell} with the given properties.
 	 */
 	Cell<V> createCell(int x, int y, Symbol<V> symbol);
 }
