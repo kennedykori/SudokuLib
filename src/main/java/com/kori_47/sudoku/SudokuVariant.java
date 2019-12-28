@@ -13,8 +13,7 @@ package com.kori_47.sudoku;
  * @since Sat, 28 Dec 2019 11:30:27
  * 
  * @see Sudoku
- * @see CellGroup
- * @see InterpolatableCellGroup
+ * @see SudokuVariants
  */
 public interface SudokuVariant {
 
