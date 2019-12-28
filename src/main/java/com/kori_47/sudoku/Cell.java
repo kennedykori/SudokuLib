@@ -169,16 +169,14 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>> {
 				Integer.compare(y(), other.y()),
 				Integer.compare(x(), other.x()));
 	}
-	
+
 	/**
-	 * Changes the {@link Symbol} of this cell to a new value. If this is an initial cell, then this call 
-	 * will fail with an {@link InitialCellModificationException}. A {@code NullPointerException} will also
-	 * be thrown if a {@code null} reference is passed to this method. 
+	 * <p> Changes the {@link Symbol} of this cell to a new value. If this is an initial cell, then this call 
+	 * will fail with an {@link InitialCellModificationException}. {@code null} values are allowed.
 	 * 
 	 * @param value the new {@code Symbol} to set on this cell.
 	 * 
 	 * @throws InitialCellModificationException if this is an initial cell.
-	 * @throws NullPointerException if @ {@code value} is {@code null}.
  	 */
 	void changeSymbol(Symbol<V> value);
 	
@@ -230,6 +228,32 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>> {
 	 * @throws NullPointerException if {@code note} is {@code null}.
 	 */
 	void removeNote(Symbol<V> note);
+
+	/**
+	 * Resets this {@code Cell} by changing the {@code Cell}s {@link Symbol} to a given value,
+	 * clears any notes that this {@code Cell} might have and reverts this {@code Cell} to
+	 * a normal {@code Cell} if this is an initial {@code Cell}.
+	 * 
+	 * @param symbol the {@code Symbol} to set this {@code Cell} to after the reset. {@code null}
+	 * is allowed and should not result in a {@code NullPointerException}.
+	 */
+	void reset(Symbol<V> symbol);
+
+	/**
+	 * Clears this {@code Cell} by changing the {@code Cell}s {@link Symbol} to a {@code null}
+	 * value, clears any notes that this {@code Cell} might have and reverts this {@code Cell} to
+	 * a normal {@code Cell} if this is an initial {@code Cell}.
+	 * 
+	 * @implSpec
+	 * The default implementation is equivalent to, for this {@code cell}:
+	 * <pre> {@code
+	 * cell.reset(null);
+	 * }
+	 * </pre>
+	 */
+	default void clear() {
+		reset(null);
+	}
 	
 	/**
 	 * Returns the x coordinate of this cell. This is also the index of the column in which
