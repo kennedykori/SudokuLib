@@ -169,9 +169,9 @@ public final class Symbols {
 		@Override
 		public boolean equals(Object obj) {
 			if (obj == this) return true;
-			if (obj == null || !(obj instanceof SimpleSymbol)) return false;
-			SimpleSymbol<?> _obj = (SimpleSymbol<?>)obj;
-			return id == _obj.id && value.equals(_obj.value);
+			if (!(obj instanceof Symbol)) return false;
+			Symbol<?> _obj = (Symbol<?>)obj;
+			return id == _obj.id() && value.equals(_obj.value());
 		}
 		
 		@Override
