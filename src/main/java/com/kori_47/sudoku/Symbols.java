@@ -137,6 +137,7 @@ public final class Symbols {
 
 		private final int id;
 		private final V value;
+		private final int hashCode;
 		
 		/**
 		 * Creates a new {@code Symbol} with the given {@code id} and {@code value}. 
@@ -149,6 +150,8 @@ public final class Symbols {
 		SimpleSymbol(int id, V value) {
 			this.id = id;
 			this.value = requireNonNull(value, "value cannot be null.");
+			// cache the hash code
+			this.hashCode = hash(Integer.valueOf(this.id), this.value);
 		}
 		
 		@Override
@@ -163,7 +166,7 @@ public final class Symbols {
 		
 		@Override
 		public int hashCode() {
-			return hash(Integer.valueOf(id), value);
+			return hashCode;
 		}
 		
 		@Override
@@ -176,7 +179,7 @@ public final class Symbols {
 		
 		@Override
 		public String toString() {
-			return String.format("[ id : %d, value : %s ]", id, value);
+			return String.format("Symbol{id=%d, value=%s}", id, value);
 		}
 	}
 
