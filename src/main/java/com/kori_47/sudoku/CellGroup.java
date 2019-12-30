@@ -19,11 +19,16 @@ import java.util.Spliterator;
  * in a complete {@code LatinSquare} should contain each of the {@link Symbol symbols} in the {@code LatinSquare}
  * exactly once. Examples of {@code CellGroup}s are {@link Row} and {@link Column}.
  * 
- * @param <V> the type of value held by the {@link Symbol}s supported by the {@link Cell}s in this {@link CellGroup}.
+ * @param <V> the type of value held by the {@link Symbol}s supported by this {@link CellGroup}.
  * 
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *
  * @since Oct 17, 2019, 2:50:14 AM
+ * 
+ * @see AbstractCellGroup
+ * @see InterpolatableCellGroup
+ * @see Cell
+ * @see LatinSquare
  */
 public interface CellGroup<V> extends Formattable, Iterable<Cell<V>>, Comparable<CellGroup<V>> {
 
@@ -217,6 +222,37 @@ public interface CellGroup<V> extends Formattable, Iterable<Cell<V>>, Comparable
 	default Set<Cell<V>> normalCells() {
 		return cells().values().stream().filter(cell -> !cell.isInitial()).collect(toSet());
 	}
+
+	/**
+	 * Returns the hash code value for this {@code CellGroup}. The hash code of a {@code CellGroup} should
+	 * be derived from the hash codes of the following properties of a {@code CellGroup}: 
+	 * <ul>
+	 * <li>The hash code value of this {@code CellGroup}'s <i>id</i>.</li>
+	 * <li>The hash code value of this {@code CellGroup}'s <i>size</i> as returned by {@link Integer#hashCode(int)}</li>
+	 * <li>The hash code value of this {@code CellGroup}'s <i>cells</i> {@code Map}.</li>
+	 * </ul>
+	 * 
+	 * @return the hash code value of this {@code CellGroup}.
+	 */
+	@Override
+	int hashCode();
+
+	/**
+	 * Compares the specified object with this {@code CellGroup} for equality. Returns {@code true} if the
+	 * given object is also a {@code CellGroup} and the two {@code CellGroup}s are identical. Two {@code CellGroup}s
+	 * are said to be equal if each of the following of their properties are also equal:
+	 * <ul>
+	 * <li>The <i>ids</i> of the {@code CellGroup}s.</li>
+	 * <li>The <i>sizes</i> of the {@code CellGroup}s</li>
+	 * <li>The <i>cells</i> {@code Map}s of the {@code CellGroup}s .</li>
+	 * </ul>
+	 * 
+	 * @param obj the object to compare for equality with this {@code CellGroup}.
+	 * 
+	 * @return {@code true} if this {@code CellGroup} is equal to {@code obj} argument, {@code false} otherwise.
+	 */
+	@Override
+	boolean equals(Object obj);
 	
 	/**
 	 * Returns a {@code String} that identifies this {@code CellGroup} in a given {@code LatinSquare}.
