@@ -33,8 +33,32 @@ public abstract class AbstractCellGroup<V> implements CellGroup<V> {
 	
 	// views
 	private final Map<String, Cell<V>> cellsView;
-	
-	public AbstractCellGroup(String id, int size, Map<String, Cell<V>> cells) {
+
+	/**
+	 * This constructor initializes the {@code id}, {@code size} and {@code cells} properties of a
+	 * {@link CellGroup} with the provided values.
+	 * 
+	 * @param id the identifier of this {@code CellGroup}.
+	 * @param size the size of this {@code CellGroup}.
+	 * @param cells the {@code Cell}s that this {@code CellGroup} will have.
+	 * 
+	 * @throws NullPointerException if {@code id} and/or {@code cells} are/is {@code null}.
+	 * @throws IllegalArgumentException if {@code size} is less than {@code 1} or the number of the
+	 * given {@code cells} is less than {@code size}.
+	 * 
+	 * @implSpec
+	 * <p> This constructor first validates that {@code id} is not {@code null} then assigns the value to
+	 * a final instance field with the same name. It then validates that {@code size >= 1} before
+	 * assigning it to a final instance field. Lastly, it validates that {@code cells} is not {@code null}
+	 * and that {@code cells.size() >= size} before sorting and creating a defensive copy of {@code cells}
+	 * on a {@link LinkedHashMap} and assiging the newly copied {@code Map} to a protected final instance
+	 * field named {@code cells}.
+	 * 
+	 * <p> This constructor also creates a final instance field {@code cellsView} that returns an unmodifiable
+	 * view of the {@code cells} {@code Map}. This field is then used as the return value of the {@link #cells()}
+	 * method which prevents modification of the cells in this {@code CellGroup}.  
+	 */
+	protected AbstractCellGroup(String id, int size, Map<String, Cell<V>> cells) {
 		this.id = requireNonNull(id, "id cannot be null.");
 		this.size = requireGreaterThanOrEqualTo(1, size, "size must be greater than or equal to 1.");
 		this.cells = validateCells(cells, this.size);
