@@ -92,6 +92,20 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	CellFactory<V> cellFactory();
 
 	/**
+	 * Returns the {@link RowFactory} used by this {@code LatinSquare} to create new {@link Row}s.
+	 * 
+	 * @return the {@code RowFactory} used by this {@code LatinSquare} to create new {@code Row}s.
+	 */
+	RowFactory<V> rowFactory();
+
+	/**
+	 * Returns the {@link ColumnFactory} used by this {@code LatinSquare} to create new {@link Column}s.
+	 * 
+	 * @return the {@code ColumnFactory} used by this {@code LatinSquare} to create new {@code Column}s.
+	 */
+	ColumnFactory<V> columnFactor();
+	
+	/**
 	 * Returns a {@code Map} of the {@link Row}s contained in this {@code LatinSquare}. Modification of the 
 	 * returned {@code Map} should not alter the {@code Row}s of this {@code LatinSquare}. Implementations of this 
 	 * interface can also choose to return an unmodifiable {@code Map} instead to prevent modifications.
