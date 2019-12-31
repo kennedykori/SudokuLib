@@ -103,7 +103,7 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 * 
 	 * @return the {@code ColumnFactory} used by this {@code LatinSquare} to create new {@code Column}s.
 	 */
-	ColumnFactory<V> columnFactor();
+	ColumnFactory<V> columnFactory();
 	
 	/**
 	 * Returns a {@code Map} of the {@link Row}s contained in this {@code LatinSquare}. Modification of the 
