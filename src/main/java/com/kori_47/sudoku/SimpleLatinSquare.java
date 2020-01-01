@@ -59,10 +59,10 @@ public class SimpleLatinSquare<V> implements LatinSquare<V> {
 	 * @param symbols the {@link Set} of {@link Symbol}s to use when filling this {@code LatinSquare} {@link Cell}s.
 	 * @param emptySymbol the empty {@code Symbol} that the new {@code LatinSquare} should use.
 	 * @param cellFactory the {@link CellFactory} that the new {@code LatinSquare} will use when creating new {@code Cell}s.
-	 * @param rowFactory the {@link RowFactory} that the new {@code LatinSquare} will use when creating new {@link Row}s .
-	 * @param columnFactory the {@link CellFactory} that the new {@code LatinSquare} will use when creating new {@link Column}s.
+	 * @param rowFactory the {@link RowFactory} that the new {@code LatinSquare} will use when creating new {@link Row}s.
+	 * @param columnFactory the {@link ColumnFactory} that the new {@code LatinSquare} will use when creating new {@link Column}s.
 	 * 
-	 * @throws NullPointerException if any of the following arguments to this method are/is {@code null}.
+	 * @throws NullPointerException if any of the following arguments to this constructor are/is {@code null}.
 	 * @throws IllegalArgumentException if {@code size} is less than {@code 1} and/or the size of {@code symbols} {@code Set}
 	 * 			is less than {@code size};
 	 */
@@ -77,7 +77,7 @@ public class SimpleLatinSquare<V> implements LatinSquare<V> {
 	 * 
 	 * @param latinSquare the {@code LatinSquare} from who's properties to create a new {@code LatinSquare} from.
 	 * 
-	 * @throws IllegalArgumentException if {@code latinSquare} is {@code null}.
+	 * @throws NullPointerException if {@code latinSquare} is {@code null}.
 	 */
 	public SimpleLatinSquare(LatinSquare<V> latinSquare) {
 		this(
@@ -97,8 +97,8 @@ public class SimpleLatinSquare<V> implements LatinSquare<V> {
 	 * @param symbols the {@link Map} of {@link Symbol}s to use when filling this {@code LatinSquare} {@link Cell}s.
 	 * @param emptySymbol the empty {@code Symbol} that the new {@code LatinSquare} should use.
 	 * @param cellFactory the {@link CellFactory} that the new {@code LatinSquare} will use when creating new {@code Cell}s.
-	 * @param rowFactory the {@link RowFactory} that the new {@code LatinSquare} will use when creating new {@link Row}s .
-	 * @param columnFactory the {@link CellFactory} that the new {@code LatinSquare} will use when creating new {@link Column}s.
+	 * @param rowFactory the {@link RowFactory} that the new {@code LatinSquare} will use when creating new {@link Row}s.
+	 * @param columnFactory the {@link ColumnFactory} that the new {@code LatinSquare} will use when creating new {@link Column}s.
 	 */
 	private SimpleLatinSquare(int size, Map<Integer, Symbol<V>> symbols, Symbol<V> emptySymbol, CellFactory<V> cellFactory,
 							  RowFactory<V> rowFactory, ColumnFactory<V> columnFactory) {
