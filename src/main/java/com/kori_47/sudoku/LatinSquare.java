@@ -27,6 +27,66 @@ import java.util.Map;
 public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toXY(LatinSquare)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toXY() {
+		return FormattableUtils.toXY(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toXYV(LatinSquare)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toXYV() {
+		return FormattableUtils.toXYV(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toXYI(LatinSquare)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toXYI() {
+		return FormattableUtils.toXYI(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toV(LatinSquare)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toV() {
+		return FormattableUtils.toV(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toI(LatinSquare)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toI() {
+		return FormattableUtils.toI(this);
+	}
+
+	/**
 	 * Mutates all the {@link Cell}s in this {@code LatinSquare} by setting them to the
 	 * {@link #emptySymbol() empty symbol} associated with this {@code LatinSquare}. This
 	 * mutation also clears the notes in each {@code Cell} and reverts any initial {@code Cell}
