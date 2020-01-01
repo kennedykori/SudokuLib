@@ -265,8 +265,7 @@ public class SimpleLatinSquare<V> implements LatinSquare<V> {
 	
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
+		return toXYV();
 	}
 
 	private void init() {
