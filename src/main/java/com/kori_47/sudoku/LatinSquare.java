@@ -60,6 +60,45 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	}
 
 	/**
+	 * Returns the hash code value for this {@code LatinSquare}. The hash code of a {@code LatinSquare} should
+	 * be derived from the hash codes of the following properties of a {@code LatinSquare}: 
+	 * <ul>
+	 * <li>The hash code value of this {@code LatinSquare}'s <i>{@link #id() id}</i>.</li>
+	 * <li>The hash code value of this {@code LatinSquare}'s <i>{@link #size() size}</i> as returned by {@link Integer#hashCode(int)}</li>
+	 * <li>The hash code value of this {@code LatinSquare}'s <i>{@link #emptySymbol() emptySymbol}</i>.</li>
+	 * <li>The hash code value of this {@code LatinSquare}'s <i>{@link #cells() cells}</i> {@code Map}.</li>
+	 * <li>The hash code value of this {@code LatinSquare}'s <i>{@link #rows() rows}</i> {@code Map}.</li>
+	 * <li>The hash code value of this {@code LatinSquare}'s <i>{@link #columns() columns}</i> {@code Map}.</li>
+	 * <li>The hash code value of this {@code LatinSquare}'s <i>{@link #symbols() symbols}</i> {@code Map}.</li>
+	 * </ul>
+	 * 
+	 * @return the hash code value of this {@code LatinSquare}.
+	 */
+	@Override
+	int hashCode();
+
+	/**
+	 * Compares the specified object with this {@code LatinSquare} for equality. Returns {@code true} if the
+	 * given object is also a {@code LatinSquare} and the two {@code LatinSquare}s are identical. Two
+	 * {@code LatinSquare}s are said to be equal if each of the following of their properties are also equal:
+	 * <ul>
+	 * <li>The <i>{@link #id() ids}</i> of the {@code LatinSquare}s.</li>
+	 * <li>The <i>{@link #size() sizes}</i> of the {@code LatinSquare}s</li>
+	 * <li>The <i>{@link #emptySymbol() emptySymbols}</i> of the {@code LatinSquare}s.</li>
+	 * <li>The <i>{@link #cells() cells}</i> {@code Map}s of the {@code LatinSquare}s.</li>
+	 * <li>The <i>{@link #rows() rows}</i> {@code Map}s of the {@code LatinSquare}s.</li>
+	 * <li>The <i>{@link #columns() columns}</i> {@code Map}s of the {@code LatinSquare}s.</li>
+	 * <li>The <i>{@link #symbols() symbols}</i> {@code Map}s of the {@code LatinSquare}s.</li>
+	 * </ul>
+	 * 
+	 * @param obj the object to compare for equality with this {@code LatinSquare}.
+	 * 
+	 * @return {@code true} if this {@code LatinSquare} is equal to {@code obj} argument, {@code false} otherwise.
+	 */
+	@Override
+	boolean equals(Object obj);
+	
+	/**
 	 * Creates and returns a new {@code LatinSquare} whose {@link Row}s and {@link Cell}s are permuted so
 	 * that the new {@code LatinSquare} is upside down in relation to this one.
 	 * 
