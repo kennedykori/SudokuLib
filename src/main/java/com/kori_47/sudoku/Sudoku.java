@@ -33,6 +33,13 @@ public interface Sudoku<V> extends LatinSquare<V> {
 	SudokuVariant variant();
 
 	/**
+	 * Returns the {@link BlockFactory} used by this {@code Sudoku} to create new {@link Block}s.
+	 * 
+	 * @return the {@code BlockFactory} used by this {@code Sudoku} to create new {@code Block}s.
+	 */
+	BlockFactory<V> blockFactory();
+	
+	/**
 	 * Returns a {@code Map} of the {@link Block}s contained in this {@code Sudoku}. Modification of the 
 	 * returned {@code Map} should not alter the {@code Block}s of this {@code Sudoku}. Implementations of
 	 * this interface can also choose to return an unmodifiable {@code Map} instead to prevent modifications.
