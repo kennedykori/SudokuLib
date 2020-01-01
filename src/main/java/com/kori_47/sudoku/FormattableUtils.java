@@ -5,6 +5,7 @@ package com.kori_47.sudoku;
 
 import static java.util.stream.Collector.of;
 
+import java.util.Comparator;
 import java.util.StringJoiner;
 
 import static java.util.Objects.requireNonNull;
@@ -19,6 +20,11 @@ import static java.util.Objects.requireNonNull;
  * @since Sun, 22 Dec 2019 21:56:14
  */
 public final class FormattableUtils {
+	
+	/**
+	 * A comparator used to sort rows on reverse based on their index
+	 */
+	private static final Comparator<Row<?>> REVERSE_ROW_COMPARATOR = (row1, row2) -> Integer.compare(row2.y(), row1.y());
 	
 	/**
 	 * The default delimiter used by methods in this class when none is provided.
@@ -125,6 +131,54 @@ public final class FormattableUtils {
 		return cellGroup.cells().values().stream().sorted().collect(of(
 				() -> new StringJoiner(delimiter),
 				(joiner, cell) -> joiner.add(cell.toXY()),
+				(joiner1, joiner2) -> joiner1.merge(joiner2), 
+				StringJoiner::toString ));
+	}
+
+	/**
+	 * Takes a {@link LatinSquare} and returns the <strong><i>{@link Formattable#toXY() XY}</i></strong>
+	 * representation of this {@code LatinSquare} as defined in the {@link Formattable} interface. The 
+	 * <strong><i>XV</i></strong> representation of a {@code LatinSquare} is constructed by joining the
+	 * <strong><i>XV</i></strong> representation of each {@link Row} in the {@code LatinSquare} delimited
+	 * by a given delimiter.
+	 * 
+	 * @implNote
+	 * A call to this method is similar to calling {@link #toXY(LatinSquare, String)} with 
+	 * {@link #DEFAULT_DELIMITER} as the delimiter.  
+	 * 
+	 * @param latinSquare the {@code LatinSquare} who's representation we are interested in.
+	 * 
+	 * @return the <strong><i>XV</i></strong> representation of the given {@code LatinSquare} as a
+	 * {@code String}.
+	 * 
+	 * @throws NullPointerException if {@code latinSquare} is {@code null}.
+	 */
+	public static final String toXY(final LatinSquare<?> latinSquare) {
+		return toXY(latinSquare, DEFAULT_DELIMITER);
+	}
+	
+	/**
+	 * Takes a {@link LatinSquare} and returns the <strong><i>{@link Formattable#toXY() XY}</i></strong>
+	 * representation of this {@code LatinSquare} as defined in the {@link Formattable} interface. The 
+	 * <strong><i>XV</i></strong> representation of a {@code LatinSquare} is constructed by joining the
+	 * <strong><i>XV</i></strong> representation of each {@link Row} in the {@code LatinSquare} delimited
+	 * by a given delimiter.
+	 * 
+	 * @param latinSquare the {@code LatinSquare} who's representation we are interested in.
+	 * @param delimiter the {@code String} to be used between each {@code Row}'s <strong><i>XV</i></strong>
+	 * representation in the given {@code LatinSquare}.
+	 * 
+	 * @return the <strong><i>XV</i></strong> representation of the given {@code LatinSquare} as a
+	 * {@code String}.
+	 * 
+	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
+	 */
+	public static final String toXY(final LatinSquare<?> latinSquare, final String delimiter) {
+		requireNonNull(latinSquare, "latinSquare cannot be null.");
+		requireNonNull(delimiter, "delimiter cannot be null.");
+		return latinSquare.rows().values().stream().sorted(REVERSE_ROW_COMPARATOR).collect(of(
+				() -> new StringJoiner(delimiter),
+				(joiner, row) -> joiner.add(row.toXY()),
 				(joiner1, joiner2) -> joiner1.merge(joiner2), 
 				StringJoiner::toString ));
 	}
@@ -268,6 +322,82 @@ public final class FormattableUtils {
 		return cellGroup.cells().values().stream().sorted().collect(of(
 				() -> new StringJoiner(delimiter),
 				(joiner, cell) -> joiner.add(cell.toXYV()),
+				(joiner1, joiner2) -> joiner1.merge(joiner2), 
+				StringJoiner::toString ));
+	}
+	
+	/**
+	 * Takes a {@link LatinSquare} and returns the <strong><i>{@link Formattable#toXYV() XYV}</i></strong>
+	 * representation of this {@code LatinSquare} as defined in the {@link Formattable} interface. The
+	 * <strong><i>XVY</i></strong> representation of a {@code LatinSquare} is constructed by joining the
+	 * <strong><i>XVY</i></strong> representation of each {@link Row} in the {@code LatinSquare} delimited
+	 * by a given delimiter.
+	 * 
+	 * @implNote
+	 * A call to this method is similar to calling {@link #toXYV(LatinSquare, String, String)} with
+	 * {@link #DEFAULT_DELIMITER} as the {@code delimiter} and {@link #DEFAULT_PLACEHOLDER} as the
+	 * {@code placeholder}.
+	 * 
+	 * @param latinSquare the {@code LatinSquare} who's representation we are interested in.
+	 * 
+	 * @return the <strong><i>XVY</i></strong> representation of the given {@code LatinSquare} as a
+	 * {@code String}.
+	 * 
+	 * @throws NullPointerException if {@code latinSquare} is {@code null}.
+	 */
+	public static final String toXYV(final LatinSquare<?> latinSquare) {
+		return toXYV(latinSquare, DEFAULT_DELIMITER);
+	}
+
+	/**
+	 * Takes a {@link LatinSquare} and returns the <strong><i>{@link Formattable#toXYV() XYV}</i></strong>
+	 * representation of this {@code LatinSquare} as defined in the {@link Formattable} interface. The
+	 * <strong><i>XVY</i></strong> representation of a {@code LatinSquare} is constructed by joining the
+	 * <strong><i>XVY</i></strong> representation of each {@link Row} in the {@code LatinSquare} delimited
+	 * by a given delimiter.
+	 * 
+	 * @implNote
+	 * A call to this method is similar to calling {@link #toXYV(LatinSquare, String, String)} with
+	 * {@link #DEFAULT_PLACEHOLDER} as the {@code placeholder}.
+	 * 
+	 * @param latinSquare the {@code LatinSquare} who's representation we are interested in.
+	 * @param delimiter the {@code String} to be used between each {@code Row}'s <strong><i>XVY</i></strong>
+	 * representation in the given {@code LatinSquare}.
+	 * 
+	 * @return the <strong><i>XVY</i></strong> representation of the given {@code LatinSquare} as a
+	 * {@code String}.
+	 * 
+	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
+	 */
+	public static final String toXYV(final LatinSquare<?> latinSquare, final String delimiter) {
+		return toXYV(latinSquare, delimiter, DEFAULT_PLACEHOLDER);
+	}
+	
+	/**
+	 * Takes a {@link LatinSquare} and returns the <strong><i>{@link Formattable#toXYV() XYV}</i></strong>
+	 * representation of this {@code LatinSquare} as defined in the {@link Formattable} interface. The 
+	 * <strong><i>XVY</i></strong> representation of a {@code LatinSquare} is constructed by joining the
+	 * <strong><i>XVY</i></strong> representation of each {@link Row} in the {@code LatinSquare} delimited
+	 * by a given delimiter.
+	 * 
+	 * @param latinSquare the {@code LatinSquare} who's representation we are interested in.
+	 * @param delimiter the {@code String} to be used between each {@code Row}'s <strong><i>XVY</i></strong>
+	 * representation in the given {@code LatinSquare}.
+	 * @param placeholder a {@code String} to be used as a "stand-in" value in case some {@code Cell}s
+	 * in the given {@code LatinSquare} have no set {@code Symbol}.
+	 * 
+	 * @return the <strong><i>XVY</i></strong> representation of the given {@code LatinSquare} as a
+	 * {@code String}.
+	 * 
+	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
+	 */
+	public static final String toXYV(final LatinSquare<?> latinSquare, final String delimiter, final String placeholder) {
+		requireNonNull(latinSquare, "latinSquare cannot be null.");
+		requireNonNull(delimiter, "delimiter cannot be null.");
+		requireNonNull(placeholder, "placeholder cannot be null.");
+		return latinSquare.rows().values().stream().sorted(REVERSE_ROW_COMPARATOR).collect(of(
+				() -> new StringJoiner(delimiter),
+				(joiner, row) -> joiner.add(row.toXYV()),
 				(joiner1, joiner2) -> joiner1.merge(joiner2), 
 				StringJoiner::toString ));
 	}
@@ -419,6 +549,79 @@ public final class FormattableUtils {
 				(joiner1, joiner2) -> joiner1.merge(joiner2), 
 				StringJoiner::toString ));
 	}
+	
+	/**
+	 * Takes a {@link LatinSquare} and returns the <strong><i>{@link Formattable#toXYI() XYI}</i></strong>
+	 * representation of this {@code LatinSquare} as defined in the {@link Formattable} interface. The
+	 * <strong><i>XYI</i></strong> representation of a {@code LatinSquare} is constructed by joining the
+	 * <strong><i>XYI</i></strong> representation of each {@link Row} in the {@code LatinSquare} delimited
+	 * by a given delimiter.
+	 * 
+	 * @implNote
+	 * A call to this method is similar to calling {@link #toXYI(LatinSquare, String, String)} with
+	 * {@link #DEFAULT_DELIMITER} as the {@code delimiter} and {@link #DEFAULT_PLACEHOLDER} as the
+	 * {@code placeholder}.
+	 * 
+	 * @param latinSquare the {@code LatinSquare} who's representation we are interested in.
+	 * 
+	 * @return the <strong><i>XYI</i></strong> representation of the given {@code LatinSquare} as a {@code String}.
+	 * 
+	 * @throws NullPointerException if {@code latinSquare} is {@code null}.
+	 */
+	public static final String toXYI(final LatinSquare<?> latinSquare) {
+		return toXYI(latinSquare, DEFAULT_DELIMITER);
+	}
+
+	/**
+	 * Takes a {@link LatinSquare} and returns the <strong><i>{@link Formattable#toXYI() XYI}</i></strong>
+	 * representation of this {@code LatinSquare} as defined in the {@link Formattable} interface. The
+	 * <strong><i>XYI</i></strong> representation of a {@code LatinSquare} is constructed by joining the
+	 * <strong><i>XYI</i></strong> representation of each {@link Row} in the {@code LatinSquare} delimited
+	 * by a given delimiter.
+	 * 
+	 * @implNote
+	 * A call to this method is similar to calling {@link #toXYI(LatinSquare, String, String)} with
+	 * {@link #DEFAULT_PLACEHOLDER} as the {@code placeholder}.
+	 * 
+	 * @param latinSquare the {@code LatinSquare} who's representation we are interested in.
+	 * @param delimiter the {@code String} to be used between each {@code Row}'s <strong><i>XYI</i></strong>
+	 * representation in the given {@code LatinSquare}.
+	 * 
+	 * @return the <strong><i>XYI</i></strong> representation of the given {@code LatinSquare} as a {@code String}.
+	 * 
+	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
+	 */
+	public static final String toXYI(final LatinSquare<?> latinSquare, final String delimiter) {
+		return toXYI(latinSquare, delimiter, DEFAULT_PLACEHOLDER);
+	}
+	
+	/**
+	 * Takes a {@link LatinSquare} and returns the <strong><i>{@link Formattable#toXYI() XYI}</i></strong>
+	 * representation of this {@code LatinSquare} as defined in the {@link Formattable} interface. The
+	 * <strong><i>XYI</i></strong> representation of a {@code LatinSquare} is constructed by joining the
+	 * <strong><i>XYI</i></strong> representation of each {@link Row} in the {@code LatinSquare} delimited
+	 * by a given delimiter.
+	 * 
+	 * @param latinSquare the {@code LatinSquare} who's representation we are interested in.
+	 * @param delimiter the {@code String} to be used between each {@code Row}'s <strong><i>XYI</i></strong>
+	 * representation in the given {@code LatinSquare}.
+	 * @param placeholder a {@code String} to be used as a "stand-in" value in case some {@code Cell}s
+	 * in the given {@code LatinSquare} have no set {@code Symbol}.
+	 * 
+	 * @return the <strong><i>XYI</i></strong> representation of the given {@code LatinSquare} as a {@code String}.
+	 * 
+	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
+	 */
+	public static final String toXYI(final LatinSquare<?> latinSquare, final String delimiter, final String placeholder) {
+		requireNonNull(latinSquare, "latinSquare cannot be null.");
+		requireNonNull(delimiter, "delimiter cannot be null.");
+		requireNonNull(placeholder, "placeholder cannot be null.");
+		return latinSquare.rows().values().stream().sorted(REVERSE_ROW_COMPARATOR).collect(of(
+				() -> new StringJoiner(delimiter),
+				(joiner, row) -> joiner.add(row.toXYI()),
+				(joiner1, joiner2) -> joiner1.merge(joiner2), 
+				StringJoiner::toString ));
+	}
 	/* ============================================================================
 	 * toV()
 	 * ============================================================================
@@ -537,6 +740,79 @@ public final class FormattableUtils {
 				(joiner1, joiner2) -> joiner1.merge(joiner2), 
 				StringJoiner::toString ));
 	}
+
+	/**
+	 * Takes a {@link LatinSquare} and returns the <strong><i>{@link Formattable#toV() V}</i></strong>
+	 * representation of this {@code LatinSquare} as defined in the {@link Formattable} interface. The
+	 * <strong><i>V</i></strong> representation of a {@code LatinSquare} is constructed by joining the
+	 * <strong><i>V</i></strong> representation of each {@link Row} in the {@code LatinSquare} delimited
+	 * by a given delimiter.
+	 * 
+	 * @implNote
+	 * A call to this method is similar to calling {@link #toV(LatinSquare, String, String)} with
+	 * {@link #DEFAULT_DELIMITER} as the {@code delimiter} and {@link #DEFAULT_PLACEHOLDER} as the
+	 * {@code placeholder}.
+	 * 
+	 * @param latinSquare the {@code LatinSquare} who's representation we are interested in.
+	 * 
+	 * @return the <strong><i>V</i></strong> representation of the given {@code LatinSquare} as a {@code String}.
+	 * 
+	 * @throws NullPointerException if {@code latinSquare} is {@code null}.
+	 */
+	public static final String toV(final LatinSquare<?> latinSquare) {
+		return toV(latinSquare, DEFAULT_DELIMITER);
+	}
+
+	/**
+	 * Takes a {@link LatinSquare} and returns the <strong><i>{@link Formattable#toV() V}</i></strong>
+	 * representation of this {@code LatinSquare} as defined in the {@link Formattable} interface. The
+	 * <strong><i>V</i></strong> representation of a {@code LatinSquare} is constructed by joining the
+	 * <strong><i>V</i></strong> representation of each {@link Row} in the {@code LatinSquare} delimited
+	 * by a given delimiter.
+	 * 
+	 * @implNote
+	 * A call to this method is similar to calling {@link #toV(LatinSquare, String, String)} with
+	 * {@link #DEFAULT_PLACEHOLDER} as the {@code placeholder}.
+	 * 
+	 * @param latinSquare the {@code LatinSquare} who's representation we are interested in.
+	 * @param delimiter the {@code String} to be used between each {@code Row}'s <strong><i>V</i></strong>
+	 * representation in the given {@code LatinSquare}.
+	 * 
+	 * @return the <strong><i>V</i></strong> representation of the given {@code LatinSquare} as a {@code String}.
+	 * 
+	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
+	 */
+	public static final String toV(final LatinSquare<?> latinSquare, final String delimiter) {
+		return toV(latinSquare, delimiter, DEFAULT_PLACEHOLDER);
+	}
+
+	/**
+	 * Takes a {@link LatinSquare} and returns the <strong><i>{@link Formattable#toV() V}</i></strong>
+	 * representation of this {@code LatinSquare} as defined in the {@link Formattable} interface. The
+	 * <strong><i>V</i></strong> representation of a {@code LatinSquare} is constructed by joining the
+	 * <strong><i>V</i></strong> representation of each {@link Row} in the {@code LatinSquare} delimited
+	 * by a given delimiter.
+	 * 
+	 * @param latinSquare the {@code LatinSquare} who's representation we are interested in.
+	 * @param delimiter the {@code String} to be used between each {@code Row}'s <strong><i>V</i></strong>
+	 * representation in the given {@code LatinSquare}.
+	 * @param placeholder a {@code String} to be used as a "stand-in" value in case some {@code Cell}s
+	 * in the given {@code LatinSquare} have no set {@code Symbol}.
+	 * 
+	 * @return the <strong><i>V</i></strong> representation of the given {@code LatinSquare} as a {@code String}.
+	 * 
+	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
+	 */
+	public static final String toV(final LatinSquare<?> latinSquare, final String delimiter, final String placeholder) {
+		requireNonNull(latinSquare, "latinSquare cannot be null.");
+		requireNonNull(delimiter, "delimiter cannot be null.");
+		requireNonNull(placeholder, "placeholder cannot be null.");
+		return latinSquare.rows().values().stream().sorted(REVERSE_ROW_COMPARATOR).collect(of(
+				() -> new StringJoiner(delimiter),
+				(joiner, row) -> joiner.add(row.toV()),
+				(joiner1, joiner2) -> joiner1.merge(joiner2), 
+				StringJoiner::toString ));
+	}
 	/* ============================================================================
 	 * toI()
 	 * ============================================================================
@@ -652,6 +928,79 @@ public final class FormattableUtils {
 		return cellGroup.cells().values().stream().sorted().collect(of(
 				() -> new StringJoiner(delimiter),
 				(joiner, cell) -> joiner.add(cell.toI()),
+				(joiner1, joiner2) -> joiner1.merge(joiner2), 
+				StringJoiner::toString ));
+	}
+
+	/**
+	 * Takes a {@link LatinSquare} and returns the <strong><i>{@link Formattable#toI() I}</i></strong>
+	 * representation of this {@code LatinSquare} as defined in the {@link Formattable} interface. The
+	 * <strong><i>I</i></strong> representation of a {@code LatinSquare} is constructed by joining the
+	 * <strong><i>I</i></strong> representation of each {@link Row} in the {@code LatinSquare} delimited
+	 * by a given delimiter.
+	 * 
+	 * @implNote
+	 * A call to this method is similar to calling {@link #toI(LatinSquare, String, String)} with
+	 * {@link #DEFAULT_DELIMITER} as the {@code delimiter} and {@link #DEFAULT_PLACEHOLDER} as the
+	 * {@code placeholder}.
+	 * 
+	 * @param latinSquare the {@code LatinSquare} who's representation we are interested in.
+	 * 
+	 * @return the <strong><i>I</i></strong> representation of the given {@code LatinSquare} as a {@code String}.
+	 * 
+	 * @throws NullPointerException if {@code latinSquare} is {@code null}.
+	 */
+	public static final String toI(final LatinSquare<?> latinSquare) {
+		return toV(latinSquare, DEFAULT_DELIMITER);
+	}
+
+	/**
+	 * Takes a {@link LatinSquare} and returns the <strong><i>{@link Formattable#toI() I}</i></strong>
+	 * representation of this {@code LatinSquare} as defined in the {@link Formattable} interface. The
+	 * <strong><i>I</i></strong> representation of a {@code LatinSquare} is constructed by joining the
+	 * <strong><i>I</i></strong> representation of each {@link Row} in the {@code LatinSquare} delimited
+	 * by a given delimiter.
+	 * 
+	 * @implNote
+	 * A call to this method is similar to calling {@link #toI(LatinSquare, String, String)} with
+	 * {@link #DEFAULT_PLACEHOLDER} as the {@code placeholder}.
+	 * 
+	 * @param latinSquare the {@code LatinSquare} who's representation we are interested in.
+	 * @param delimiter the {@code String} to be used between each {@code Row}'s <strong><i>I</i></strong>
+	 * representation in the given {@code LatinSquare}.
+	 * 
+	 * @return the <strong><i>I</i></strong> representation of the given {@code LatinSquare} as a {@code String}.
+	 * 
+	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
+	 */
+	public static final String toI(final LatinSquare<?> latinSquare, final String delimiter) {
+		return toV(latinSquare, delimiter, DEFAULT_PLACEHOLDER);
+	}
+
+	/**
+	 * Takes a {@link LatinSquare} and returns the <strong><i>{@link Formattable#toI() I}</i></strong>
+	 * representation of this {@code LatinSquare} as defined in the {@link Formattable} interface. The
+	 * <strong><i>I</i></strong> representation of a {@code LatinSquare} is constructed by joining the
+	 * <strong><i>I</i></strong> representation of each {@link Row} in the {@code LatinSquare} delimited
+	 * by a given delimiter.
+	 * 
+	 * @param latinSquare the {@code LatinSquare} who's representation we are interested in.
+	 * @param delimiter the {@code String} to be used between each {@code Row}'s <strong><i>I</i></strong>
+	 * representation in the given {@code LatinSquare}.
+	 * @param placeholder a {@code String} to be used as a "stand-in" value in case some {@code Cell}s
+	 * in the given {@code LatinSquare} have no set {@code Symbol}.
+	 * 
+	 * @return the <strong><i>I</i></strong> representation of the given {@code LatinSquare} as a {@code String}.
+	 * 
+	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
+	 */
+	public static final String toI(final LatinSquare<?> latinSquare, final String delimiter, final String placeholder) {
+		requireNonNull(latinSquare, "latinSquare cannot be null.");
+		requireNonNull(delimiter, "delimiter cannot be null.");
+		requireNonNull(placeholder, "placeholder cannot be null.");
+		return latinSquare.rows().values().stream().sorted(REVERSE_ROW_COMPARATOR).collect(of(
+				() -> new StringJoiner(delimiter),
+				(joiner, row) -> joiner.add(row.toI()),
 				(joiner1, joiner2) -> joiner1.merge(joiner2), 
 				StringJoiner::toString ));
 	}
