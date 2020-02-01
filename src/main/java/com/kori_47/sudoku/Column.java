@@ -11,6 +11,8 @@ package com.kori_47.sudoku;
  * <p> Implementations must make sure that all the {@link Cell}s in this {@code Column} have the same x 
  * coordinate as the {@link #x() index} of this {@code Column}.
  * 
+ * @param <V> the type of value held by the {@link Symbol}s supported by this {@code Column}.
+ * 
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *
  * @since Sat, 21 Dec 2019 20:03:16
@@ -18,7 +20,7 @@ package com.kori_47.sudoku;
  * @see InterpolatableCellGroup
  * @see Row
  */
-public interface Column<V> extends InterpolatableCellGroup<V> {
+public interface Column<V> extends UniqueCellGroup<V>, InterpolatableCellGroup<V> {
 
 	/**
 	 * Returns the index of this {@code Column} on the {@link LatinSquare} that this {@code Column} is

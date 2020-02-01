@@ -11,6 +11,7 @@ package com.kori_47.sudoku;
  * <p> Implementations must make sure that all the {@link Cell}s in this {@code Row} have the same y coordinate
  * as the {@link #y() index} of this {@code Row}.
  * 
+ * @param <V> the type of value held by the {@link Symbol}s supported by this {@code Row}.
  * 
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *
@@ -19,7 +20,7 @@ package com.kori_47.sudoku;
  * @see InterpolatableCellGroup
  * @see Column
  */
-public interface Row<V> extends InterpolatableCellGroup<V> {
+public interface Row<V> extends UniqueCellGroup<V>, InterpolatableCellGroup<V> {
 
 	/**
 	 * Returns the index of this {@code Row} on the {@link LatinSquare} that this {@code Row} is

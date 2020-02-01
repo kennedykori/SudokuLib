@@ -86,7 +86,7 @@ public final class CellGroups {
 	 * 
 	 * @param <V> the type of value held by the {@link Symbol}s supported by this {@link Row}.
 	 */
-	private static final class SimpleRow<V> extends AbstractCellGroup<V> implements Row<V> {
+	private static final class SimpleRow<V> extends AbstractUniqueCellGroup<V> implements Row<V> {
 
 		/**
 		 * the index of this {@code Row}.
@@ -123,7 +123,7 @@ public final class CellGroups {
 	 * 
 	 * @param <V> the type of value held by the {@link Symbol}s supported by this {@link Row}.
 	 */
-	private static final class SimpleColumn<V> extends AbstractCellGroup<V> implements Column<V> {
+	private static final class SimpleColumn<V> extends AbstractUniqueCellGroup<V> implements Column<V> {
 
 		/**
 		 * the index of this {@code Column}.
