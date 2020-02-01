@@ -30,7 +30,7 @@ import java.util.Spliterator;
  * @see Cell
  * @see LatinSquare
  */
-public interface CellGroup<V> extends Formattable, Iterable<Cell<V>>, Comparable<CellGroup<V>> {
+public interface CellGroup<V> extends Formattable, Iterable<Cell<V>> {
 
 	/**
 	 * {@inheritDoc}
@@ -227,7 +227,6 @@ public interface CellGroup<V> extends Formattable, Iterable<Cell<V>>, Comparable
 	 * Returns the hash code value for this {@code CellGroup}. The hash code of a {@code CellGroup} should
 	 * be derived from the hash codes of the following properties of a {@code CellGroup}: 
 	 * <ul>
-	 * <li>The hash code value of this {@code CellGroup}'s <i>id</i>.</li>
 	 * <li>The hash code value of this {@code CellGroup}'s <i>size</i> as returned by {@link Integer#hashCode(int)}</li>
 	 * <li>The hash code value of this {@code CellGroup}'s <i>cells</i> {@code Map}.</li>
 	 * </ul>
@@ -242,7 +241,6 @@ public interface CellGroup<V> extends Formattable, Iterable<Cell<V>>, Comparable
 	 * given object is also a {@code CellGroup} and the two {@code CellGroup}s are identical. Two {@code CellGroup}s
 	 * are said to be equal if each of the following of their properties are also equal:
 	 * <ul>
-	 * <li>The <i>ids</i> of the {@code CellGroup}s.</li>
 	 * <li>The <i>sizes</i> of the {@code CellGroup}s</li>
 	 * <li>The <i>cells</i> {@code Map}s of the {@code CellGroup}s .</li>
 	 * </ul>
@@ -253,13 +251,6 @@ public interface CellGroup<V> extends Formattable, Iterable<Cell<V>>, Comparable
 	 */
 	@Override
 	boolean equals(Object obj);
-	
-	/**
-	 * Returns a {@code String} that identifies this {@code CellGroup} in a given {@code LatinSquare}.
-	 * 
-	 * @return the unique identifier of this {@code CellGroup} in a {@code LatinSquare}.
-	 */
-	String id();
 	
 	/**
 	 * Returns the number of {@code Cell}s in this {@code CellGroup}. This should normally be equal

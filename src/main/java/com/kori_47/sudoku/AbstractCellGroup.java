@@ -15,17 +15,17 @@ import java.util.Map;
 /**
  * <p>This is a skeletal implementation of the {@link CellGroup} interface.
  * 
- * <p><i><strong>Note:</strong> This class has a natural ordering that is inconsistent with equals.</i>
- * 
  * @param <V> the type of value held by the {@link Symbol}s supported by this {@link CellGroup}.
  * 
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *
  * @since Oct 19, 2019, 1:20:22 AM
+ * 
+ * @see CellGroup
+ * @see LatinSquare
  */
 public abstract class AbstractCellGroup<V> implements CellGroup<V> {
 	
-	private final String id;
 	private final int size;
 	
 	// protected values that concrete classes need to access 
@@ -38,7 +38,6 @@ public abstract class AbstractCellGroup<V> implements CellGroup<V> {
 	 * This constructor initializes the {@code id}, {@code size} and {@code cells} properties of a
 	 * {@link CellGroup} with the provided values.
 	 * 
-	 * @param id the identifier of this {@code CellGroup}.
 	 * @param size the size of this {@code CellGroup}.
 	 * @param cells the {@code Cell}s that this {@code CellGroup} will have.
 	 * 
@@ -47,50 +46,19 @@ public abstract class AbstractCellGroup<V> implements CellGroup<V> {
 	 * given {@code cells} is less than {@code size}.
 	 * 
 	 * @implSpec
-	 * <p> This constructor first validates that {@code id} is not {@code null} then assigns the value to
-	 * a final instance field with the same name. It then validates that {@code size >= 1} before
-	 * assigning it to a final instance field. Lastly, it validates that {@code cells} is not {@code null}
-	 * and that {@code cells.size() >= size} before sorting and creating a defensive copy of {@code cells}
-	 * on a {@link LinkedHashMap} and assiging the newly copied {@code Map} to a protected final instance
-	 * field named {@code cells}.
+	 * <p> This constructor first validates that {@code size >= 1} before assigning it to a final instance
+	 * field. It then validates that {@code cells} is not {@code null} and that {@code cells.size() >= size}
+	 * before sorting and creating a defensive copy of {@code cells} on a {@link LinkedHashMap} and assiging
+	 * the newly copied {@code Map} to a protected final instance field named {@code cells}.
 	 * 
 	 * <p> This constructor also creates a final instance field {@code cellsView} that returns an unmodifiable
 	 * view of the {@code cells} {@code Map}. This field is then used as the return value of the {@link #cells()}
 	 * method which prevents modification of the cells in this {@code CellGroup}.  
 	 */
-	protected AbstractCellGroup(String id, int size, Map<String, Cell<V>> cells) {
-		this.id = requireNonNull(id, "id cannot be null.");
+	protected AbstractCellGroup(int size, Map<String, Cell<V>> cells) {
 		this.size = requireGreaterThanOrEqualTo(1, size, "size must be greater than or equal to 1.");
 		this.cells = validateCells(cells, this.size);
 		this.cellsView = unmodifiableMap(this.cells);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws NullPointerException {@inheritDoc}
-	 * @throws ClassCastException {@inheritDoc}
-	 * 
-	 * @implSpec
-	 * This implementation compares this {@link CellGroup} with another by their {@code id}s. That is, this
-	 * implementation is equivalent to, for this {@code cellGroup}:
-	 * <pre> {@code
-	 * return cellGroup.id().compareTo(other.id());
-	 * }
-	 * </pre>
-	 */
-	@Override
-	public int compareTo(CellGroup<V> other) {
-		requireNonNull(other, "other cannot be null.");
-		return id.compareTo(other.id());
-	}
-
-	/**
-	* {@inheritDoc}
-	*/
-	@Override
-	public String id() {
-		return id;
 	}
 
 	/**
@@ -115,13 +83,13 @@ public abstract class AbstractCellGroup<V> implements CellGroup<V> {
 	 * @implSpec
 	 * This implementation is equivalent to, for this {@code cellGroup}:
 	 * <pre> {@code
-	 * return cellGroup.id().hashCode() + Integer.hashCode(cellGroup.size()) + cellGroup.cells().hashCode();
+	 * return Integer.hashCode(cellGroup.size()) + cellGroup.cells().hashCode();
 	 * }
 	 * </pre>
 	 */
 	@Override
 	public int hashCode() {
-		return id.hashCode() + Integer.hashCode(size) + cells.hashCode();
+		return Integer.hashCode(size) + cells.hashCode();
 	}
 
 	/**
@@ -138,7 +106,7 @@ public abstract class AbstractCellGroup<V> implements CellGroup<V> {
 		if (this == obj) return true;
 		if (!(obj instanceof CellGroup)) return false;
 		CellGroup<?> _obj = (CellGroup<?>) obj;
-		return size == _obj.size() && id.equals(_obj.id()) && cells.equals(_obj.cells());
+		return size == _obj.size() && cells.equals(_obj.cells());
 	}
 
 	/**
