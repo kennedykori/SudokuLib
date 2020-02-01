@@ -21,10 +21,9 @@ import java.util.Set;
  * </pre>
  * 
  * <p>
- * A {@code Cell} can be marked as an initial cell making it non editable until it is changed back to a 
- * normal cell. Attempting to modify an initial cell should result in the {@link InitialCellModificationException}
- * being thrown. Modification in this context refers to changing a cell's {@code Symbol} and making or
- * removing notes on the cell.
+ * A {@code Cell} can be marked as a clue cell making it non editable until it is changed back to a normal cell.
+ * Attempting to modify an clue cell should result in the {@link ClueCellModificationException} being thrown.
+ * Modification in this context refers to changing a cell's {@code Symbol} and making or removing notes on the cell.
  * </p>
  * 
  * <p>
@@ -172,31 +171,31 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>> {
 
 	/**
 	 * <p> Changes the {@link Symbol} of this cell to a new value. If this is an initial cell, then this call 
-	 * will fail with an {@link InitialCellModificationException}. {@code null} values are allowed.
+	 * will fail with an {@link ClueCellModificationException}. {@code null} values are allowed.
 	 * 
 	 * @param value the new {@code Symbol} to set on this cell.
 	 * 
-	 * @throws InitialCellModificationException if this is an initial cell.
+	 * @throws ClueCellModificationException if this is an initial cell.
  	 */
 	void changeSymbol(Symbol<V> value);
 	
 	/**
 	 * <p>
-	 * Marks this cell as an initial cell and sets the given {@link Symbol} as the {@code Symbol} for this
-	 * cell. Any modifications attempts on this cell after this call will result in an {@link InitialCellModificationException}
+	 * Marks this cell as a clue cell and sets the given {@link Symbol} as the {@code Symbol} for this cell. Any
+	 * modifications attempts on this cell after this call will result in an {@link ClueCellModificationException}
 	 * being thrown until this cell is changed back to an normal cell.
 	 * </p>
 	 * 
 	 * <p>
-	 * Multiple calls of this method on an initial cell are allowed and should not throw an
-	 * {@code InitialCellModificationException}.
+	 * Multiple calls of this method on a cell that is already marked as a clue cell are allowed and should not
+	 * throw a {@code ClueCellModificationException}.
 	 * </p>
 	 * 
-	 * @param initialValue the {@code Symbol} to set to this initial cell.
+	 * @param initialValue the {@code Symbol} to set to this clue cell.
 	 * 
 	 * @throws NullPointerException if {@code initialValue} is {@code null}.
 	 */
-	void markInitial(Symbol<V> initialValue);
+	void makeClueCell(Symbol<V> initialValue);
 	
 	/**
 	 * Marks this cell as a normal cell allowing modification of the cell. 
@@ -205,15 +204,16 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>> {
 	 * Multiple calls of this method on a normal cell are allowed and should return cleanly.
 	 * </p>
 	 */
-	void markNormal();
+	void makeNormalCell();
 	
 	/**
-	 * Adds the given {@link Symbol} as a possible value for this cell. Adding an already
-	 * noted {@code Symbol} should have no effect and should result in a clean return.
+	 * Adds the given {@link Symbol} as a possible value for this cell. Adding an already noted {@code Symbol} should
+	 * have no effect and should result in a clean return.
 	 * 
 	 * @param note the {@code Symbol} to mark as a possible value for this cell.
 	 * 
 	 * @throws NullPointerException if {@code note} is {@code null}.
+	 * @throws ClueCellModificationException if this a clue cell.
 	 */
 	void makeNote(Symbol<V> note);
 	
@@ -226,13 +226,14 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>> {
 	 * of this cell.
 	 * 
 	 * @throws NullPointerException if {@code note} is {@code null}.
+	 * @throws ClueCellModificationException if this a clue cell.
 	 */
 	void removeNote(Symbol<V> note);
 
 	/**
 	 * Resets this {@code Cell} by changing the {@code Cell}s {@link Symbol} to a given value,
 	 * clears any notes that this {@code Cell} might have and reverts this {@code Cell} to
-	 * a normal {@code Cell} if this is an initial {@code Cell}.
+	 * a normal {@code Cell} if this is marked as a clue {@code Cell}.
 	 * 
 	 * @param symbol the {@code Symbol} to set this {@code Cell} to after the reset. {@code null}
 	 * is allowed and should not result in a {@code NullPointerException}.
@@ -242,7 +243,7 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>> {
 	/**
 	 * Clears this {@code Cell} by changing the {@code Cell}s {@link Symbol} to a {@code null}
 	 * value, clears any notes that this {@code Cell} might have and reverts this {@code Cell} to
-	 * a normal {@code Cell} if this is an initial {@code Cell}.
+	 * a normal {@code Cell} if this is marked as a clue {@code Cell}.
 	 * 
 	 * @implSpec
 	 * The default implementation is equivalent to, for this {@code cell}:
@@ -295,10 +296,10 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>> {
 	Set<Symbol<V>> notes();
 	
 	/**
-	 * Indicates whether this cell is marked as an initial cell or not. Returns {@code true} if this
-	 * is an initial cell or {@code false} otherwise.
+	 * Indicates whether this cell is marked as a clue cell or not. Returns {@code true} if this
+	 * is an clue cell or {@code false} otherwise.
 	 * 
-	 * @return {@code true} if this is an initial cell or {@code false} otherwise.
+	 * @return {@code true} if this is a clue cell or {@code false} otherwise.
 	 */
-	boolean isInitial();
+	boolean isClueCell();
 }

@@ -183,24 +183,24 @@ public interface CellGroup<V> extends Formattable, Iterable<Cell<V>>, Comparable
 	}
 
 	/**
-	 * Returns a {@link Set} of all the {@link Cell#isInitial() initial} {@link Cell}s in this
+	 * Returns a {@link Set} of all the {@link Cell#isClueCell() clue} {@link Cell}s in this
 	 * {@code CellGroup}. Modification of the returned {@code Set} should not alter the contents of 
 	 * this {@code CellGroup}. Implementations of this interface can also choose to return an unmodifiable
 	 * {@code Set} instead to prevent modifications.
 	 * 
-	 * @return a {@code Set} of all the initial {@code Cell}s in this {@code CellGroup}.
+	 * @return a {@code Set} of all the clue {@code Cell}s in this {@code CellGroup}.
 	 * 
 	 * @implSpec
 	 * The default implementation is equivalent to, for this {@code cellGroup}:
 	 * <pre> {@code
 	 * return cellGroup.cells().values().stream()
-	 * 		.filter(cell -> cell.isInitial())
+	 * 		.filter(cell -> cell.isClueCell())
 	 * 		.collect(Collectors.toSet());
 	 * }
 	 * </pre>
 	 */
-	default Set<Cell<V>> initialCells() {
-		return cells().values().stream().filter(cell -> cell.isInitial()).collect(toSet());
+	default Set<Cell<V>> clueCells() {
+		return cells().values().stream().filter(cell -> cell.isClueCell()).collect(toSet());
 	}
 
 	/**
@@ -214,13 +214,13 @@ public interface CellGroup<V> extends Formattable, Iterable<Cell<V>>, Comparable
 	 * The default implementation is equivalent to, for this {@code cellGroup}:
 	 * <pre> {@code
 	 * return cellGroup.cells().values().stream()
-	 * 		.filter(cell -> !cell.isInitial())
+	 * 		.filter(cell -> !cell.isClueCell())
 	 * 		.collect(Collectors.toSet());
 	 * }
 	 * </pre>
 	 */
 	default Set<Cell<V>> normalCells() {
-		return cells().values().stream().filter(cell -> !cell.isInitial()).collect(toSet());
+		return cells().values().stream().filter(cell -> !cell.isClueCell()).collect(toSet());
 	}
 
 	/**
