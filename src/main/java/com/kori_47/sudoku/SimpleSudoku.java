@@ -20,7 +20,7 @@ import java.util.Set;
  *
  * @since Wed, 1 Jan 2020 12:55:30
  */
-public class SimpleSudoku<V> extends SimpleLatinSquare<V> implements Sudoku<V> {
+class SimpleSudoku<V> extends SimpleLatinSquare<V> implements Sudoku<V> {
 	
 	private static final String DEFAULT_SUDOKU_ID = "SDK";
 

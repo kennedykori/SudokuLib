@@ -25,7 +25,7 @@ import java.util.stream.Stream;
  *
  * @since Mon, 30 Dec 2019 23:42:00
  */
-public class SimpleLatinSquare<V> implements LatinSquare<V> {
+class SimpleLatinSquare<V> implements LatinSquare<V> {
 	
 	private static final String DEFAULT_LATIN_SQUARE_ID = "LS";
 		
