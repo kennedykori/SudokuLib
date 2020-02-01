@@ -19,16 +19,11 @@ import java.util.stream.Stream;
 /**
  * <p>This is a simple implementation of the {@link LatinSquare} interface.
  * 
- * <p><i><strong>Note:</strong> This class has a natural ordering that is inconsistent with equals.</i>
- * 
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *
  * @since Mon, 30 Dec 2019 23:42:00
  */
-class SimpleLatinSquare<V> implements LatinSquare<V> {
-	
-	private static final String DEFAULT_LATIN_SQUARE_ID = "LS";
-		
+class SimpleLatinSquare<V> implements LatinSquare<V> {	
 
 	// ================================================
 	// PRIMARY FIELDS
@@ -133,12 +128,6 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 	}
 
 	@Override
-	public int compareTo(CellGroup<V> other) {
-		requireNonNull(other, "other cannot be null.");
-		return Integer.compare(size, other.size());
-	}
-
-	@Override
 	public LatinSquare<V> flipHorizontally() {
 		SimpleLatinSquare<V> nLS = new SimpleLatinSquare<>(this); // new LatinSquare 
 		for (int index = 0, index2 = (size - 1); index < size; index++, index2--) {
@@ -176,11 +165,6 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 		return newLatinSquare;
 	}
 	
-	@Override
-	public String id() {
-		return DEFAULT_LATIN_SQUARE_ID;
-	}
-
 	@Override
 	public int size() {
 		return size;
@@ -232,14 +216,14 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 	 * @implSpec
 	 * This implementation is equivalent to, for this {@code ls}:
 	 * <pre> {@code
-	 * return ls.id().hashCode() + Integer.hashCode(ls.size()) + ls.emptySymbol().hashCode() + ls.cells().hashCode()
+	 * return Integer.hashCode(ls.size()) + ls.emptySymbol().hashCode() + ls.cells().hashCode()
 			+ ls.columns().hashCode() + ls.rows().hashCode() + ls.symbols().hashCode();
 	 * }
 	 * </pre>
 	 */
 	@Override
 	public int hashCode() {
-		return id().hashCode() + Integer.hashCode(size) + emptySymbol.hashCode() + cells.hashCode()
+		return Integer.hashCode(size) + emptySymbol.hashCode() + cells.hashCode()
 			+ columns.hashCode() + rows.hashCode() + symbols.hashCode();
 	}
 
@@ -249,7 +233,7 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 	 * @implSpec
 	 * This implementation first checks if the specified object is this {@code LatinSquare}; if so it
 	 * returns {@code true}. Then it checks if the specified object is a {@code LatinSquare} whose size,
-	 * id, empty {@code Symbol}, symbols {@code Map}, columns {@code Map}, rows {@code Map} and cells {@code Map}
+	 * empty {@code Symbol}, symbols {@code Map}, columns {@code Map}, rows {@code Map} and cells {@code Map}
 	 * are equal to the equivalent properties of this {@code LatinSquare}; if not, it returns {@code false}. If so,
 	 * it returns {@code true}.
 	 */
@@ -258,9 +242,8 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 		if (this == obj) return true;
 		if (!(obj instanceof LatinSquare)) return false;
 		LatinSquare<?> _obj = (LatinSquare<?>) obj;
-		return size == _obj.size() && id().equals(_obj.id()) && emptySymbol.equals(_obj.emptySymbol())
-				&& symbols.equals(_obj.symbols()) && columns.equals(_obj.columns()) && rows.equals(_obj.rows())
-				&& cells.equals(_obj.cells());
+		return size == _obj.size() && emptySymbol.equals(_obj.emptySymbol()) && symbols.equals(_obj.symbols())
+				&& columns.equals(_obj.columns()) && rows.equals(_obj.rows()) && cells.equals(_obj.cells());
 	}
 	
 	@Override

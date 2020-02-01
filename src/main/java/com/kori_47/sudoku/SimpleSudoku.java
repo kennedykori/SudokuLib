@@ -14,16 +14,12 @@ import java.util.Set;
 /**
  * <p>This is a simple implementation of the {@link Sudoku} interface.
  * 
- * <p><i><strong>Note:</strong> This class has a natural ordering that is inconsistent with equals.</i>
- * 
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *
  * @since Wed, 1 Jan 2020 12:55:30
  */
 class SimpleSudoku<V> extends SimpleLatinSquare<V> implements Sudoku<V> {
 	
-	private static final String DEFAULT_SUDOKU_ID = "SDK";
-
 	// ================================================
 	// PRIMARY FIELDS
 	// ================================================
@@ -121,11 +117,6 @@ class SimpleSudoku<V> extends SimpleLatinSquare<V> implements Sudoku<V> {
 		});
 		return newSudoku;
 	}
-	
-	@Override
-	public String id() {
-		return DEFAULT_SUDOKU_ID;
-	}
 
 	@Override
 	public SudokuVariant variant() {
@@ -148,15 +139,15 @@ class SimpleSudoku<V> extends SimpleLatinSquare<V> implements Sudoku<V> {
 	 * @implSpec
 	 * This implementation is equivalent to, for this {@code sdk}:
 	 * <pre> {@code
-	 * return sdk.id().hashCode() + sdk.variant().hashCode() + sdk.emptySymbol().hashCode() + sdk.cells().hashCode()
+	 * return sdk.variant().hashCode() + sdk.emptySymbol().hashCode() + sdk.cells().hashCode()
 			+ sdk.columns().hashCode() + sdk.rows().hashCode() + sdk.symbols().hashCode() + sdk.blocks().hashCode();
 	 * }
 	 * </pre>
 	 */
 	@Override
 	public int hashCode() {
-		return id().hashCode() + variant.hashCode() + emptySymbol().hashCode() + cells.hashCode()
-			+ columns.hashCode() + rows.hashCode() + symbols.hashCode() + blocks.hashCode();
+		return variant.hashCode() + emptySymbol().hashCode() + cells.hashCode() + columns.hashCode() + rows.hashCode()
+			+ symbols.hashCode() + blocks.hashCode();
 	}
 
 	/**
@@ -173,9 +164,9 @@ class SimpleSudoku<V> extends SimpleLatinSquare<V> implements Sudoku<V> {
 		if (this == obj) return true;
 		if (!(obj instanceof Sudoku)) return false;
 		Sudoku<?> _obj = (Sudoku<?>) obj;
-		return id().equals(_obj.id()) && emptySymbol().equals(_obj.emptySymbol()) && variant.equals(_obj.variant())
-				&& symbols.equals(_obj.symbols()) && columns.equals(_obj.columns()) && rows.equals(_obj.rows())
-				&& blocks.equals(_obj.blocks()) && cells.equals(_obj.cells());
+		return emptySymbol().equals(_obj.emptySymbol()) && variant.equals(_obj.variant()) && symbols.equals(_obj.symbols())
+				&& columns.equals(_obj.columns()) && rows.equals(_obj.rows()) && blocks.equals(_obj.blocks())
+				&& cells.equals(_obj.cells());
 	}
 	
 	/**

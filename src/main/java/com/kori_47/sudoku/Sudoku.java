@@ -31,7 +31,6 @@ public interface Sudoku<V> extends LatinSquare<V> {
 	 * Returns the hash code value for this {@code Sudoku}. The hash code of a {@code Sudoku} should
 	 * be derived from the hash codes of the following properties of a {@code Sudoku}: 
 	 * <ul>
-	 * <li>The hash code value of this {@code Sudoku}'s <i>{@link #id() id}</i>.</li>
 	 * <li>The hash code value of this {@code Sudoku}'s <i>{@link #variant() variant}</i>.</li>
 	 * <li>The hash code value of this {@code Sudoku}'s <i>{@link #emptySymbol() emptySymbol}</i>.</li>
 	 * <li>The hash code value of this {@code Sudoku}'s <i>{@link #cells() cells}</i> {@code Map}.</li>
@@ -51,7 +50,6 @@ public interface Sudoku<V> extends LatinSquare<V> {
 	 * given object is also a {@code Sudoku} and the two {@code Sudoku}s are identical. Two {@code Sudoku}s are
 	 * said to be equal if each of the following of their properties are also equal:
 	 * <ul>
-	 * <li>The <i>{@link #id() ids}</i> of the {@code Sudoku}s.</li>
 	 * <li>The <i>{@link #variant() variants}</i> of the {@code Sudoku}s.</li>
 	 * <li>The <i>{@link #emptySymbol() emptySymbols}</i> of the {@code Sudoku}s.</li>
 	 * <li>The <i>{@link #cells() cells}</i> {@code Map}s of the {@code Sudoku}s.</li>

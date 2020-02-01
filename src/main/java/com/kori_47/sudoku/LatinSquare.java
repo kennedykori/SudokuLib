@@ -123,7 +123,6 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 * Returns the hash code value for this {@code LatinSquare}. The hash code of a {@code LatinSquare} should
 	 * be derived from the hash codes of the following properties of a {@code LatinSquare}: 
 	 * <ul>
-	 * <li>The hash code value of this {@code LatinSquare}'s <i>{@link #id() id}</i>.</li>
 	 * <li>The hash code value of this {@code LatinSquare}'s <i>{@link #size() size}</i> as returned by {@link Integer#hashCode(int)}</li>
 	 * <li>The hash code value of this {@code LatinSquare}'s <i>{@link #emptySymbol() emptySymbol}</i>.</li>
 	 * <li>The hash code value of this {@code LatinSquare}'s <i>{@link #cells() cells}</i> {@code Map}.</li>
@@ -142,7 +141,6 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 * given object is also a {@code LatinSquare} and the two {@code LatinSquare}s are identical. Two
 	 * {@code LatinSquare}s are said to be equal if each of the following of their properties are also equal:
 	 * <ul>
-	 * <li>The <i>{@link #id() ids}</i> of the {@code LatinSquare}s.</li>
 	 * <li>The <i>{@link #size() sizes}</i> of the {@code LatinSquare}s</li>
 	 * <li>The <i>{@link #emptySymbol() emptySymbols}</i> of the {@code LatinSquare}s.</li>
 	 * <li>The <i>{@link #cells() cells}</i> {@code Map}s of the {@code LatinSquare}s.</li>
