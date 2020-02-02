@@ -19,7 +19,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @since Oct 17, 2019, 12:15:56 AM
  */
-public interface Symbol<V> extends Comparable<Symbol<V>> {
+public interface Symbol<V> extends Comparable<Symbol<V>>, Unique<Integer> {
 	
 	/**
 	 * Performs order and equality comparisons on two {@code Symbol}s.
@@ -38,13 +38,13 @@ public interface Symbol<V> extends Comparable<Symbol<V>> {
      * The default implementation performs comparison based on the {@link #id() ids}
      * of the two symbols. That is, the implementation is equivalent to:
      * <pre> {@code
-	 * return Integer.compare(this.id(), other.id());
+	 * return this.id().compare(other.id());
 	 * }
 	 * </pre>
 	 */
 	@Override
 	default int compareTo(Symbol<V> other) {
-		return Integer.compare(id(), requireNonNull(other, "other cannot be null.").id());
+		return id().compareTo(requireNonNull(other, "other cannot be null.").id());
 	}
 	
 	/**
@@ -52,7 +52,7 @@ public interface Symbol<V> extends Comparable<Symbol<V>> {
 	 * 
 	 * @return the id of this symbol.
 	 */
-	int id();
+	Integer id();
 	
 	/**
 	 * Returns the value of this symbol.

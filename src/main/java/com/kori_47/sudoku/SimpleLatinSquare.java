@@ -288,7 +288,8 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 		// sort the symbols and create a defensive copy of the symbols Map
 		return symbols.stream()
 				.sorted()
-				.collect(toMap(symbol -> Integer.valueOf(symbol.id()),
+				.collect(toMap(
+						symbol -> symbol.id(),
 						symbol -> symbol,
 						(oldValue, newValue) -> newValue,
 						() -> new LinkedHashMap<Integer, Symbol<V>>(size)));

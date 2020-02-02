@@ -36,9 +36,9 @@ public final class Symbols {
 	 * 
 	 * @return a new {@code Symbol} with the given {@code id} and {@code value}.
 	 * 
-	 * @throws NullPointerException if {@code value} is {@code null}.
+	 * @throws NullPointerException if {@code id} or/and {@code value} is/are {@code null}.
 	 */
-	public static final <V> Symbol<V> of(int id, V value) {
+	public static final <V> Symbol<V> of(Integer id, V value) {
 		return new SimpleSymbol<V>(id, value);
 	}
 
@@ -51,7 +51,7 @@ public final class Symbols {
 	 * @see #numberSymbolsUpTo(int)
 	 */
 	public static final Symbol<Integer> emptyNumberSymbol() {
-		return of(0, Integer.valueOf(0));
+		return of(Integer.valueOf(0), Integer.valueOf(0));
 	}
 
 	/**
@@ -72,7 +72,8 @@ public final class Symbols {
 	public static final Set<Symbol<Integer>> numberSymbolsUpTo(int upTo) {
 		requireGreaterThanOrEqualTo(1, upTo, "upTo must be greater than or equal to 1.");
 		return range(1, upTo)
-				.mapToObj(value -> of(value, Integer.valueOf(value)))
+				.mapToObj(Integer::valueOf)
+				.map(value -> of(value, value))
 				.collect(toSet());
 	}
 
@@ -86,7 +87,7 @@ public final class Symbols {
 	 * @see #letterSymbolsUpTo(int)
 	 */
 	public static final Symbol<Character> emptyLetterSymbol() {
-		return of(0, ' ');
+		return of(Integer.valueOf(0), ' ');
 	}
 
 	/**
@@ -122,7 +123,7 @@ public final class Symbols {
 	 * @return a new letter {@code Symbol} constructed from the given {@code Symbol}.
 	 */
 	private static final Symbol<Character> nextLetterSymbol(int offset) {
-		return of(offset, (char)('A' + (--offset)));
+		return of(Integer.valueOf(offset), (char)('A' + (--offset)));
 	}
 	/**
 	 * This is a simple implementation of the {@link Symbol} interface.
@@ -135,7 +136,7 @@ public final class Symbols {
 	 */
 	private static class SimpleSymbol<V> implements Symbol<V> {
 
-		private final int id;
+		private final Integer id;
 		private final V value;
 		private final int hashCode;
 		
@@ -145,17 +146,17 @@ public final class Symbols {
 		 * @param id the {@code id} of the new {@code Symbol}.
 		 * @param value the {@code value} of the new {@code Symbol}.
 		 * 
-		 * @throws NullPointerException if {@code value} is {@code null}.
+		 * @throws NullPointerException if {@code id} or/and {@code value} is/are {@code null}.
 		 */
-		SimpleSymbol(int id, V value) {
-			this.id = id;
+		SimpleSymbol(Integer id, V value) {
+			this.id = requireNonNull(id, "id cannot be null.");
 			this.value = requireNonNull(value, "value cannot be null.");
 			// cache the hash code
 			this.hashCode = hash(Integer.valueOf(this.id), this.value);
 		}
 		
 		@Override
-		public int id() {
+		public Integer id() {
 			return id;
 		}
 

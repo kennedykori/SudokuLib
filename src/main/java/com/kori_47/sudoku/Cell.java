@@ -37,7 +37,7 @@ import java.util.Set;
  *
  * @since Oct 17, 2019, 12:38:39 AM
  */
-public interface Cell<V> extends Formattable, Comparable<Cell<V>> {
+public interface Cell<V> extends Formattable, Comparable<Cell<V>>, Unique<String> {
 
 	/**
 	 * {@inheritDoc}
@@ -175,7 +175,7 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>> {
 	 * 
 	 * @param value the new {@code Symbol} to set on this cell.
 	 * 
-	 * @throws ClueCellModificationException if this is an initial cell.
+	 * @throws ClueCellModificationException if this is a clue cell.
  	 */
 	void changeSymbol(Symbol<V> value);
 	
