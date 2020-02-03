@@ -128,11 +128,12 @@ public final class Symbols {
 	/**
 	 * This is a simple implementation of the {@link Symbol} interface.
 	 * 
+	 * @param <V> the type of value that this {@code Symbol} supports.
+	 * 
 	 * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
 	 *
 	 * @since Sat, 28 Dec 2019 21:43:37
 	 * 
-	 * @param <V> the type of value that this {@code Symbol} supports.
 	 */
 	private static class SimpleSymbol<V> implements Symbol<V> {
 
@@ -175,7 +176,7 @@ public final class Symbols {
 			if (obj == this) return true;
 			if (!(obj instanceof Symbol)) return false;
 			Symbol<?> _obj = (Symbol<?>)obj;
-			return id == _obj.id() && value.equals(_obj.value());
+			return id.equals(_obj.id()) && value.equals(_obj.value());
 		}
 		
 		@Override
