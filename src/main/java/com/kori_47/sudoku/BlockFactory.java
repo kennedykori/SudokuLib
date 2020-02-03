@@ -9,7 +9,7 @@ import java.util.Map;
  * An object that creates new {@link Block}s. Using cell factories avoids hardwiring and enables clients
  * to use special {@code Block} subclasses.
  * 
- * <p>This is a functional interface whose functional method is {@link #createBlock(String, int, Map, Cell, int, int)}.
+ * <p>This is a functional interface whose functional method is {@link #createBlock(String, int, Map, Cell, Cell)}.
  * 
  * @param <V> the type of value held by the {@link Symbol}s supported by this {@code Block}.
  * 
@@ -28,10 +28,9 @@ public interface BlockFactory<V> {
 	 * @param size the size of the new {@code Block}.
 	 * @param cells the {@link Cell}s of the new {@code Block}.
 	 * @param startCell the first {@code Cell} of this {@code Block}.
-	 * @param blockRows the number of {@link Row}s in this {@code Block}.
-	 * @param blockColumns the number of {@link Column}s in this {@code Block}.
+	 * @param endCell the last {@code Cell} of this {@code Block}.
 	 * 
 	 * @return a new {@code Block} with the given properties.
 	 */
-	Block<V> createBlock(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, int blockRows, int blockColumns);
+	Block<V> createBlock(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, Cell<V> endCell);
 }

@@ -5,7 +5,6 @@ package com.kori_47.sudoku;
 
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toMap;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -173,45 +172,18 @@ class SimpleSudoku<V> extends SimpleLatinSquare<V> implements Sudoku<V> {
 	 * Initializes this {@code Sudoku}s blocks
 	 */
 	private final void initBlocks() {
-		// Initialize blocks
-		for (int index = 0, x = 0, y = 0; index < variant.size(); index++) { 
-			// extract the cells of the next block and store them on a Map
-			Map<String, Cell<V>> blockCells = extractBlockCells(x, y);
-			// create the next block
-			Block<V> block = blockFactory.createBlock(
-					Integer.toString(index),
-					variant.size(),
-					blockCells,
-					getCell(x, y).get(),
-					variant.blockRows(), variant.blockColumns());
-			// add the created block to the blocks Map
-			blocks.put(block.id(), block);
-			
-			// calculate and set the next blocks starting coordinates
-			if ((index + 1) % variant.xBlocks() == 0) { // if we have reached the last column?
-				x = 0; // then reset to the index of the first column
-				y += variant.blockColumns(); // and move up to the next row
-			} else {
-				x += variant.blockColumns(); // move to the start of the next block
-			}
-		}
-	}
-	
-	/**
-	 * Extract and return a {@code Map} of {@code Block} {@code Cell}s given the starting coordinates
-	 * of the {@code Block}.
-	 * 
-	 * @param x the starting x coordinate of the {@code Block}; 
-	 * @param y the starting y coordinate of the {@code Block};
-	 * 
-	 * @return a {@code Map} of the {@code Cells} that belong to the stated {@code Block}.
-	 */
-	private final Map<String, Cell<V>> extractBlockCells(int x, int y) {
-		// find the ends of the next block
-		final int x1 = x + variant.blockColumns(), y1 = y + variant.blockRows();
-		return cells.values().stream()
-				.filter(cell -> cell.x() >= x && x < x1)
-				.filter(cell -> cell.y() >= y && y < y1)
-				.collect(toMap(cell -> cell.id(), cell -> cell));
+		// create the blocks using this class SudokuVariant
+		Set<Block<V>> createdBlocks = requireNonNull(variant.createBlocks(this), "'variant.createBlocks()' shouldn't return null.");
+		
+		// make sure the createdBlocks are the correct number
+		if (createdBlocks.size() != variant.size())
+			throw new SudokuException(
+					String.format("The number of blocks created (%d) is less than the expected number (%d).", 
+							createdBlocks.size(),
+							variant.size()
+						));
+		
+		// copy the createdBlocks into this.blocks
+		createdBlocks.forEach(block -> blocks.put(block.id(), block));
 	}
 }
