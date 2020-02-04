@@ -4,13 +4,11 @@
 package com.kori_47.sudoku;
 
 import static java.util.Collections.unmodifiableSet;
-import static java.util.Objects.hash;
 import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,11 +27,10 @@ public final class Cells {
 	/**
 	 * default Cell Comparator
 	 */
-	private static final Comparator<Cell<?>> DEFAULT_CELL_COMPARATOR = (cell1, cell2) -> Integer.compare(
-				// TODO Needs further testing to ensure the comparison gives excepted results
-				Integer.compare(cell1.y(), cell2.y()),
-				Integer.compare(cell1.x(), cell2.x())
-			);
+	// TODO Needs further testing to ensure the comparison gives excepted results
+	private static final Comparator<Cell<?>> DEFAULT_CELL_COMPARATOR = Comparator.<Cell<?>>comparingInt(Cell::y)
+			.thenComparingInt(Cell::x)
+			.thenComparing(Cell::id);
 	
 	/**
 	 * Returns a new {@link Cell} with the given properties.
@@ -70,8 +67,180 @@ public final class Cells {
 		return new SimpleCell<V>(id, x, y, value);
 	}
 	
+	/**
+	 * Returns a default {@link Comparator} that can be used to compare two {@link Cell}s for equality
+	 * and ordering. The {@code Comparator} returned performs comparisons based on the following properties
+	 * of a {@code Cell}:
+	 * <ul>
+	 * <li>The {@link Cell#id() id} of a {@code Cell}.</li>
+	 * <li>The {@link Cell#x() x coordinate} of a {@code Cell}.</li>
+	 * <li>The {@link Cell#y() y coordinate} of a {@code Cell}.</li>
+	 * </ul>
+	 * 
+	 * <p>
+	 * The {@code Comparator} returned is guaranteed to be consistent with the {@link Cell#equals(Object) equals}
+	 * method of a {@link Cell} as long as the {@code Cell}'s equals method implementation maintains the strict contract
+	 * of that method. It should also be noted that since the {@code Comparator} returned by this method includes the {@code id}
+	 * of a {@code Cell} when performing comparisons, it will work best with {@code Cell}s who's {@code id}s are part of a sequence.
+	 * 
+	 * @return a {@code Comparator} that can be used for {@code Cell} comparisons.
+	 * 
+	 * @see Cell#compareTo(Cell)
+	 * @see Cell#equals(Object)
+	 * 
+	 * @apiNote
+	 * The {@code Comparator} returned by this method orders {@code Cell}s such that {@code Cell}s with higher {@code x} and {@code y}
+	 * coordinates are considered to be "larger" than their counterparts with smaller coordinate values. The {@code y} coordinate has
+	 * a higher weight than the {@code x coordinate} so that for any two {@code Cells}, {@code cell1} and  {@code cell2}, where the following
+	 * is {@code true}, {@code cell2.y() > cell1.y()}, {@code cell2} will always be greater than {@code cell1} even if {@code cell1} has a
+	 * higher value for the {@code x} coordinate than {@code cell2}, i.e {@code cell1.x() > cell2.x()}. If both {@code Cell}s have the same
+	 * values for both the {@code x} and {@code y} coordinates, then {@code id}s of the {@code Cell}s are compared to get the final result.
+	 * Consider the following:
+     * 
+     * <p>
+     * Assume we have a {@code Cell} implementation {@code CellImp} with the following
+     * constructor:
+     * <pre> 
+     * <code>
+     * public CellImp(String id, int x, int y) {
+     * 	this.id = id;  // where id is the identifier of this cell 
+     * 	this.x = x;    // where x is the x coordinate of this cell
+     * 	this.y = y;    // where y is the y coordinate of this cell
+     * }
+     * </code>
+     * </pre>
+     * 
+     * Then consider the following code snippet:
+     * 
+     * <pre> {@code
+	 * CellImp<V> a = new CellImp<>("1", 2, 3);
+	 * CellImp<V> b = new CellImp<>("2", 3, 2);
+	 * CellImp<V> c = new CellImp<>("3", 3, 3);
+	 * CellImp<V> d = new CellImp<>("4", 2, 0);
+	 * CellImp<V> e = new CellImp<>("5", 2, 0);
+	 * 
+	 * System.out.println(a.compare(b));
+	 * System.out.println(a.compare(c));
+	 * System.out.println(b.compare(c));
+	 * System.out.println(c.compare(d));
+	 * System.out.println(e.compare(d));
+	 * }
+	 * </pre>
+	 * 
+	 * Then the code snippet above should produce the following output:
+	 * <pre> {@code
+	 * 1
+	 * -1
+	 * -1
+	 * 1
+	 * 1
+	 * }
+	 * </pre>
+	 * 
+	 * where {@code 1} can be any positive {@code Integer} and {@code -1} can be
+	 * any negative {@code Integer}.
+	 * </p>
+	 */
 	public static final Comparator<Cell<?>> defaultComparator() {
 		return DEFAULT_CELL_COMPARATOR;
+	}
+	
+	/**
+	 * Returns the hash code of the given {@link Cell}. This method uses the following properties of a {@code Cell} to
+	 * calculate it's hash code:
+	 * <ul>
+	 * <li>The hash code of the {@link Cell#id() id} of the {@code Cell}.</li>
+	 * <li>The hash code of the {@link Cell#x() x coordinate} of the {@code Cell}.</li>
+	 * <li>The hash code of the {@link Cell#y() y coordinate} of the {@code Cell}.</li>
+	 * </ul>
+	 * 
+	 * <p>
+	 * The hash code value returned by this method is guaranteed to be obey the contract of the {@link Cell#hashCode hashCode}
+	 * method as defined in the {@code Cell} interface.
+	 * 
+	 * @param cell the {@code Cell} whose hash code we want.
+	 * 
+	 * @return the hash code of the given {@code Cell}.
+	 * 
+	 * @throws NullPointerException if {@code cell} is {@code null}.
+	 * 
+	 * @see Cell#hashCode()
+	 */
+	public static final int hash(Cell<?> cell) {
+		requireNonNull(cell, "cell cannot be null.");
+		int hashCode = cell.id().hashCode();
+		hashCode = 92821 * hashCode + cell.x();
+		hashCode = 92821 * hashCode + cell.y();
+		return hashCode;
+	}
+
+	/**
+	 * Compares the given {@link Cell} and {@code Object} for equality. Returns {@code true} if
+	 * the given object is also a {@code Cell} and the two {@code Cell}s are identical. According
+	 * to {@link Cell#equals(Object)} method, two {@code Cell}s are equal if the following of their
+	 * properties are equal:
+	 * <ul>
+	 * <li>The <i>{@link #id() ids}</i> of the {@code Cell}s</li>
+	 * <li>The <i>{@link #x() x coordinates}</i> of the {@code Cell}s.</li>
+	 * <li>The <i>{@link #y() y coordinates}</i> of the {@code Cell}s.</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * This {@code equals} implementation is guaranteed to obey the contract of the {@link Cell#equals(Object) equals}
+	 * method as defined in the {@code Cell} interface.
+	 * 
+	 * @param cell the {@code Cell} to compare to the given object for equality. Must <b>NOT</b> be {@code null}.
+	 * @param obj the object to compare for equality with the given {@code Cell}. Maybe {@code null}.
+	 * 
+	 * @return {@code true} if the given {@code Cell} is equal to the given object, {@code false} otherwise.
+	 * 
+	 * @throws NullPointerException if {@code cell} is {@code null}.
+	 * 
+	 * @see Cell#equals(Object)
+	 */
+	public static final boolean equals(Cell<?> cell, Object obj) {
+		requireNonNull(cell, "cell cannot be null.");
+		if (obj == cell) return true;
+		if (!(obj instanceof Cell)) return false;
+		Cell<?> _obj =  (Cell<?>)obj;
+		return cell.x() == _obj.x() && cell.y() == _obj.y() && cell.id().equals(_obj.id());
+	}
+	
+	/**
+	 * Returns a {@code String} representation of a {@link Cell}. A call to this method is similar to calling
+	 * {@link #toString(Cell, String)} with the second argument as {@code null}.
+	 * 
+	 * @param cell the {@code Cell} whose {@code String} representation we are interested in.
+	 * 
+	 * @return the {@code String} representation of the given {@code Cell}.
+	 * 
+	 * @throws NullPointerException if {@code cell} is {@code null}.
+	 * 
+	 * @see #toString(Cell, String)
+	 */
+	public static final String toString(Cell<?> cell) {
+		return toString(cell, null);
+	}
+	
+	/**
+	 * Returns a {@code String} representation of a {@link Cell}. An optional placeholder can also be given to be used in
+	 * case the given {@code Cell} has a {@code null} {@link Symbol}. If {@code null} is given as a placeholder, the default
+	 * placeholder, an underscore, is used instead.
+	 * 
+	 * @param cell the {@code Cell} whose {@code String} representation we are interested in.
+	 * @param placeholder an optional {@code String} value to be used in case the given {@code Cell} has a {@code null}
+	 * 	{@code Symbol}. Can be {@code null} in which case an underscore will be used as the placeholder.
+	 * 
+	 * @return the {@code String} representation of the given {@code Cell}.
+	 * 
+	 * @throws NullPointerException if {@code cell} is {@code null}.
+	 * 
+	 * @see #toString(Cell)
+	 */
+	public static final String toString(Cell<?> cell, String placeholder) {
+		requireNonNull(cell, "cell cannot be null.");
+		String cellValue = (cell.value().isPresent())? cell.value().toString() : isNull(placeholder)? "-" : placeholder;
+		return String.format("Cell{id=%s, coord=(x:%d, y:%d), value=%s}", cell.id(), cell.x(),  cell.y(), cellValue);
 	}
 	
 	/**
@@ -192,14 +361,11 @@ public final class Cells {
 		
 		@Override
 		public int hashCode() {
-			return hash(
-					id.hashCode(), Integer.valueOf(x), Integer.valueOf(y),
-					Objects.hashCode(value), notes(), Boolean.valueOf(isClueCell())
-				);
+			return hash(this);
 		}
 		
 		@Override
-		public boolean equals(Object obj) {
+		public boolean deepEquals(Object obj) {
 			if (obj == this) return true;
 			if (!(obj instanceof Cell)) return false;
 			Cell<?> _obj =  (Cell<?>)obj;
@@ -209,8 +375,13 @@ public final class Cells {
 		}
 		
 		@Override
+		public boolean equals(Object obj) {
+			return Cells.equals(this, obj);
+		}
+		
+		@Override
 		public String toString() {
-			return String.format("Cell{id=%s, coord=(x:%d, y:%d), value=%s}", id, x,  y, value);
+			return Cells.toString(this);
 		}
 		
 		/**
