@@ -157,18 +157,76 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	boolean equals(Object obj);
 	
 	/**
-	 * Creates and returns a new {@code LatinSquare} whose {@link Row}s and {@link Cell}s are permuted so
-	 * that the new {@code LatinSquare} is upside down in relation to this one.
+	 * Creates and returns a new {@code LatinSquare} whose {@link Cell} values are permuted so that the new {@code LatinSquare}
+	 * is upside down in relation to this one.
+	 * 
+	 * <p>
+	 * Cosider the following {@code LatinSquare}:
+	 * <pre>
+	 * 		+---+---+---+---+
+	 * 		| 1 | 2 | 3 | 4 |
+	 * 		+---+---+---+---+
+	 * 		| 2 | 3 | 4 | 1 |
+	 * 		+---+---+---+---+
+	 * 		| 3 | 4 | 1 | 2 |
+	 * 		+---+---+---+---+
+	 * 		| 4 | 1 | 2 | 3 |
+	 * 		+---+---+---+---+
+	 * </pre>
+	 * 
+	 * After calling {@code flipHorizontally()}, the {@code LatinSquare} returned should have the following {@code Cell} values:
+	 * <pre>
+	 * 		+---+---+---+---+
+	 * 		| 4 | 1 | 2 | 3 |
+	 * 		+---+---+---+---+
+	 * 		| 3 | 4 | 1 | 2 |
+	 * 		+---+---+---+---+
+	 * 		| 2 | 3 | 4 | 1 |
+	 * 		+---+---+---+---+
+	 * 		| 1 | 2 | 3 | 4 |
+	 * 		+---+---+---+---+
+	 * </pre>
 	 * 
 	 * @return a new identical but upside down {@code LatinSquare} in relation to this one.
+	 * 
+	 * @see #flipVertically()
 	 */
 	LatinSquare<V> flipHorizontally();
 
 	/**
-	 * Creates and returns a new {@code LatinSquare} whose {@link Column}s and {@link Cell}s are permuted so
-	 * that the new {@code LatinSquare} is flipped sideways in relation to this one.
+	 * Creates and returns a new {@code LatinSquare} whose {@link Cell} values are permuted so that the new {@code LatinSquare}
+	 * is flipped sideways in relation to this one.
+	 * 
+	 * <p>
+	 * Cosider the following {@code LatinSquare}:
+	 * <pre>
+	 * 		+---+---+---+---+
+	 * 		| 1 | 2 | 3 | 4 |
+	 * 		+---+---+---+---+
+	 * 		| 2 | 3 | 4 | 1 |
+	 * 		+---+---+---+---+
+	 * 		| 3 | 4 | 1 | 2 |
+	 * 		+---+---+---+---+
+	 * 		| 4 | 1 | 2 | 3 |
+	 * 		+---+---+---+---+
+	 * </pre>
+	 * 
+	 * After calling {@code flipVertically()}, the {@code LatinSquare} returned should have the following {@code Cell} values:
+	 * <pre>
+	 * 		+---+---+---+---+
+	 * 		| 4 | 3 | 2 | 1 |
+	 * 		+---+---+---+---+
+	 * 		| 1 | 4 | 3 | 2 |
+	 * 		+---+---+---+---+
+	 * 		| 2 | 1 | 4 | 3 |
+	 * 		+---+---+---+---+
+	 * 		| 3 | 2 | 1 | 4 |
+	 * 		+---+---+---+---+
+	 * </pre>
 	 * 
 	 * @return a new identical but flipped sideways {@code LatinSquare} in relation to this one.
+	 * 
+	 * @see #flipHorizontally()
 	 */
 	LatinSquare<V> flipVertically();
 
@@ -205,7 +263,7 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	/**
 	 * Returns a {@code Map} of the {@link Row}s contained in this {@code LatinSquare}. Modification of the 
 	 * returned {@code Map} should not alter the {@code Row}s of this {@code LatinSquare}. Implementations of this 
-	 * interface can also choose to return an unmodifiable {@code Map} instead to prevent modifications.
+	 * interface can also choose to return an immutable {@code Map} instead to prevent modifications.
 	 * 
 	 * @return a {@code Map} of the {@code Row}s contained in this {@code LatinSquare}.
 	 */
@@ -214,7 +272,7 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	/**
 	 * Returns a {@code Map} of the {@link Column}s contained in this {@code LatinSquare}. Modification of the 
 	 * returned {@code Map} should not alter the {@code Column}s of this {@code LatinSquare}. Implementations of
-	 * this interface can also choose to return an unmodifiable {@code Map} instead to prevent modifications.
+	 * this interface can also choose to return an immutable {@code Map} instead to prevent modifications.
 	 * 
 	 * @return a {@code Map} of the {@code Column}s contained in this {@code LatinSquare}.
 	 */
@@ -232,7 +290,7 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 * returned {@code Map}'s size must be equal to the size of this {@code LatinSquare}.
 	 * 
 	 * <p> Modification of the returned {@code Map} should not alter the {@code Symbol}s of this {@code LatinSquare}.
-	 * Implementations of this interface can also choose to return an unmodifiable {@code Map} instead to prevent
+	 * Implementations of this interface can also choose to return an immutable {@code Map} instead to prevent
 	 * modifications.
 	 * 
 	 * @return a {@code Map} of the {@code Symbol}s contained in this {@code LatinSquare}.

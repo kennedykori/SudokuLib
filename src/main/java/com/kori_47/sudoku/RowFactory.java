@@ -11,8 +11,7 @@ import java.util.Map;
  * 
  * <p>This is a functional interface whose functional method is {@link #createRow(String, int, Map, int)}.
  * 
- * @param <V> the type of value held by the {@link Symbol}s supported by this {@code Row}.
- * 
+ * @param <V> the type of {@code Symbol} values supported by the {@code Row} instances returned by this factory.
  * 
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *

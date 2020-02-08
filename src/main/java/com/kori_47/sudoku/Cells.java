@@ -44,6 +44,11 @@ public final class Cells {
 	 * @return a new {@code Cell} with the given properties.
 	 * 
 	 * @throws NullPointerException if {@code id} is {@code null}.
+	 * 
+	 * @see #of(String, int, int, Symbol)
+	 * 
+	 * @implNote
+	 * The {@link Cell#notes() notes()} method of the new {@code Cell} instances returns an immutable {@code Set}.
 	 */
 	public static final <V> Cell<V> of(String id, int x, int y) {
 		return of(id, x, y, null);
@@ -62,9 +67,27 @@ public final class Cells {
 	 * @return a new {@code Cell} with the given properties.
 	 * 
 	 * @throws NullPointerException if {@code id} is {@code null}.
+	 * 
+	 * @implNote
+	 * The {@link Cell#notes() notes()} method of the new {@code Cell} instances returns an immutable {@code Set}. 
 	 */
 	public static final <V> Cell<V> of(String id, int x, int y, Symbol<V> value) {
 		return new SimpleCell<V>(id, x, y, value);
+	}
+	
+	/**
+	 * Returns a {@link CellFactory} instance that can be used for instantiating {@link Cell}s.
+	 * 
+	 * @param <V> the type of {@code Symbol} values held by the {@code Cell} instances returned by this factory. 
+	 * 
+	 * @return a {@code CellFactory} instance that can be used for instantiating {@code Cell}s.
+	 * 
+	 * @implNote
+	 * The {@code Cell} instances created by the returned {@code CellFactory} have the same properties as those
+	 * returned by {@link Cells#of(String, int, int, Symbol)}.
+	 */
+	public static final <V> CellFactory<V> defaultCellFactory() {
+		return (id, x, y, symbol) -> of(id, x, y);
 	}
 	
 	/**
@@ -88,7 +111,7 @@ public final class Cells {
 	 * @see Cell#compareTo(Cell)
 	 * @see Cell#equals(Object)
 	 * 
-	 * @apiNote
+	 * @implSpec
 	 * The {@code Comparator} returned by this method orders {@code Cell}s such that {@code Cell}s with higher {@code x} and {@code y}
 	 * coordinates are considered to be "larger" than their counterparts with smaller coordinate values. The {@code y} coordinate has
 	 * a higher weight than the {@code x coordinate} so that for any two {@code Cells}, {@code cell1} and  {@code cell2}, where the following
@@ -98,15 +121,22 @@ public final class Cells {
 	 * Consider the following:
      * 
      * <p>
-     * Assume we have a {@code Cell} implementation {@code CellImp} with the following
-     * constructor:
+     * Assume we have the following concrete implementation of {@code Cell}, {@code CellImp}:
      * <pre> 
      * <code>
-     * public CellImp(String id, int x, int y) {
+     * ...
+     * 
+     * public CellImp(String id, int x, int y) {	// constructor
      * 	this.id = id;  // where id is the identifier of this cell 
      * 	this.x = x;    // where x is the x coordinate of this cell
      * 	this.y = y;    // where y is the y coordinate of this cell
      * }
+     * 
+     * public int compareTo(Cell<V> other) {		// compareTo
+     * 	return Cells.defaultComparator().compare(this, other);
+     * }
+     * 
+     * ...
      * </code>
      * </pre>
      * 
@@ -166,7 +196,7 @@ public final class Cells {
 	 * 
 	 * @see Cell#hashCode()
 	 */
-	public static final int hash(Cell<?> cell) {
+	public static final int hashCode(Cell<?> cell) {
 		requireNonNull(cell, "cell cannot be null.");
 		int hashCode = cell.id().hashCode();
 		hashCode = 92821 * hashCode + cell.x();
@@ -361,7 +391,7 @@ public final class Cells {
 		
 		@Override
 		public int hashCode() {
-			return hash(this);
+			return Cells.hashCode(this);
 		}
 		
 		@Override

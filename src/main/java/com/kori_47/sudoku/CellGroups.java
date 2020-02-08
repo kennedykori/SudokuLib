@@ -20,6 +20,7 @@ import java.util.Map;
  * @see CellGroup
  * @see Row
  * @see Column
+ * @see Block
  */
 public final class CellGroups {
 
@@ -75,6 +76,45 @@ public final class CellGroups {
 	 */
 	public static final <V> Column<V> columnOf(String id, int size, Map<String, Cell<V>> cells, int x) {
 		return new SimpleColumn<V>(id, size, cells, x);
+	}
+	
+	/**
+	 * Returns a {@link RowFactory} instance that can be used for instantiating {@link Row}s. The {@code Row}
+	 * instances created by the returned {@code RowFactory} have the same properties as those returned by
+	 * {@link CellGroups#rowOf(String, int, Map, int)}.
+	 * 
+	 * @param <V> the type of {@code Symbol} values supported by the {@code Row} instances returned by this factory. 
+	 * 
+	 * @return a {@code RowFactory} instance that can be used for instantiating {@code Row}s.
+	 */
+	public static final <V> RowFactory<V> defaultRowFactory() {
+		return (id, size, cells, y) -> rowOf(id, size, cells, y);
+	}
+	
+	/**
+	 * Returns a {@link ColumnFactory} instance that can be used for instantiating {@link Column}s. The {@code Column}
+	 * instances created by the returned {@code ColumnFactory} have the same properties as those returned by
+	 * {@link CellGroups#columnOf(String, int, Map, int)}.
+	 * 
+	 * @param <V> the type of {@code Symbol} values supported by the {@code Column} instances returned by this factory. 
+	 * 
+	 * @return a {@code ColumnFactory} instance that can be used for instantiating {@code Column}s.
+	 */
+	public static final <V> ColumnFactory<V> defaultColumnFactory() {
+		return (id, size, cells, x) -> columnOf(id, size, cells, x);
+	}
+	
+	/**
+	 * Returns a {@link BlockFactory} instance that can be used for instantiating {@link Block}s. The {@code Block}
+	 * instances created by the returned {@code BlockFactory} have the same properties as those returned by
+	 * {@link CellGroups#rowOf(String, int, Map, int)}.
+	 * 
+	 * @param <V> the type of {@code Symbol} values supported by the {@code Block} instances returned by this factory. 
+	 * 
+	 * @return a {@code BlockFactory} instance that can be used for instantiating {@code Block}s.
+	 */
+	public static final <V> BlockFactory<V> defaultBlockFactory() {
+		return null;
 	}
 
 	/**

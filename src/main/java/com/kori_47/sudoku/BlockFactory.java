@@ -11,8 +11,7 @@ import java.util.Map;
  * 
  * <p>This is a functional interface whose functional method is {@link #createBlock(String, int, Map, Cell, Cell)}.
  * 
- * @param <V> the type of value held by the {@link Symbol}s supported by this {@code Block}.
- * 
+ * @param <V> the type of {@code Symbol} values supported by the {@code Block} instances returned by this factory.
  * 
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *

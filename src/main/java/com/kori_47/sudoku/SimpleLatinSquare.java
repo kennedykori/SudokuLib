@@ -12,6 +12,7 @@ import static com.kori_47.utils.ObjectUtils.requireGreaterThanOrEqualTo;
 import java.util.LinkedHashMap;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -70,7 +71,7 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 	 * Creates a new {@link LatinSquare} from the properties of the given {@code LatinSquare}. The {@link Cell} values of
 	 * the given {@code LatinSquare} are <strong><i>NOT</i></strong> copied into the new {@code LatinSquare}.
 	 * 
-	 * @param latinSquare the {@code LatinSquare} from who's properties to create a new {@code LatinSquare} from.
+	 * @param latinSquare the {@code LatinSquare} from whose properties to create a new {@code LatinSquare} from.
 	 * 
 	 * @throws NullPointerException if {@code latinSquare} is {@code null}.
 	 */
@@ -117,6 +118,12 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 		init();
 	}
 
+	@Override
+	public Optional<Cell<V>> getCell(int x, int y) {
+		// construct the id from x and y and use getCell(String cellId)
+		return getCell(x + "/" + y);
+	}
+	
 	@Override
 	public Cell<V> startCell() {
 		return getCell(0, 0).get();
@@ -255,7 +262,7 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 		// create cells
 		for (int x = 0; x < size; x++) {
 			for (int y = 0; y < size; y++) {
-				Cell<V> cell = cellFactory.createCell(x, y, emptySymbol);
+				Cell<V> cell = cellFactory.createCell(x + "/" + y , x, y, emptySymbol);
 				cells.put(cell.id(), cell);
 			}
 		}

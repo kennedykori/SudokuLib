@@ -22,11 +22,12 @@ public interface CellFactory<V> {
 	/**
 	 * Should return a new {@link Cell} with the given {@link Symbol} and x and y coordinates.
 	 * 
+	 * @param id the identifier to assign to the new {@code Cell}.
 	 * @param x the x coordinate that the new {@code Cell} should have.
 	 * @param y the y coordinate that the new {@code Cell} should have.
 	 * @param symbol the {@code Symbol} to assign to the new {@code Cell}.
 	 * 
 	 * @return the newly created {@code Cell} with the given properties.
 	 */
-	Cell<V> createCell(int x, int y, Symbol<V> symbol);
+	Cell<V> createCell(String id, int x, int y, Symbol<V> symbol);
 }

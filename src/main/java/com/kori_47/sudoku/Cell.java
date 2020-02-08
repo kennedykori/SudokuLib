@@ -319,9 +319,10 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>>, Unique<String
 	Optional<Symbol<V>> value();
 	
 	/**
-	 * Returns a {@link Set} of {@code Symbol}s marked as possible values for this cell.
+	 * Returns a {@link Set} of {@code Symbol}s marked as possible values for this cell. Modification
+	 * of the returned {@code Set} should not alter the notes this {@code Cell}.
 	 * 
-	 * @return a {@link Set} of {@code Symbol}s marked as possible values for this cell.
+	 * @return a {@code Set} of {@code Symbol}s marked as possible values for this cell.
 	 */
 	Set<Symbol<V>> notes();
 	

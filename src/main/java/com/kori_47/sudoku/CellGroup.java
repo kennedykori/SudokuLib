@@ -185,7 +185,7 @@ public interface CellGroup<V> extends Formattable, Iterable<Cell<V>> {
 	/**
 	 * Returns a {@link Set} of all the {@link Cell#isClueCell() clue} {@link Cell}s in this
 	 * {@code CellGroup}. Modification of the returned {@code Set} should not alter the contents of 
-	 * this {@code CellGroup}. Implementations of this interface can also choose to return an unmodifiable
+	 * this {@code CellGroup}. Implementations of this interface can also choose to return an immutable
 	 * {@code Set} instead to prevent modifications.
 	 * 
 	 * @return a {@code Set} of all the clue {@code Cell}s in this {@code CellGroup}.
@@ -206,7 +206,7 @@ public interface CellGroup<V> extends Formattable, Iterable<Cell<V>> {
 	/**
 	 * Returns a {@link Set} of all the normal {@link Cell}s in this {@code CellGroup}. Modification of the
 	 * returned {@code Set} should not alter the contents of this {@code CellGroup}. Implementations of this
-	 * interface can also choose to return an unmodifiable {@code Set} instead to prevent modifications.
+	 * interface can also choose to return an immutable {@code Set} instead to prevent modifications.
 	 * 
 	 * @return a {@code Set} of all the normal {@code Cell}s in this {@code CellGroup}.
 	 * 
@@ -263,7 +263,7 @@ public interface CellGroup<V> extends Formattable, Iterable<Cell<V>> {
 	/**
 	 * Returns a {@code Map} of the {@code Cell}s contained in this {@code CellGroup}. Modification of the 
 	 * returned {@code Map} should not alter the contents of this {@code CellGroup}. Implementations of this 
-	 * interface can also choose to return an unmodifiable {@code Map} instead to prevent modifications.
+	 * interface can also choose to return an immutable {@code Map} instead to prevent modifications.
 	 * 
 	 * @return a {@code Map} of the {@code Cell}s contained in this {@code CellGroup}
 	 */

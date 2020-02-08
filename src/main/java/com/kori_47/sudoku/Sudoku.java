@@ -114,7 +114,7 @@ public interface Sudoku<V> extends LatinSquare<V> {
 	/**
 	 * Returns a {@code Map} of the {@link Block}s contained in this {@code Sudoku}. Modification of the 
 	 * returned {@code Map} should not alter the {@code Block}s of this {@code Sudoku}. Implementations of
-	 * this interface can also choose to return an unmodifiable {@code Map} instead to prevent modifications.
+	 * this interface can also choose to return an immutable {@code Map} instead to prevent modifications.
 	 * 
 	 * @return a {@code Map} of the {@code Block}s contained in this {@code Sudoku}.
 	 */
@@ -284,13 +284,21 @@ public interface Sudoku<V> extends LatinSquare<V> {
 			this.yBlocks = requireGreaterThanOrEqualTo(1, yBlocks, "yBlocks must be greater tha or equal to 1.");
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * @apiNote
+		 * This method creates {@code Block}s starting from the first {@link Row} of the {@code Sudoku} moving to the last,
+		 * and starting from the first {@code Column} moving to the last. 
+		 */
 		@Override
 		public <V> Set<Block<V>> createBlocks(Sudoku<V> sudoku) {
 			requireNonNull(sudoku, "sudoku cannot be null.");
 			Set<Block<V>> blocks = new HashSet<Block<V>>(size);
+			// get the first sudoku cell
+			Cell<V> firstSudokuCell = sudoku.startCell();
 			
-			// Initialize blocks
-			for (int index = 0, x = 0, y = 0; index < size; index++) { 
+			// initialize blocks
+			for (int index = 0, x = firstSudokuCell.x(), y = firstSudokuCell.y(); index < size; index++) { 
 				// extract the cells of the next block and store them on a Map
 				Map<String, Cell<V>> blockCells = extractBlockCells(x, y, sudoku);
 				// get the start cell of this block
@@ -304,7 +312,7 @@ public interface Sudoku<V> extends LatinSquare<V> {
 				
 				// calculate and set the next blocks starting coordinates
 				if ((index + 1) % xBlocks() == 0) { // if we have reached the last column?
-					x = 0; // then reset to the index of the first column
+					x = firstSudokuCell.x(); // then reset to the index of the first column
 					y += blockColumns; // and move up to the next row
 				} else {
 					x += blockColumns; // move to the start of the next block
