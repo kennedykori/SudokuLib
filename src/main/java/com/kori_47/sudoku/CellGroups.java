@@ -78,6 +78,14 @@ public final class CellGroups {
 		return new SimpleColumn<V>(id, size, cells, x);
 	}
 	
+	public static final <V> Block<V> blockOf(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, int blockRows, int blockColumns) {
+		return new SimpleBoxBlock<V>(id, size, cells, startCell, blockRows, blockColumns);
+	}
+	
+	public static final <V> Block<V> blockOf(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, Cell<V> endCell) {
+		return new SimpleBoxBlock<V>(id, size, cells, startCell, endCell);
+	}
+	
 	/**
 	 * Returns a {@link RowFactory} instance that can be used for instantiating {@link Row}s. The {@code Row}
 	 * instances created by the returned {@code RowFactory} have the same properties as those returned by
@@ -188,6 +196,63 @@ public final class CellGroups {
 		@Override
 		public int x() {
 			return x;
+		}
+	}
+	
+	/**
+	 * A simple implementation of the {@link BoxBlock} interface.
+	 * 
+	 * @param <V> the type of value held by the {@link Symbol}s supported by this {@link Block}.
+	 * 
+	 * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
+	 *
+	 * @since Sun, 9 Feb 2020 00:10:38
+	 */
+	private static final class SimpleBoxBlock<V> extends AbstractUniqueCellGroup<V> implements BoxBlock<V> {
+
+		private final Cell<V> startCell;
+		private final Cell<V> endCell;
+		private final int blockRows;
+		private final int blockColumns;
+		
+		SimpleBoxBlock(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, int blockRows, int blockColumns) {
+			super(id, size, cells);
+			this.startCell = requireNonNull(startCell, "startCell cannot be null.");
+			this.blockRows = blockRows;
+			this.blockColumns = blockColumns;
+			this.endCell = this.cells.values().stream()
+					.filter(cell -> cell.x() == (this.startCell.x() + blockRows))
+					.filter(cell -> cell.y() == (this.startCell.y() + blockColumns))
+					.findAny().get();
+		}
+		
+		/* this constructor is useful because of BlockFactory.createBlock() method */ 
+		SimpleBoxBlock(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, Cell<V> endCell) {
+			super(id, size, cells);
+			this.startCell = requireNonNull(startCell, "startCell cannot be null.");
+			this.endCell = requireNonNull(endCell, "endCell cannot be null.");
+			this.blockRows = (this.endCell.x() - this.startCell.x()) + 1;
+			this.blockColumns = (this.endCell.y() - this.startCell.y()) + 1;
+		}
+
+		@Override
+		public Cell<V> startCell() {
+			return startCell;
+		}
+
+		@Override
+		public Cell<V> endCell() {
+			return endCell;
+		}
+
+		@Override
+		public int blockRows() {
+			return blockRows;
+		}
+
+		@Override
+		public int blockColumns() {
+			return blockColumns;
 		}
 	}
 	
