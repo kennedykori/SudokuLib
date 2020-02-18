@@ -78,11 +78,69 @@ public final class CellGroups {
 		return new SimpleColumn<V>(id, size, cells, x);
 	}
 	
-	public static final <V> Block<V> blockOf(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, int blockRows, int blockColumns) {
+	/**
+	 * <p> Creates and returns an instance of a {@link BoxBlock} with the specified properties.
+	 * 
+	 * <p> This method throws an {@link IllegalArgumentException} if the following conditions aren't met.
+	 * <ul>
+	 * <li>The given size must be greater than or equal to {@code 1}.</li>
+	 * <li>The number of cells given must be equal to the size given.</li>
+	 * <li>The start {@code Cell} given must be in the provided cells {@code Map}.</li>
+	 * <li>The given block {@link Row}s must be greater than or equal to {@code 1}.</li>
+	 * <li>The given block {@link Column}s must be greater than or equal to {@code 1}.</li>
+	 * </ul>
+	 * 
+	 * @param <V> the type of value held by the {@link Symbol}s supported by this {@link Column}.
+	 * 
+	 * @param id the identifier of the {@code BoxBlock} instance to be created.
+	 * @param size the size of the {@code BoxBlock} instance to be created. This is also the number of {@link Cell}s
+	 * 		in the {@code BoxBlock}.
+	 * @param cells a {@code Map} of {@link Cell}s that will be used as this {@code BoxBlock}'s {@code Cell}s.
+	 * @param startCell the first {@code Cell} at the beginning of the region to be covered by this {@code BoxBlock}. This
+	 * 		{@code Cell} must be in the given {@code cells Map}.
+	 * @param blockRows the number of {@code Row}s that the returned {@code BoxBlock} instance will have.
+	 * @param blockColumns the number of {@code Column}s that the returned {@code BoxBlock} instance will have.
+	 * 
+	 * @return an instance of a {@code BoxBlock} with the specified properties.
+	 * 
+	 * @throws NullPointerException if any of the given arguments is {@code null}.
+	 * @throws IllegalArgumentException if any of the conditions stated above isn't met.
+	 * 
+	 * @see #boxBlockOf(String, int, Map, Cell, Cell)
+	 */
+	public static final <V> BoxBlock<V> boxBlockOf(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, int blockRows, int blockColumns) {
 		return new SimpleBoxBlock<V>(id, size, cells, startCell, blockRows, blockColumns);
 	}
 	
-	public static final <V> Block<V> blockOf(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, Cell<V> endCell) {
+	/**
+	 * <p> Creates and returns an instance of a {@link BoxBlock} with the specified properties.
+	 * 
+	 * <p> This method throws an {@link IllegalArgumentException} if the following conditions aren't met.
+	 * <ul>
+	 * <li>The given size must be greater than or equal to {@code 1}.</li>
+	 * <li>The number of cells given must be equal to the size given.</li>
+	 * <li>The start and end {@code Cell}s given must be in the provided cells {@code Map}.</li>
+	 * </ul>
+	 * 
+	 * @param <V> the type of value held by the {@link Symbol}s supported by this {@link Column}.
+	 * 
+	 * @param id the identifier of the {@code BoxBlock} instance to be created.
+	 * @param size the size of the {@code BoxBlock} instance to be created. This is also the number of {@link Cell}s
+	 * 		in the {@code BoxBlock}.
+	 * @param cells a {@code Map} of {@link Cell}s that will be used as this {@code BoxBlock}'s {@code Cell}s.
+	 * @param startCell the first {@code Cell} at the beginning of the region to be covered by this {@code BoxBlock}. This
+	 * 		{@code Cell} must be in the given {@code cells Map}.
+	 * @param endCell the last {@code Cell} at the end of the region to be covered by this {@code BoxBlock}. This {@code Cell}
+	 * 		must be in the given {@code cells Map}.  
+	 * 
+	 * @return an instance of a {@code BoxBlock} with the specified properties.
+	 * 
+	 * @throws NullPointerException if any of the given arguments is {@code null}.
+	 * @throws IllegalArgumentException if any of the conditions stated above isn't met.
+	 * 
+	 * @see #boxBlockOf(String, int, Map, Cell, int, int)
+	 */
+	public static final <V> BoxBlock<V> boxBlockOf(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, Cell<V> endCell) {
 		return new SimpleBoxBlock<V>(id, size, cells, startCell, endCell);
 	}
 	
@@ -217,9 +275,9 @@ public final class CellGroups {
 		
 		SimpleBoxBlock(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, int blockRows, int blockColumns) {
 			super(id, size, cells);
-			this.startCell = requireNonNull(startCell, "startCell cannot be null.");
-			this.blockRows = blockRows;
-			this.blockColumns = blockColumns;
+			this.startCell = validateCellInCellsMap(requireNonNull(startCell, "startCell cannot be null."), cells, startCell + " must be in " + cells);
+			this.blockRows = requireGreaterThanOrEqualTo(1, blockRows);
+			this.blockColumns = requireGreaterThanOrEqualTo(1, blockColumns);
 			this.endCell = this.cells.values().stream()
 					.filter(cell -> cell.x() == (this.startCell.x() + blockRows))
 					.filter(cell -> cell.y() == (this.startCell.y() + blockColumns))
@@ -229,8 +287,8 @@ public final class CellGroups {
 		/* this constructor is useful because of BlockFactory.createBlock() method */ 
 		SimpleBoxBlock(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, Cell<V> endCell) {
 			super(id, size, cells);
-			this.startCell = requireNonNull(startCell, "startCell cannot be null.");
-			this.endCell = requireNonNull(endCell, "endCell cannot be null.");
+			this.startCell = validateCellInCellsMap(requireNonNull(startCell, "startCell cannot be null."), cells, startCell + " must be in " + cells);
+			this.endCell = validateCellInCellsMap(requireNonNull(endCell, "endCell cannot be null."), cells, startCell + " must be in " + cells);
 			this.blockRows = (this.endCell.x() - this.startCell.x()) + 1;
 			this.blockColumns = (this.endCell.y() - this.startCell.y()) + 1;
 		}
@@ -275,7 +333,18 @@ public final class CellGroups {
 		return cells;
 	}
 	
+	private final static <V> Cell<V> validateCellInCellsMap(Cell<V> cell, Map<String, Cell<V>> cells, String errorMessage) {
+		// validate that the args aren't null.
+		requireNonNull(cell, "cell cannot be null.");
+		requireNonNull(cells, "cells cannot be null.");
+		
+		// validate that the given cells is inside the provided cells Map.
+		if (!cells.containsKey(cell.id()))
+			throw new IllegalArgumentException(errorMessage);
+		
+		return cell;
+	}
+	
 	// private constructor to prevent instantiation of this class
 	private CellGroups() {}
-
 }
