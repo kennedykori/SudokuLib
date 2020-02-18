@@ -171,16 +171,16 @@ public final class CellGroups {
 	}
 	
 	/**
-	 * Returns a {@link BlockFactory} instance that can be used for instantiating {@link Block}s. The {@code Block}
+	 * Returns a {@link BlockFactory} instance that can be used for instantiating {@link BoxBlock}s. The {@code BoxBlock}
 	 * instances created by the returned {@code BlockFactory} have the same properties as those returned by
-	 * {@link CellGroups#rowOf(String, int, Map, int)}.
+	 * {@link CellGroups#boxBlockOf(String, int, Map, Cell, Cell)}.
 	 * 
-	 * @param <V> the type of {@code Symbol} values supported by the {@code Block} instances returned by this factory. 
+	 * @param <V> the type of {@code Symbol} values supported by the {@code BoxBlock} instances returned by this factory. 
 	 * 
-	 * @return a {@code BlockFactory} instance that can be used for instantiating {@code Block}s.
+	 * @return a {@code BlockFactory} instance that can be used for instantiating {@code BoxBlock}s.
 	 */
-	public static final <V> BlockFactory<V> defaultBlockFactory() {
-		return null;
+	public static final <V> BlockFactory<V> defaultBoxBlockFactory() {
+		return (id, size, cells, startCell, endCell) -> boxBlockOf(id, size, cells, startCell, endCell);
 	}
 
 	/**
