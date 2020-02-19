@@ -184,6 +184,120 @@ public final class CellGroups {
 	}
 
 	/**
+	 * Returns the hash code of the given {@link CellGroup}. The hash code of the {@code CellGroup} should be derived from the
+	 * hash codes of the following properties of a {@code CellGroup}:
+	 * <ul>
+	 * <li>The hash code value of this {@code CellGroup}'s <i>{@link CellGroup#size() size}</i> as returned by {@link Integer#hashCode(int)}</li>
+	 * <li>The hash code value of this {@code CellGroup}'s <i>{@link CellGroup#cells() cells}</i> {@code Map}.</li>
+	 * </ul>
+	 * 
+	 * <p>
+	 * The hash code value returned by this method is guaranteed to obey the contract of the {@link CellGroup#hashCode hashCode}
+	 * method as defined in the {@code CellGroup} interface.
+	 * 
+	 * @param cellGroup the {@code CellGroup} whose hash code we are interested in.
+	 * 
+	 * @return the hash code of the given {@code CellGroup}.
+	 * 
+	 * @throws NullPointerException if {@code cellGroup} is {@code null}.
+	 * 
+	 * @see CellGroup#hashCode()
+	 */
+	public static final int hashCode(CellGroup<?> cellGroup) {
+		requireNonNull(cellGroup, "cellGroup cannot be null.");
+		int hashCode = Integer.hashCode(cellGroup.size());
+		return 31 * hashCode + cellGroup.cells().hashCode();
+	}
+
+	/**
+	 * Compares the given {@code CellGroup} with the given {@code Object} for equality. Returns {@code true} if the
+	 * given object is also a {@code CellGroup} and the two {@code CellGroup}s are identical. Two {@code CellGroup}s
+	 * are said to be equal if each of the following of their properties are also equal:
+	 * <ul>
+	 * <li>The <i>{@link CellGroup#size() sizes}</i> of the {@code CellGroup}s</li>
+	 * <li>The <i>{@link CellGroup#cells() cells}</i> {@code Map}s of the {@code CellGroup}s.</li>
+	 * </ul>
+	 * 
+	 * <p>
+	 * This {@code equals} implementation is guaranteed to obey the contract of the {@link CellGroup#equals(Object) equals}
+	 * method as defined in the {@code CellGroup} interface.
+	 * 
+	 * @param cellGroup the {@code CellGroup} to compare to the given object for equality. Must <b>NOT</b> be {@code null}.
+	 * @param obj the object to compare for equality with the given {@code CellGroup}. Maybe {@code null}.
+	 * 
+	 * @return {@code true} if the given {@code CellGroup} is equal to the given object, {@code false} otherwise.
+	 * 
+	 * @throws NullPointerException if {@code cellGroup} is {@code null}.
+	 * 
+	 * @see CellGroup#equals(Object)
+	 */
+	public static final boolean equals(CellGroup<?> cellGroup, Object obj) {
+		requireNonNull(cellGroup, "cellGroup cannot be null.");
+		if (cellGroup == obj) return true;
+		if (!(obj instanceof CellGroup)) return false;
+		CellGroup<?> _obj = (CellGroup<?>) obj;
+		return cellGroup.size() == _obj.size() && cellGroup.cells().equals(_obj.cells());
+	}
+	
+	/**
+	 * Returns the hash code of the given {@link UniqueCellGroup}. The hash code of the {@code UniqueCellGroup} should be
+	 * derived from the hash codes of the following properties of a {@code UniqueCellGroup}:
+	 * <ul>
+	 * <li>The hash code value of this {@code UniqueCellGroup}'s <i>{@link UniqueCellGroup#id() id}</i>.</li>
+	 * <li>The hash code value of this {@code UniqueCellGroup}'s <i>{@link UniqueCellGroup#size() size}</i> as returned by {@link Integer#hashCode(int)}</li>
+	 * <li>The hash code value of this {@code UniqueCellGroup}'s <i>{@link UniqueCellGroup#cells() cells}</i> {@code Map}.</li>
+	 * </ul>
+	 * 
+	 * <p>
+	 * The hash code value returned by this method is guaranteed to obey the contract of the {@link UniqueCellGroup#hashCode hashCode}
+	 * method as defined in the {@code UniqueCellGroup} interface.
+	 * 
+	 * @param uniqueCellGroup the {@code UniqueCellGroup} whose hash code we are interested in.
+	 * 
+	 * @return the hash code of the given {@code UniqueCellGroup}.
+	 * 
+	 * @throws NullPointerException if {@code uniqueCellGroup} is {@code null}.
+	 * 
+	 * @see UniqueCellGroup#hashCode()
+	 */
+	public static final int hashCode(UniqueCellGroup<?> uniqueCellGroup) {
+		requireNonNull(uniqueCellGroup, "uniqueCellGroup cannot be null.");
+		int hashCode = hashCode(((CellGroup<?>) uniqueCellGroup));
+		return 31 * hashCode + uniqueCellGroup.id().hashCode();
+	}
+
+	/**
+	 * Compares the given {@code UniqueCellGroup} with the given {@code Object} for equality. Returns {@code true} if the
+	 * given object is also a {@code UniqueCellGroup} and the two {@code UniqueCellGroup}s are identical. Two
+	 * {@code UniqueCellGroup}s are said to be equal if each of the following of their properties are also equal:
+	 * <ul>
+	 * <li>The <i> {@link UniqueCellGroup#id() ids}</i> of the {@code UniqueCellGroup}s.</li>
+	 * <li>The <i>{@link UniqueCellGroup#size() sizes}</i> of the {@code UniqueCellGroup}s</li>
+	 * <li>The <i>{@link UniqueCellGroup#cells() cells}</i> {@code Map}s of the {@code UniqueCellGroup}s.</li>
+	 * </ul>
+	 * 
+	 * <p>
+	 * This {@code equals} implementation is guaranteed to obey the contract of the {@link UniqueCellGroup#equals(Object) equals}
+	 * method as defined in the {@code UniqueCellGroup} interface.
+	 * 
+	 * @param uniqueCellGroup the {@code UniqueCellGroup} to compare to the given object for equality. Must <b>NOT</b> be {@code null}.
+	 * @param obj the object to compare for equality with the given {@code UniqueCellGroup}. Maybe {@code null}.
+	 * 
+	 * @return {@code true} if the given {@code UniqueCellGroup} is equal to the given object, {@code false} otherwise.
+	 * 
+	 * @throws NullPointerException if {@code uniqueCellGroup} is {@code null}.
+	 * 
+	 * @see UniqueCellGroup#equals(Object)
+	 */
+	public static final boolean equals(UniqueCellGroup<?> uniqueCellGroup, Object obj) {
+		requireNonNull(uniqueCellGroup, "uniqueCellGroup cannot be null.");
+		if (uniqueCellGroup == obj) return true;
+		if (!(obj instanceof UniqueCellGroup)) return false;
+		UniqueCellGroup<?> _obj = (UniqueCellGroup<?>) obj;
+		return equals(((CellGroup<?>) uniqueCellGroup), _obj) && uniqueCellGroup.id().equals(_obj.id());
+	}
+
+	/**
 	 * A simple implementation of the {@link Row} interface.
 	 * 
 	 * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
