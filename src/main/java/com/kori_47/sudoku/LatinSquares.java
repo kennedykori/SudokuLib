@@ -359,6 +359,42 @@ public final class LatinSquares {
 	}
 	
 	/**
+	 * Creates and initializes the given {@link Sudoku}'s {@link Block}s and returns a {@code Map} of the created
+	 * {@code Block}s. This method uses the {@link SudokuVariant#createBlocks(Sudoku) createBlocks(Sudoku)} method
+	 * of the given {@code Sudoku}'s {@link SudokuVariant variant} to create the new {@code Block}s. This method
+	 * also validates that the {@code Set} returned by the {@code createBlocks(Sudoku)} method is not {@code null}
+	 * and the size of the {@code Set} is equal to the value returned by the {@code size()} method of the given
+	 * {@code Sudoku}'s variant.
+	 * 
+	 * @param <V> the {@link Symbol} values supported by the given {@code Sudoku}.
+	 * 
+	 * @param sudoku the {@code Sudoku} whose {@code Block}s we want to create.
+	 * @param mapSupplier a {@link Supplier} that returns a new and empty {@code Map} to insert the new {@code Block}s.
+	 * @return a {@code Map} of the newly created {@code Block}s.
+	 * 
+	 * @throws NullPointerException if any of the given arguments are {@code null} or if the {@code Set} of {@code Blocks}
+	 * returned by {@code sudoku.variant().createBlocks(Sudoku)} is {@code null}.
+	 * @throws SudokuException if the size of {@code Set} returned by {@code sudoku.variant().createBlocks(Sudoku)} is not
+	 * equal to {@code sudoku.variant().size()}.
+	 */
+	public static final <V> Map<String, Block<V>> initializeSudokuBlocks(Sudoku<V> sudoku, Supplier<Map<String, Block<V>>> mapSupplier) {
+		requireNonNull(sudoku, "sudoku cannot be null.");
+		requireNonNull(mapSupplier, "mapSupplier cannot be null.");
+		// create the blocks using this class SudokuVariant
+		Set<Block<V>> createdBlocks = requireNonNull(sudoku.variant().createBlocks(sudoku), "'variant.createBlocks()' shouldn't return null.");
+		
+		// make sure the createdBlocks are the correct number
+		if (createdBlocks.size() != sudoku.variant().size())
+			throw new SudokuException(
+					String.format("The number of blocks created (%d) is less than the expected number (%d).",
+							createdBlocks.size(),
+							sudoku.variant().size()
+						));
+		
+		return createdBlocks.stream().collect(toMap(block -> block.id(), block -> block, (block1, block2) -> block2, mapSupplier));
+	}
+	
+	/**
 	 * Returns the hash code of the given {@link LatinSquare}. The hash code of the {@code LatinSquare} should be derived from the
 	 * hash codes of the following properties of a {@code LatinSquare}:
 	 * <ul>
@@ -371,7 +407,7 @@ public final class LatinSquares {
 	 * </ul>
 	 * 
 	 * <p>
-	 * The hash code value returned by this method is guaranteed to be obey the contract of the {@link LatinSquare#hashCode hashCode}
+	 * The hash code value returned by this method is guaranteed to obey the contract of the {@link LatinSquare#hashCode hashCode}
 	 * method as defined in the {@code LatinSquare} interface.
 	 * 
 	 * @param latinSquare the {@code LatinSquare} whose hash code we are interested in.
@@ -382,7 +418,7 @@ public final class LatinSquares {
 	 * 
 	 * @see LatinSquare#hashCode()
 	 */
-	public static final int latinSquareHashCode(LatinSquare<?> latinSquare) {
+	public static final int hashCode(LatinSquare<?> latinSquare) {
 		requireNonNull(latinSquare, "latinSquare cannot be null.");
 		int hashCode = Integer.hashCode(latinSquare.size());
 		hashCode = 31 * hashCode + latinSquare.emptySymbol().hashCode();
@@ -419,7 +455,7 @@ public final class LatinSquares {
 	 * 
 	 * @see LatinSquare#equals(Object)
 	 */
-	public static final boolean latinSquareEquals(LatinSquare<?> latinSquare, Object obj) {
+	public static final boolean equals(LatinSquare<?> latinSquare, Object obj) {
 		requireNonNull(latinSquare, "latinSquare cannot be null.");
 		if (latinSquare == obj) return true;
 		if (!(obj instanceof LatinSquare)) return false;
@@ -453,9 +489,9 @@ public final class LatinSquares {
 	 * 
 	 * @see Sudoku#hashCode()
 	 */
-	public static final int sudokuHashCode(Sudoku<?> sudoku) {
+	public static final int hashCode(Sudoku<?> sudoku) {
 		requireNonNull(sudoku, "sudoku cannot be null.");
-		int hashCode = latinSquareHashCode(sudoku);
+		int hashCode = hashCode(((LatinSquare<?>) sudoku));
 		return 31 * hashCode + sudoku.variant().hashCode(); 
 	}
 	
@@ -486,46 +522,10 @@ public final class LatinSquares {
 	 * 
 	 * @see Sudoku#equals(Object)
 	 */
-	public static final boolean sudokuEquals(Sudoku<?> sudoku, Object obj) {
+	public static final boolean equals(Sudoku<?> sudoku, Object obj) {
 		requireNonNull(sudoku, "sudoku cannot be null.");
 		if (!(obj instanceof Sudoku)) return false;
-		return latinSquareEquals(sudoku, obj) && sudoku.variant().equals(((Sudoku<?>) obj).variant());
-	}
-	
-	/**
-	 * Creates and initializes the given {@link Sudoku}'s {@link Block}s and returns a {@code Map} of the created
-	 * {@code Block}s. This method uses the {@link SudokuVariant#createBlocks(Sudoku) createBlocks(Sudoku)} method
-	 * of the given {@code Sudoku}'s {@link SudokuVariant variant} to create the new {@code Block}s. This method
-	 * also validates that the {@code Set} returned by the {@code createBlocks(Sudoku)} method is not {@code null}
-	 * and the size of the {@code Set} is equal to the value returned by the {@code size()} method of the given
-	 * {@code Sudoku}'s variant.
-	 * 
-	 * @param <V> the {@link Symbol} values supported by the given {@code Sudoku}.
-	 * 
-	 * @param sudoku the {@code Sudoku} whose {@code Block}s we want to create.
-	 * @param mapSupplier a {@link Supplier} that returns a new and empty {@code Map} to insert the new {@code Block}s.
-	 * @return a {@code Map} of the newly created {@code Block}s.
-	 * 
-	 * @throws NullPointerException if any of the given arguments are {@code null} or if the {@code Set} of {@code Blocks}
-	 * returned by {@code sudoku.variant().createBlocks(Sudoku)} is {@code null}.
-	 * @throws SudokuException if the size of {@code Set} returned by {@code sudoku.variant().createBlocks(Sudoku)} is not
-	 * equal to {@code sudoku.variant().size()}.
-	 */
-	public static final <V> Map<String, Block<V>> initializeSudokuBlocks(Sudoku<V> sudoku, Supplier<Map<String, Block<V>>> mapSupplier) {
-		requireNonNull(sudoku, "sudoku cannot be null.");
-		requireNonNull(mapSupplier, "mapSupplier cannot be null.");
-		// create the blocks using this class SudokuVariant
-		Set<Block<V>> createdBlocks = requireNonNull(sudoku.variant().createBlocks(sudoku), "'variant.createBlocks()' shouldn't return null.");
-		
-		// make sure the createdBlocks are the correct number
-		if (createdBlocks.size() != sudoku.variant().size())
-			throw new SudokuException(
-					String.format("The number of blocks created (%d) is less than the expected number (%d).",
-							createdBlocks.size(),
-							sudoku.variant().size()
-						));
-		
-		return createdBlocks.stream().collect(toMap(block -> block.id(), block -> block, (block1, block2) -> block2, mapSupplier));
+		return equals(((LatinSquare<?>) sudoku), obj) && sudoku.variant().equals(((Sudoku<?>) obj).variant());
 	}
 	
 	// make constructor private to prevent instantiation of this class
