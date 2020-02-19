@@ -147,12 +147,12 @@ final class CompositeSudoku<V> implements Sudoku<V> {
 	
 	@Override
 	public int hashCode() {
-		return LatinSquares.sudokuHashCode(this);
+		return LatinSquares.hashCode(this);
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		return LatinSquares.sudokuEquals(this, obj);
+		return LatinSquares.equals(this, obj);
 	}
 	
 	@Override
