@@ -26,7 +26,7 @@ import com.kori_47.sudoku.Sudoku.SudokuVariant;
 public final class LatinSquares {
 
 	/**
-	 * Creates a new {@link LatinSquare} from the properties of the passed {@code LatinSquare}.
+	 * Creates a new {@link LatinSquare} from the properties of the given {@code LatinSquare}.
 	 * 
 	 * @param <V> the type of values held by the {@link Symbol}s supported by the new {@code LatinSquare}.
 	 * 
@@ -87,7 +87,7 @@ public final class LatinSquares {
 	 * @throws IllegalArgumentException if {@code size} is less than {@code 1} and/or the size of {@code symbols} {@code Set}
 	 * 			is less than {@code size}.
 	 * 
-	 * {@link #latinSquareOf(int, Set, Symbol, CellFactory, RowFactory, ColumnFactory)}
+	 * @see #latinSquareOf(int, Set, Symbol, CellFactory, RowFactory, ColumnFactory)
 	 * 
 	 * @implNote
 	 * A call to this method is similar to calling {@link #latinSquareOf(int, Set, Symbol, CellFactory, RowFactory, ColumnFactory)} with
@@ -144,6 +144,218 @@ public final class LatinSquares {
 	public static final <V> LatinSquare<V> latinSquareOf(int size, Set<Symbol<V>> symbols, Symbol<V> emptySymbol, CellFactory<V> cellFactory,
 			 RowFactory<V> rowFactory, ColumnFactory<V> columnFactory) {
 		return new SimpleLatinSquare<V>(size, symbols, emptySymbol, cellFactory, rowFactory, columnFactory);
+	}
+
+	/**
+	 * Creates a new {@link Sudoku} from the properties of the given {@code Sudoku}.
+	 * 
+	 * @param <V> the type of values held by the {@link Symbol}s supported by the new {@code Sudoku}.
+	 * 
+	 * @param sudoku the {@code Sudoku} from whose propeties to create a new {@code Sudoku} instance from.
+	 * 
+	 * @return a new {@code Sudoku} instance created from the properties of the provided {@code Sudoku}.
+	 * 
+	 * @throws NullPointerException if the given {@code Sudoku} is {@code null}.
+	 * 
+	 * @see #sudokuOf(SudokuVariant, Set, Symbol, CellFactory, RowFactory, ColumnFactory, BlockFactory)
+	 * 
+	 * @implNote
+	 * The returned {@code Sudoku} instance will have the same characteristics as that created by the 
+	 * {@link #sudokuOf(SudokuVariant, Set, Symbol, CellFactory, RowFactory, ColumnFactory, BlockFactory)} method. 
+	 */
+	public static final <V> Sudoku<V> sudokuOf(Sudoku<V> sudoku) {
+		return new SimpleSudoku<V>(sudoku);
+	}
+
+	/**
+	 * Creates a new {@link Sudoku} with the given properties.
+	 * 
+	 * @param <V> the type of values held by the {@link Symbol}s supported by the new {@code Sudoku}.
+	 * 
+	 * @param variant the {@link SudokuVariant} that describes the new {@code Sudoku} to be created.
+	 * @param symbols the {@link Set} of {@link Symbol}s to use when filling this {@code Sudoku}'s {@link Cell}s.
+	 * @param emptySymbol the empty {@code Symbol} that the new {@code Sudoku} should use.
+	 * 
+	 * @return a {@code Sudoku} instance with the given properties.
+	 * 
+	 * @throws NullPointerException if any of the following arguments to this constructor are/is {@code null}.
+	 * @throws IllegalArgumentException if the size of {@code symbols} {@code Set} is less than {@code variant.size()}.
+	 * 
+	 * @see #sudokuOf(SudokuVariant, Set, Symbol, CellFactory)
+	 * 
+	 * @implNote
+	 * A call to this method is similar to calling {@link #sudokuOf(SudokuVariant, Set, Symbol, CellFactory)} with the {@code cellFactory}
+	 * instance gotten from calling {@link Cells#defaultCellFactory()}.
+	 */
+	public static final <V> Sudoku<V> sudokuOf(SudokuVariant variant, Set<Symbol<V>> symbols, Symbol<V> emptySymbol) {
+		return sudokuOf(variant, symbols, emptySymbol, Cells.defaultCellFactory());
+	}
+
+	/**
+	 * Creates a new {@link Sudoku} with the given properties.
+	 * 
+	 * @param <V> the type of values held by the {@link Symbol}s supported by the new {@code Sudoku}.
+	 * 
+	 * @param variant the {@link SudokuVariant} that describes the new {@code Sudoku} to be created.
+	 * @param symbols the {@link Set} of {@link Symbol}s to use when filling this {@code Sudoku}'s {@link Cell}s.
+	 * @param emptySymbol the empty {@code Symbol} that the new {@code Sudoku} should use.
+	 * @param cellFactory the {@link CellFactory} that the new {@code Sudoku} will use when creating new {@code Cell}s.
+	 * 
+	 * @return a {@code Sudoku} instance with the given properties.
+	 * 
+	 * @throws NullPointerException if any of the following arguments to this constructor are/is {@code null}.
+	 * @throws IllegalArgumentException if the size of {@code symbols} {@code Set} is less than {@code variant.size()}.
+	 * 
+	 * @see #sudokuOf(SudokuVariant, Set, Symbol, CellFactory, RowFactory, ColumnFactory)
+	 * 
+	 * @implNote
+	 * A call to this method is similar to calling {@link #sudokuOf(SudokuVariant, Set, Symbol, CellFactory, RowFactory, ColumnFactory)} with
+	 * {@code rowFactory} and {@code columnFactory} instances gotten from calling {@link CellGroups#defaultRowFactory()} and
+	 * {@link CellGroups#defaultColumnFactory()} respectfully.
+	 */
+	public static final <V> Sudoku<V> sudokuOf(SudokuVariant variant, Set<Symbol<V>> symbols, Symbol<V> emptySymbol, CellFactory<V> cellFactory) {
+		return sudokuOf(variant, symbols, emptySymbol, cellFactory, CellGroups.defaultRowFactory(), CellGroups.defaultColumnFactory());
+	}
+
+	/**
+	 * Creates a new {@link Sudoku} with the given properties.
+	 * 
+	 * @param <V> the type of values held by the {@link Symbol}s supported by the new {@code Sudoku}.
+	 * 
+	 * @param variant the {@link SudokuVariant} that describes the new {@code Sudoku} to be created.
+	 * @param symbols the {@link Set} of {@link Symbol}s to use when filling this {@code Sudoku}'s {@link Cell}s.
+	 * @param emptySymbol the empty {@code Symbol} that the new {@code Sudoku} should use.
+	 * @param cellFactory the {@link CellFactory} that the new {@code Sudoku} will use when creating new {@code Cell}s.
+	 * @param rowFactory the {@link RowFactory} that the new {@code Sudoku} will use when creating new {@link Row}s.
+	 * @param columnFactory the {@link ColumnFactory} that the new {@code Sudoku} will use when creating new {@link Column}s.
+	 * 
+	 * @return a {@code Sudoku} instance with the given properties.
+	 * 
+	 * @throws NullPointerException if any of the following arguments to this constructor are/is {@code null}.
+	 * @throws IllegalArgumentException if the size of {@code symbols} {@code Set} is less than {@code variant.size()}.
+	 *
+	 * @see #sudokuOf(SudokuVariant, Set, Symbol, CellFactory, RowFactory, ColumnFactory, BlockFactory)
+	 * 
+	 * @implNote
+	 * A call to this method is similar to calling {@link #sudokuOf(SudokuVariant, Set, Symbol, CellFactory, RowFactory, ColumnFactory, BlockFactory)}
+	 * with the {@code blockFactory}instance gotten from calling {@link CellGroups#defaultBoxBlockFactory()}.
+	 */
+	public static final <V> Sudoku<V> sudokuOf(SudokuVariant variant, Set<Symbol<V>> symbols, Symbol<V> emptySymbol, CellFactory<V> cellFactory,
+			 RowFactory<V> rowFactory, ColumnFactory<V> columnFactory) {
+		return sudokuOf(variant, symbols, emptySymbol, cellFactory, rowFactory, columnFactory, CellGroups.defaultBoxBlockFactory());
+	}
+	
+	/**
+	 * Creates a new {@link Sudoku} with the given properties.
+	 * 
+	 * @param <V> the type of values held by the {@link Symbol}s supported by the new {@code Sudoku}.
+	 * 
+	 * @param variant the {@link SudokuVariant} that describes the new {@code Sudoku} to be created.
+	 * @param symbols the {@link Set} of {@link Symbol}s to use when filling this {@code Sudoku}'s {@link Cell}s.
+	 * @param emptySymbol the empty {@code Symbol} that the new {@code Sudoku} should use.
+	 * @param cellFactory the {@link CellFactory} that the new {@code Sudoku} will use when creating new {@code Cell}s.
+	 * @param rowFactory the {@link RowFactory} that the new {@code Sudoku} will use when creating new {@link Row}s.
+	 * @param columnFactory the {@link ColumnFactory} that the new {@code Sudoku} will use when creating new {@link Column}s.
+	 * @param blockFactory the {@link BlockFactory} that the new {@code Sudoku} will use when creating new {@link BlockFactory}s.
+	 * 
+	 * @return a {@code Sudoku} instance with the given properties.
+	 * 
+	 * @throws NullPointerException if any of the following arguments to this constructor are/is {@code null}.
+	 * @throws IllegalArgumentException if the size of {@code symbols} {@code Set} is less than {@code variant.size()}.
+	 * 
+	 * @see #sudokuOf(LatinSquare, SudokuVariant, BlockFactory)
+	 * 
+	 * @implNote
+	 * The returned {@code Sudoku} instance has the following characteristics:
+	 * <ul>
+	 * <li>The {@link Sudoku#startCell() first} {@code Cell} of the {@code Sudoku} has an x and y coordinate of {@code 0}.</li>
+	 * <li>The {@link Sudoku#endCell() last} {@code Cell} of the {@code Sudoku} has an x and y coordinate of {@code size - 1}.</li>
+	 * <li>
+	 * The identifiers of the {@code Cell}s of the {@code Sudoku} are generated from the x and y coordinates of a {@code Cell}
+	 * separated by a forward slash. i.e the 1st {@code Cell} has an id of {@code "0/0"}, the 2nd has an id of {@code "1/0"} and so on. 
+	 * </li>
+	 * <li>
+	 * 		The identifiers of the {@link Row}s and {@link Column}s of the {@code Sudoku} are the {@code String} representations of their indices.
+	 * 		i.e, the 1st {@code Row} and {@code Column} have an id of {@code "0"}, the 2nd have an id of {@code "1"}, etc.
+	 * </li>
+	 * <li>
+	 * 		All the <i>view</i> methods of the {@code Sudoku} return unmodifiable collections. e.g {@link Sudoku#cells() cells()},
+	 * 		{@link Sudoku#rows() rows()}, {@link Sudoku#columns() columns()}, {@link Sudoku#symbols() symbols()}, etc, all
+	 * 		return immutable {@code Map}s.
+	 * </li>
+	 * <li>The identifiers of the {@link Block}s of the {@code Sudoku} are determined by the given {@code SudokuVariant}.</li>
+	 * </ul>
+	 * 
+	 * <p>
+	 * In addition, the {@link Sudoku#hashCode() hashCode()} and {@link Sudoku#equals(Object) equals(Object)} methods are implemented in
+	 * accordance to their specification in the {@code Sudoku} interface. It should also be noted that the {@code Sudoku} instance returned
+	 * is <i>not thread safe</i>.
+	 */
+	public static final <V> Sudoku<V> sudokuOf(SudokuVariant variant, Set<Symbol<V>> symbols, Symbol<V> emptySymbol, CellFactory<V> cellFactory,
+			 RowFactory<V> rowFactory, ColumnFactory<V> columnFactory, BlockFactory<V> blockFactory) {
+		return new SimpleSudoku<V>(variant, symbols, emptySymbol, cellFactory, rowFactory, columnFactory, blockFactory);
+	}
+
+	/**
+	 * <p>
+	 * Creates a new {@link Sudoku} from the given {@link LatinSquare}, {@link SudokuVariant} and {@link BlockFactory}. The given {@code LatinSquare}
+	 * must be of the same size as the value returned by the {@code size()} method of the given {@code SudokuVariant}.
+	 * 
+	 * <p>
+	 * The provided {@code LatinSquare} is used as the {@code Sudoku}'s backing {@code LatinSquare} and clients can provide different backing
+	 * {@code LatinSquare}s to customize the behaviour of the {@code Sudoku}, i.e how {@link Cell}s, {@link Row}s and {@link Column}s are initialized
+	 * and stored, how {@link LatinSquare#flipHorizontally() flipHorizontally()} and {@link LatinSquare#flipVertically() flipVertically()} are
+	 * implemented, etc.
+	 * 
+	 * @param <V> the type of values held by the {@link Symbol}s supported by the new {@code Sudoku}.
+	 * 
+	 * @param latinSquare the {@code LatinSquare} from which to create a new {@code Sudoku} from.
+	 * @param variant the {@code SudokuVariant} that describes the new {@code Sudoku}.
+	 * 
+	 * @return a {@code Sudoku} instance with the given properties.
+	 * 
+	 * @see #sudokuOf(LatinSquare, SudokuVariant, BlockFactory)
+	 * 
+	 * @throws NullPointerException if any of the given arguments are {@code null}.
+	 * @throws IllegalArgumentException if the size of the given {@code LatinSquare} is not equal to size of the given {@code SudokuVariant}.
+	 * 
+	 * @implNote
+	 * A call to this method is similar to calling {@link #sudokuOf(LatinSquare, SudokuVariant, BlockFactory)} with the {@code blockFactory}
+	 * instance gotten from calling {@link CellGroups#defaultBoxBlockFactory()}.
+	 */
+	public static final <V> Sudoku<V> sudokuOf(LatinSquare<V> latinSquare, SudokuVariant variant) {
+		return sudokuOf(latinSquare, variant, CellGroups.defaultBoxBlockFactory());
+	}
+	
+	/**
+	 * <p>
+	 * Creates a new {@link Sudoku} from the given {@link LatinSquare}, {@link SudokuVariant} and {@link BlockFactory}. The given {@code LatinSquare}
+	 * must be of the same size as the value returned by the {@code size()} method of the given {@code SudokuVariant}.
+	 * 
+	 * <p>
+	 * The provided {@code LatinSquare} is used as the {@code Sudoku}'s backing {@code LatinSquare} and clients can provide different backing
+	 * {@code LatinSquare}s to customize the behaviour of the {@code Sudoku}, i.e how {@link Cell}s, {@link Row}s and {@link Column}s are initialized
+	 * and stored, how {@link LatinSquare#flipHorizontally() flipHorizontally()} and {@link LatinSquare#flipVertically() flipVertically()} are
+	 * implemented, etc.
+	 * 
+	 * @param <V> the type of values held by the {@link Symbol}s supported by the new {@code Sudoku}.
+	 * 
+	 * @param latinSquare the {@code LatinSquare} from which to create a new {@code Sudoku} from.
+	 * @param variant the {@code SudokuVariant} that describes the new {@code Sudoku}.
+	 * @param blockFactory the {@code BlockFactory} that will be used to create the new {@code Sudoku}'s {@code Block}s.
+	 * 
+	 * @return a {@code Sudoku} instance with the given properties.
+	 * 
+	 * @see #latinSquareOf(int, Set, Symbol, CellFactory, RowFactory, ColumnFactory)
+	 * 
+	 * @throws NullPointerException if any of the given arguments are {@code null}.
+	 * @throws IllegalArgumentException if the size of the given {@code LatinSquare} is not equal to size of the given {@code SudokuVariant}.
+	 * 
+	 * @implNote
+	 * The characteristics of the returned {@code Sudoku} instance are largely depend on the provided {@code LatinSquare} and {@code SudokuVariant}.
+	 */
+	public static final <V> Sudoku<V> sudokuOf(LatinSquare<V> latinSquare, SudokuVariant variant, BlockFactory<V> blockFactory) {
+		return new CompositeSudoku<V>(latinSquare, variant, blockFactory);
 	}
 	
 	/**
