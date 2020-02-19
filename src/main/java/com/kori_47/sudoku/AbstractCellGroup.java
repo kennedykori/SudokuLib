@@ -24,7 +24,7 @@ import java.util.Map;
  * @see CellGroup
  * @see LatinSquare
  */
-public abstract class AbstractCellGroup<V> implements CellGroup<V> {
+abstract class AbstractCellGroup<V> implements CellGroup<V> {
 	
 	private final int size;
 	

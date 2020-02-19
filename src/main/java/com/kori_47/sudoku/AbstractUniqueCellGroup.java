@@ -20,7 +20,7 @@ import java.util.Map;
  *
  * @since Sun, 2 Feb 2020 00:48:02
  */
-public abstract class AbstractUniqueCellGroup<V> extends AbstractCellGroup<V> implements UniqueCellGroup<V> {
+abstract class AbstractUniqueCellGroup<V> extends AbstractCellGroup<V> implements UniqueCellGroup<V> {
 
 	/**
 	 * the unqiue identifier of this {@code UniqueCellGroup}.
