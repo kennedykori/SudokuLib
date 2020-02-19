@@ -5,6 +5,7 @@ package com.kori_47.sudoku;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,10 +22,9 @@ import java.util.Set;
  * </pre>
  * 
  * <p>
- * A {@code Cell} can be marked as an initial cell making it non editable until it is changed back to a 
- * normal cell. Attempting to modify an initial cell should result in the {@link InitialCellModificationException}
- * being thrown. Modification in this context refers to changing a cell's {@code Symbol} and making or
- * removing notes on the cell.
+ * A {@code Cell} can be marked as a clue cell making it non editable until it is changed back to a normal cell.
+ * Attempting to modify an clue cell should result in the {@link ClueCellModificationException} being thrown.
+ * Modification in this context refers to changing a cell's {@code Symbol} and making or removing notes on the cell.
  * </p>
  * 
  * <p>
@@ -38,7 +38,7 @@ import java.util.Set;
  *
  * @since Oct 17, 2019, 12:38:39 AM
  */
-public interface Cell<V> extends Formattable, Comparable<Cell<V>> {
+public interface Cell<V> extends Formattable, Comparable<Cell<V>>, Unique<String> {
 
 	/**
 	 * {@inheritDoc}
@@ -113,136 +113,22 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>> {
      * 
      * @throws NullPointerException if {@code other} is {@code null}.
      * 
+     * @see Cells#defaultComparator()
+     * 
      * @implSpec
-     * The default implementation performs comparison based on the {@link #x() x}
-     * and {@link #y() y} coordinates of the two {@code Cell}s with the {@code y}
-     * coordinate having more weight over the {@code x} coordinate. Consider the
-     * following:
-     * 
-     * <p>
-     * Assume we have a {@code Cell} implementation {@code CellImp} with the following
-     * constructor:
-     * <pre> 
-     * <code>
-     * public CellImp(int x, int y) {
-     * 	this.x = x; // where x is the x coordinate of this cell
-     * 	this.y = y; // where y is the y coordinate of this cell
-     * }
-     * </code>
-     * </pre>
-     * 
-     * Then consider the following code snippet:
-     * 
-     * <pre> {@code
-	 * CellImp<V> a = new CellImp<>(2, 3);
-	 * CellImp<V> b = new CellImp<>(3, 2);
-	 * CellImp<V> c = new CellImp<>(3, 3);
-	 * CellImp<V> d = new CellImp<>(2, 0);
-	 * CellImp<V> e = new CellImp<>(2, 0);
-	 * 
-	 * System.out.println(a.compare(b));
-	 * System.out.println(a.compare(c));
-	 * System.out.println(b.compare(c));
-	 * System.out.println(c.compare(d));
-	 * System.out.println(e.compare(d));
-	 * }
-	 * </pre>
-	 * 
-	 * Then the code snippet above should produce the following output:
-	 * <pre> {@code
-	 * 1
-	 * -1
-	 * -1
-	 * 0
-	 * }
-	 * </pre>
-	 * 
-	 * where {@code 1} can be any positive {@code Integer} and {@code -1} can be
-	 * any negative {@code Integer}.
-	 * </p>
+     * The default implementation uses the {@link Comparator} returned by {@link Cells#defaultComparator()}
+     * to perform the needed comparisons. 
 	 */
 	@Override
-	default int compareTo(Cell<V> other) {
-		// TODO Needs further testing to ensure the comparison gives excepted results 
+	default int compareTo(Cell<V> other) { 
 		requireNonNull(other, "other cannot be null.");
-		return Integer.compare(
-				Integer.compare(y(), other.y()),
-				Integer.compare(x(), other.x()));
+		return Cells.defaultComparator().compare(this, other);
 	}
-
-	/**
-	 * <p> Changes the {@link Symbol} of this cell to a new value. If this is an initial cell, then this call 
-	 * will fail with an {@link InitialCellModificationException}. {@code null} values are allowed.
-	 * 
-	 * @param value the new {@code Symbol} to set on this cell.
-	 * 
-	 * @throws InitialCellModificationException if this is an initial cell.
- 	 */
-	void changeSymbol(Symbol<V> value);
 	
-	/**
-	 * <p>
-	 * Marks this cell as an initial cell and sets the given {@link Symbol} as the {@code Symbol} for this
-	 * cell. Any modifications attempts on this cell after this call will result in an {@link InitialCellModificationException}
-	 * being thrown until this cell is changed back to an normal cell.
-	 * </p>
-	 * 
-	 * <p>
-	 * Multiple calls of this method on an initial cell are allowed and should not throw an
-	 * {@code InitialCellModificationException}.
-	 * </p>
-	 * 
-	 * @param initialValue the {@code Symbol} to set to this initial cell.
-	 * 
-	 * @throws NullPointerException if {@code initialValue} is {@code null}.
-	 */
-	void markInitial(Symbol<V> initialValue);
-	
-	/**
-	 * Marks this cell as a normal cell allowing modification of the cell. 
-	 * 
-	 * <p>
-	 * Multiple calls of this method on a normal cell are allowed and should return cleanly.
-	 * </p>
-	 */
-	void markNormal();
-	
-	/**
-	 * Adds the given {@link Symbol} as a possible value for this cell. Adding an already
-	 * noted {@code Symbol} should have no effect and should result in a clean return.
-	 * 
-	 * @param note the {@code Symbol} to mark as a possible value for this cell.
-	 * 
-	 * @throws NullPointerException if {@code note} is {@code null}.
-	 */
-	void makeNote(Symbol<V> note);
-	
-	/**
-	 * Removes the given {@link Symbol} from the {@code Set} of noted possible values of this
-	 * cell. Removing a non noted {@code Symbol} should have no effect and should result in a
-	 * clean return.
-	 * 
-	 * @param note the {@code Symbol} to remove from the {@code Set} of noted possible values
-	 * of this cell.
-	 * 
-	 * @throws NullPointerException if {@code note} is {@code null}.
-	 */
-	void removeNote(Symbol<V> note);
-
-	/**
-	 * Resets this {@code Cell} by changing the {@code Cell}s {@link Symbol} to a given value,
-	 * clears any notes that this {@code Cell} might have and reverts this {@code Cell} to
-	 * a normal {@code Cell} if this is an initial {@code Cell}.
-	 * 
-	 * @param symbol the {@code Symbol} to set this {@code Cell} to after the reset. {@code null}
-	 * is allowed and should not result in a {@code NullPointerException}.
-	 */
-	void reset(Symbol<V> symbol);
-
 	/**
 	 * Clears this {@code Cell} by changing the {@code Cell}s {@link Symbol} to a {@code null}
 	 * value, clears any notes that this {@code Cell} might have and reverts this {@code Cell} to
-	 * a normal {@code Cell} if this is an initial {@code Cell}.
+	 * a normal {@code Cell} if this is marked as a clue {@code Cell}.
 	 * 
 	 * @implSpec
 	 * The default implementation is equivalent to, for this {@code cell}:
@@ -256,7 +142,152 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>> {
 	}
 	
 	/**
-	 * Returns the x coordinate of this cell. This is also the index of the column in which
+	 * This method is meant to be used as alternative to {@link #equals(Object)} and concrete
+	 * implementations of this interface can provide a more detailed and comprehensive comparison
+	 * of two {@code Cell}s. This method exists because this interface imposes a strict specification
+	 * on the {@code equals} method that might not be comprehensive enough for some implementations.
+	 * 
+	 * <p>
+	 * <i>
+	 * <strong>NOTE:</strong> Since this is meant to be used as an alternative to {@code equals},
+	 * implementations of this method should maintain the general contracts of the {@code equals} method
+	 * to ensure correct and predictable results.
+	 * </i>
+	 * 
+	 * @param otherObj the other object to compare for equality with this one.
+	 * 
+	 * @return {@code true} if this {@code Cell} is equal to {@code otherObj}, {@code false} otherwise.
+	 * 
+	 * @see #equals(Object)
+	 * 
+	 * @implSpec
+	 * The default implementation of this method simply calls the {@code equals} method of this {@code Cell}.
+	 * That is, the default implementation is equivalent to:
+	 * <pre> {@code
+	 * return this.equals(otherObj);
+	 * }
+	 * </pre>
+	 */
+	default boolean deepEquals(Object otherObj) {
+		return this.equals(otherObj);
+	}
+	
+	/**
+	 * Returns the hash code value for this {@link Cell}. Since a {@code Cell} is mutable, the
+	 * hash code value of a {@code Cell} is derived from the following three properties of a
+	 * {@code Cell} that are not expected to mutate within the lifetime of a {@code Cell}:
+	 * <ul>
+	 * <li>The hash code of the {@link #id()} of this {@code Cell}.</li>
+	 * <li>The hash code of the {@link #x() x coordinate} of this {@code Cell}.</li>
+	 * <li>The hash code of the {@link #y() y coordinate} of this {@code Cell}.</li>
+	 * </ul>
+	 * 
+	 * @return the hash code value of this {@code Cell}.
+	 */
+	@Override
+	int hashCode();
+	
+	/**
+	 * Compares the given object with this {@code Cell} for equality. Returns {@code true} if the
+	 * given object is also a {@code Cell} and the two {@code Cell}s are identical. Since {@code Cell}s
+	 * are mutable, two {@code Cell}s are said to be equal only if each of the following of their properties
+	 * are also equal:
+	 * <ul>
+	 * <li>The <i>{@link #id() ids}</i> of the {@code Cell}s</li>
+	 * <li>The <i>{@link #x() x coordinates}</i> of the {@code Cell}s.</li>
+	 * <li>The <i>{@link #y() y coordinates}</i> of the {@code Cell}s.</li>
+	 * </ul>
+	 * 
+	 * <p>
+	 * Each of the properties above is not expected to mutate within the lifetime of a {@code Cell} and
+	 * each {@code Cell} within a given {@link CellGroup} should have a unique combination of these properties.
+	 * Using non mutable properties for equals comparisons helps to ensure that a {@link Set} of {@code Cell}s
+	 * works correctly even if it's cells are mutated and helps to ensure that the general contract of the
+	 * {@code hashCode} method is maintained. For a more comprehensive comparisons of {@code Cell}s
+	 * {@link #deepEquals(Object)} should be used instead.
+	 * 
+	 * @param obj the object to compare for equality with this {@code Cell}.
+	 * 
+	 * @return {@code true} if this {@code Cell} is equal to {@code obj} argument, {@code false} otherwise.
+	 * 
+	 * @see #deepEquals(Object)
+	 */
+	@Override
+	boolean equals(Object obj);
+
+	/**
+	 * <p> Changes the {@link Symbol} of this cell to a new value. If this is an initial cell, then this call 
+	 * will fail with an {@link ClueCellModificationException}. {@code null} values are allowed.
+	 * 
+	 * @param value the new {@code Symbol} to set on this cell.
+	 * 
+	 * @throws ClueCellModificationException if this is a clue cell.
+ 	 */
+	void changeSymbol(Symbol<V> value);
+	
+	/**
+	 * <p>
+	 * Marks this cell as a clue cell and sets the given {@link Symbol} as the {@code Symbol} for this cell. Any
+	 * modifications attempts on this cell after this call will result in an {@link ClueCellModificationException}
+	 * being thrown until this cell is changed back to an normal cell.
+	 * </p>
+	 * 
+	 * <p>
+	 * Multiple calls of this method on a cell that is already marked as a clue cell are allowed and should not
+	 * throw a {@code ClueCellModificationException}.
+	 * </p>
+	 * 
+	 * @param initialValue the {@code Symbol} to set to this clue cell.
+	 * 
+	 * @throws NullPointerException if {@code initialValue} is {@code null}.
+	 */
+	void makeClueCell(Symbol<V> initialValue);
+	
+	/**
+	 * Marks this cell as a normal cell allowing modification of the cell. 
+	 * 
+	 * <p>
+	 * Multiple calls of this method on a normal cell are allowed and should return cleanly.
+	 * </p>
+	 */
+	void makeNormalCell();
+	
+	/**
+	 * Adds the given {@link Symbol} as a possible value for this cell. Adding an already noted {@code Symbol} should
+	 * have no effect and should result in a clean return.
+	 * 
+	 * @param note the {@code Symbol} to mark as a possible value for this cell.
+	 * 
+	 * @throws NullPointerException if {@code note} is {@code null}.
+	 * @throws ClueCellModificationException if this a clue cell.
+	 */
+	void makeNote(Symbol<V> note);
+	
+	/**
+	 * Removes the given {@link Symbol} from the {@code Set} of noted possible values of this
+	 * cell. Removing a non noted {@code Symbol} should have no effect and should result in a
+	 * clean return.
+	 * 
+	 * @param note the {@code Symbol} to remove from the {@code Set} of noted possible values
+	 * of this cell.
+	 * 
+	 * @throws NullPointerException if {@code note} is {@code null}.
+	 * @throws ClueCellModificationException if this a clue cell.
+	 */
+	void removeNote(Symbol<V> note);
+
+	/**
+	 * Resets this {@code Cell} by changing the {@code Cell}s {@link Symbol} to a given value,
+	 * clears any notes that this {@code Cell} might have and reverts this {@code Cell} to
+	 * a normal {@code Cell} if this is marked as a clue {@code Cell}.
+	 * 
+	 * @param symbol the {@code Symbol} to set this {@code Cell} to after the reset. {@code null}
+	 * is allowed and should not result in a {@code NullPointerException}.
+	 */
+	void reset(Symbol<V> symbol);
+	
+	/**
+	 * Returns the x coordinate of this cell. This is also the index of the {@link Column} in which
 	 * this cell belongs.
 	 * 
 	 * @return the x coordinate of this cell.
@@ -264,7 +295,7 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>> {
 	int x();
 	
 	/**
-	 * Returns the y coordinate of this cell. This is also the index of the row in which
+	 * Returns the y coordinate of this cell. This is also the index of the {@link Row} in which
 	 * this cell belongs.
 	 * 
 	 * @return the y coordinate of this cell.
@@ -272,9 +303,9 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>> {
 	int y();
 
 	/**
-	 * Returns a unique {@code String} that can be used to identify this cell in a {@code LatinSquare}.
+	 * Returns a unique {@code String} that can be used to identify this cell in a {@code CellGroup}.
 	 * 
-	 * @return a unique identifier of this cell in a {@code LatinSquare}.
+	 * @return a unique identifier of this cell in a {@code CellGroup}.
 	 */
 	String id();
 	
@@ -288,17 +319,18 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>> {
 	Optional<Symbol<V>> value();
 	
 	/**
-	 * Returns a {@link Set} of {@code Symbol}s marked as possible values for this cell.
+	 * Returns a {@link Set} of {@code Symbol}s marked as possible values for this cell. Modification
+	 * of the returned {@code Set} should not alter the notes this {@code Cell}.
 	 * 
-	 * @return a {@link Set} of {@code Symbol}s marked as possible values for this cell.
+	 * @return a {@code Set} of {@code Symbol}s marked as possible values for this cell.
 	 */
 	Set<Symbol<V>> notes();
 	
 	/**
-	 * Indicates whether this cell is marked as an initial cell or not. Returns {@code true} if this
-	 * is an initial cell or {@code false} otherwise.
+	 * Indicates whether this cell is marked as a clue cell or not. Returns {@code true} if this
+	 * is an clue cell or {@code false} otherwise.
 	 * 
-	 * @return {@code true} if this is an initial cell or {@code false} otherwise.
+	 * @return {@code true} if this is a clue cell or {@code false} otherwise.
 	 */
-	boolean isInitial();
+	boolean isClueCell();
 }

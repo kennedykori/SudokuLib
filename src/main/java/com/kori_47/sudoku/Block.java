@@ -5,7 +5,10 @@ package com.kori_47.sudoku;
 
 /**
  * This represents a region in a {@link Sudoku}. For example, the famous <i>9x9</i> {@code Sudoku}
- * has nine <i>3x3</i> regions.
+ * has nine <i>3x3</i> regions. This is a marker interface and has no addition methods other than
+ * the ones it inherits from other interfaces.
+ * 
+ * @param <V> the type of value held by the {@link Symbol}s supported by this {@code Block}.
  * 
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *
@@ -14,20 +17,8 @@ package com.kori_47.sudoku;
  * @see Sudoku
  * @see CellGroup
  * @see InterpolatableCellGroup
+ * @see UniqueCellGroup
  */
-public interface Block<V> extends InterpolatableCellGroup<V> {
+public interface Block<V> extends UniqueCellGroup<V>, InterpolatableCellGroup<V> {
 
-	/**
-	 * Returns the number of {@link Row}s in this {@code Block}.
-	 * 
-	 * @return the number of {@code Row}s in this {@code Block}.
-	 */
-	int blockRows();
-
-	/**
-	 * Returns the number of {@link Column}s in this {@code Block}.
-	 * 
-	 * @return the number of {@code Column}s in this {@code Block}.
-	 */
-	int blockColumns();
 }

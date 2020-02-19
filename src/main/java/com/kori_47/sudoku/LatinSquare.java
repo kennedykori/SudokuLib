@@ -27,6 +27,66 @@ import java.util.Map;
 public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toXY(LatinSquare)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toXY() {
+		return FormattableUtils.toXY(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toXYV(LatinSquare)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toXYV() {
+		return FormattableUtils.toXYV(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toXYI(LatinSquare)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toXYI() {
+		return FormattableUtils.toXYI(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toV(LatinSquare)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toV() {
+		return FormattableUtils.toV(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @implSpec
+	 * The default implementation uses {@link FormattableUtils#toI(LatinSquare)} to construct the desired
+	 * representation.
+	 */
+	@Override
+	default String toI() {
+		return FormattableUtils.toI(this);
+	}
+
+	/**
 	 * Mutates all the {@link Cell}s in this {@code LatinSquare} by setting them to the
 	 * {@link #emptySymbol() empty symbol} associated with this {@code LatinSquare}. This
 	 * mutation also clears the notes in each {@code Cell} and reverts any initial {@code Cell}
@@ -60,18 +120,113 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	}
 
 	/**
-	 * Creates and returns a new {@code LatinSquare} whose {@link Row}s and {@link Cell}s are permuted so
-	 * that the new {@code LatinSquare} is upside down in relation to this one.
+	 * Returns the hash code value for this {@code LatinSquare}. The hash code of a {@code LatinSquare} should
+	 * be derived from the hash codes of the following properties of a {@code LatinSquare}: 
+	 * <ul>
+	 * <li>The hash code value of this {@code LatinSquare}'s <i>{@link #size() size}</i> as returned by {@link Integer#hashCode(int)}</li>
+	 * <li>The hash code value of this {@code LatinSquare}'s <i>{@link #emptySymbol() emptySymbol}</i>.</li>
+	 * <li>The hash code value of this {@code LatinSquare}'s <i>{@link #cells() cells}</i> {@code Map}.</li>
+	 * <li>The hash code value of this {@code LatinSquare}'s <i>{@link #rows() rows}</i> {@code Map}.</li>
+	 * <li>The hash code value of this {@code LatinSquare}'s <i>{@link #columns() columns}</i> {@code Map}.</li>
+	 * <li>The hash code value of this {@code LatinSquare}'s <i>{@link #symbols() symbols}</i> {@code Map}.</li>
+	 * </ul>
+	 * 
+	 * @return the hash code value of this {@code LatinSquare}.
+	 */
+	@Override
+	int hashCode();
+
+	/**
+	 * Compares the specified object with this {@code LatinSquare} for equality. Returns {@code true} if the
+	 * given object is also a {@code LatinSquare} and the two {@code LatinSquare}s are identical. Two
+	 * {@code LatinSquare}s are said to be equal if each of the following of their properties are also equal:
+	 * <ul>
+	 * <li>The <i>{@link #size() sizes}</i> of the {@code LatinSquare}s</li>
+	 * <li>The <i>{@link #emptySymbol() emptySymbols}</i> of the {@code LatinSquare}s.</li>
+	 * <li>The <i>{@link #cells() cells}</i> {@code Map}s of the {@code LatinSquare}s.</li>
+	 * <li>The <i>{@link #rows() rows}</i> {@code Map}s of the {@code LatinSquare}s.</li>
+	 * <li>The <i>{@link #columns() columns}</i> {@code Map}s of the {@code LatinSquare}s.</li>
+	 * <li>The <i>{@link #symbols() symbols}</i> {@code Map}s of the {@code LatinSquare}s.</li>
+	 * </ul>
+	 * 
+	 * @param obj the object to compare for equality with this {@code LatinSquare}.
+	 * 
+	 * @return {@code true} if this {@code LatinSquare} is equal to {@code obj} argument, {@code false} otherwise.
+	 */
+	@Override
+	boolean equals(Object obj);
+	
+	/**
+	 * Creates and returns a new {@code LatinSquare} whose {@link Cell} values are permuted so that the new {@code LatinSquare}
+	 * is upside down in relation to this one.
+	 * 
+	 * <p>
+	 * Cosider the following {@code LatinSquare}:
+	 * <pre>
+	 * 		+---+---+---+---+
+	 * 		| 1 | 2 | 3 | 4 |
+	 * 		+---+---+---+---+
+	 * 		| 2 | 3 | 4 | 1 |
+	 * 		+---+---+---+---+
+	 * 		| 3 | 4 | 1 | 2 |
+	 * 		+---+---+---+---+
+	 * 		| 4 | 1 | 2 | 3 |
+	 * 		+---+---+---+---+
+	 * </pre>
+	 * 
+	 * After calling {@code flipHorizontally()}, the {@code LatinSquare} returned should have the following {@code Cell} values:
+	 * <pre>
+	 * 		+---+---+---+---+
+	 * 		| 4 | 1 | 2 | 3 |
+	 * 		+---+---+---+---+
+	 * 		| 3 | 4 | 1 | 2 |
+	 * 		+---+---+---+---+
+	 * 		| 2 | 3 | 4 | 1 |
+	 * 		+---+---+---+---+
+	 * 		| 1 | 2 | 3 | 4 |
+	 * 		+---+---+---+---+
+	 * </pre>
 	 * 
 	 * @return a new identical but upside down {@code LatinSquare} in relation to this one.
+	 * 
+	 * @see #flipVertically()
 	 */
 	LatinSquare<V> flipHorizontally();
 
 	/**
-	 * Creates and returns a new {@code LatinSquare} whose {@link Column}s and {@link Cell}s are permuted so
-	 * that the new {@code LatinSquare} is flipped sideways in relation to this one.
+	 * Creates and returns a new {@code LatinSquare} whose {@link Cell} values are permuted so that the new {@code LatinSquare}
+	 * is flipped sideways in relation to this one.
+	 * 
+	 * <p>
+	 * Cosider the following {@code LatinSquare}:
+	 * <pre>
+	 * 		+---+---+---+---+
+	 * 		| 1 | 2 | 3 | 4 |
+	 * 		+---+---+---+---+
+	 * 		| 2 | 3 | 4 | 1 |
+	 * 		+---+---+---+---+
+	 * 		| 3 | 4 | 1 | 2 |
+	 * 		+---+---+---+---+
+	 * 		| 4 | 1 | 2 | 3 |
+	 * 		+---+---+---+---+
+	 * </pre>
+	 * 
+	 * After calling {@code flipVertically()}, the {@code LatinSquare} returned should have the following {@code Cell} values:
+	 * <pre>
+	 * 		+---+---+---+---+
+	 * 		| 4 | 3 | 2 | 1 |
+	 * 		+---+---+---+---+
+	 * 		| 1 | 4 | 3 | 2 |
+	 * 		+---+---+---+---+
+	 * 		| 2 | 1 | 4 | 3 |
+	 * 		+---+---+---+---+
+	 * 		| 3 | 2 | 1 | 4 |
+	 * 		+---+---+---+---+
+	 * </pre>
 	 * 
 	 * @return a new identical but flipped sideways {@code LatinSquare} in relation to this one.
+	 * 
+	 * @see #flipHorizontally()
 	 */
 	LatinSquare<V> flipVertically();
 
@@ -92,9 +247,23 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	CellFactory<V> cellFactory();
 
 	/**
+	 * Returns the {@link RowFactory} used by this {@code LatinSquare} to create new {@link Row}s.
+	 * 
+	 * @return the {@code RowFactory} used by this {@code LatinSquare} to create new {@code Row}s.
+	 */
+	RowFactory<V> rowFactory();
+
+	/**
+	 * Returns the {@link ColumnFactory} used by this {@code LatinSquare} to create new {@link Column}s.
+	 * 
+	 * @return the {@code ColumnFactory} used by this {@code LatinSquare} to create new {@code Column}s.
+	 */
+	ColumnFactory<V> columnFactory();
+	
+	/**
 	 * Returns a {@code Map} of the {@link Row}s contained in this {@code LatinSquare}. Modification of the 
 	 * returned {@code Map} should not alter the {@code Row}s of this {@code LatinSquare}. Implementations of this 
-	 * interface can also choose to return an unmodifiable {@code Map} instead to prevent modifications.
+	 * interface can also choose to return an immutable {@code Map} instead to prevent modifications.
 	 * 
 	 * @return a {@code Map} of the {@code Row}s contained in this {@code LatinSquare}.
 	 */
@@ -103,7 +272,7 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	/**
 	 * Returns a {@code Map} of the {@link Column}s contained in this {@code LatinSquare}. Modification of the 
 	 * returned {@code Map} should not alter the {@code Column}s of this {@code LatinSquare}. Implementations of
-	 * this interface can also choose to return an unmodifiable {@code Map} instead to prevent modifications.
+	 * this interface can also choose to return an immutable {@code Map} instead to prevent modifications.
 	 * 
 	 * @return a {@code Map} of the {@code Column}s contained in this {@code LatinSquare}.
 	 */
@@ -121,7 +290,7 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 * returned {@code Map}'s size must be equal to the size of this {@code LatinSquare}.
 	 * 
 	 * <p> Modification of the returned {@code Map} should not alter the {@code Symbol}s of this {@code LatinSquare}.
-	 * Implementations of this interface can also choose to return an unmodifiable {@code Map} instead to prevent
+	 * Implementations of this interface can also choose to return an immutable {@code Map} instead to prevent
 	 * modifications.
 	 * 
 	 * @return a {@code Map} of the {@code Symbol}s contained in this {@code LatinSquare}.
