@@ -254,9 +254,9 @@ public interface CellGroup<V> extends Formattable, Iterable<Cell<V>> {
 	
 	/**
 	 * Returns the number of {@code Cell}s in this {@code CellGroup}. This should normally be equal
-	 * to the size of the {@code LatinSquare} in which this {@code CellGroup} belongs.
+	 * to the size of the {@link LatinSquare} in which this {@code CellGroup} belongs.
 	 * 
-	 * @return the number of {@code Cell}s in this {@code LatinSquare}.
+	 * @return the number of {@code Cell}s in this {@code CellGroup}.
 	 */
 	int size();
 	
