@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
  *
  * @since Sat, 22 Feb 2020 19:49:58
  */
-public interface SymbolTests extends TestEquals<Symbol<?>>, TestComparable<Symbol<?>> {
+public interface SymbolTest extends TestEquals<Symbol<Object>>, TestComparable<Symbol<Object>> {
 	
 	/**
 	 * Test that {@link Symbol} accessor methods do not return {@code null}.
