@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
  *
  * @since Thu, 20 Feb 2020 00:12:14
  */
-public interface TestComparable<T extends Comparable<T>> extends Testable<T> {
+public interface ComparableTest<T extends Comparable<T>> extends Testable<T> {
 
 	/**
 	 * Returns a smaller value of the {@code Testable} entity. That is, returns
