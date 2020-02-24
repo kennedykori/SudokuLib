@@ -473,7 +473,7 @@ public final class FormattableUtils {
 		requireNonNull(cell, "cell cannot be null.");
 		requireNonNull(separator, "separator cannot be null.");
 		requireNonNull(placeholder, "placeholder cannot be null.");
-		return String.format("%d%s%d%s%d", cell.x(), separator, cell.y(), separator,
+		return String.format("%d%s%d%s%s", cell.x(), separator, cell.y(), separator,
 				(cell.value().isPresent()? cell.value().get().id() : placeholder));
 	}
 

@@ -327,7 +327,7 @@ public final class Cells {
 
 		@Override
 		public void makeClueCell(Symbol<V> initialValue) {
-			changeSymbol(requireNonNull(initialValue, "initialValue cannot be null."));
+			this.value = requireNonNull(initialValue, "initialValue cannot be null.");
 			clueCell = true;
 		}
 
