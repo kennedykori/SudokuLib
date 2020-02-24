@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * This class defines the tests for the methods and components found on the
- * {@link Symbols} static utility class.
+ * {@link Symbols} utility class.
  * 
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *
