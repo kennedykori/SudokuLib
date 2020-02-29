@@ -116,13 +116,13 @@ final class CompositeSudoku<V> implements Sudoku<V> {
 	}
 
 	@Override
-	public Sudoku<V> flipHorizontally() {
-		return new CompositeSudoku<>(latinSquare.flipHorizontally(), variant, blockFactory);
+	public void flipHorizontally() {
+		latinSquare.flipHorizontally();
 	}
 
 	@Override
-	public Sudoku<V> flipVertically() {
-		return new CompositeSudoku<>(latinSquare.flipVertically(), variant, blockFactory);
+	public void flipVertically() {
+		latinSquare.flipVertically();
 	}
 
 	@Override

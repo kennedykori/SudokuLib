@@ -71,22 +71,6 @@ public interface Sudoku<V> extends LatinSquare<V> {
 	 */
 	@Override
 	boolean equals(Object obj);
-	
-	/**
-	 * Creates and returns a new {@code Sudoku} whose {@link Row}s and {@link Cell}s are permuted so
-	 * that the new {@code Sudoku} is upside down in relation to this one.
-	 * 
-	 * @return a new identical but upside down {@code Sudoku} in relation to this one.
-	 */
-	Sudoku<V> flipHorizontally();
-
-	/**
-	 * Creates and returns a new {@code Sudoku} whose {@link Column}s and {@link Cell}s are permuted so
-	 * that the new {@code Sudoku} is flipped sideways in relation to this one.
-	 * 
-	 * @return a new identical but flipped sideways {@code Sudoku} in relation to this one.
-	 */
-	Sudoku<V> flipVertically();
 
 	/**
 	 * Returns a new {@code Sudoku} that has the same properties, {@link Cell cells} and 
