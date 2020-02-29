@@ -288,7 +288,7 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>>, Unique<String
 	
 	/**
 	 * Returns the x coordinate of this cell. This is also the index of the {@link Column} in which
-	 * this cell belongs.
+	 * this cell belongs and thus should always be a positive {@code Integer}.
 	 * 
 	 * @return the x coordinate of this cell.
 	 */
@@ -296,7 +296,7 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>>, Unique<String
 	
 	/**
 	 * Returns the y coordinate of this cell. This is also the index of the {@link Row} in which
-	 * this cell belongs.
+	 * this cell belongs and thus should always be a positive {@code Integer}.
 	 * 
 	 * @return the y coordinate of this cell.
 	 */
