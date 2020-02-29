@@ -11,15 +11,14 @@ import java.util.StringJoiner;
 import static java.util.Objects.requireNonNull;
 
 /**
- * This is a utility class composed of only static methods that can be used to represent
- * {@link Formattable}s on different forms/formats as defined by the {@code Formattable}
- * interface.
+ * This is a utility class composed exclusively of static methods that can be used to represent
+ * {@link Formattable}s on different forms/formats as defined by the {@code Formattable} interface.
  * 
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *
  * @since Sun, 22 Dec 2019 21:56:14
  */
-public final class FormattableUtils {
+public final class Formattables {
 	
 	/**
 	 * A comparator used to sort rows on reverse based on their index
@@ -1006,5 +1005,5 @@ public final class FormattableUtils {
 	}
 	
 	// private constructor to prevent instantiation of this class.
-	private FormattableUtils() { }
+	private Formattables() { }
 }

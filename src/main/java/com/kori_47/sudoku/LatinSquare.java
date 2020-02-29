@@ -30,60 +30,60 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toXY(LatinSquare)} to construct the desired
+	 * The default implementation uses {@link Formattables#toXY(LatinSquare)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toXY() {
-		return FormattableUtils.toXY(this);
+		return Formattables.toXY(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toXYV(LatinSquare)} to construct the desired
+	 * The default implementation uses {@link Formattables#toXYV(LatinSquare)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toXYV() {
-		return FormattableUtils.toXYV(this);
+		return Formattables.toXYV(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toXYI(LatinSquare)} to construct the desired
+	 * The default implementation uses {@link Formattables#toXYI(LatinSquare)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toXYI() {
-		return FormattableUtils.toXYI(this);
+		return Formattables.toXYI(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toV(LatinSquare)} to construct the desired
+	 * The default implementation uses {@link Formattables#toV(LatinSquare)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toV() {
-		return FormattableUtils.toV(this);
+		return Formattables.toV(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toI(LatinSquare)} to construct the desired
+	 * The default implementation uses {@link Formattables#toI(LatinSquare)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toI() {
-		return FormattableUtils.toI(this);
+		return Formattables.toI(this);
 	}
 
 	/**

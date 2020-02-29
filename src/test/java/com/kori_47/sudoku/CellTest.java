@@ -27,70 +27,70 @@ public interface CellTest extends TestHashCode<Cell<Object>>, ComparableTest<Cel
 	 * {@inheritDoc}
 	 * @implSpec
 	 * The default implementation for this {@code cell} only checks that {@code cell.toI()}
-	 * equals to {@link FormattableUtils#toI(Cell)}.
+	 * equals to {@link Formattables#toI(Cell)}.
 	 */
 	@Test
 	@Override
 	default void testToI() {
 		Cell<Object> cell = createValue();
 		
-		assertEquals(FormattableUtils.toI(cell), cell.toI());
+		assertEquals(Formattables.toI(cell), cell.toI());
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 * @implSpec
 	 * The default implementation for this {@code cell} only checks that {@code cell.toV()}
-	 * equals to {@link FormattableUtils#toV(Cell)}.
+	 * equals to {@link Formattables#toV(Cell)}.
 	 */
 	@Test
 	@Override
 	default void testToV() {
 		Cell<Object> cell = createValue();
 		
-		assertEquals(FormattableUtils.toV(cell), cell.toV());
+		assertEquals(Formattables.toV(cell), cell.toV());
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 * @implSpec
 	 * The default implementation for this {@code cell} only checks that {@code cell.toXY()}
-	 * equals to {@link FormattableUtils#toXY(Cell)}.
+	 * equals to {@link Formattables#toXY(Cell)}.
 	 */
 	@Test
 	@Override
 	default void testToXY() {
 		Cell<Object> cell = createValue();
 		
-		assertEquals(FormattableUtils.toXY(cell), cell.toXY());
+		assertEquals(Formattables.toXY(cell), cell.toXY());
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 * @implSpec
 	 * The default implementation for this {@code cell} only checks that {@code cell.toXYI()}
-	 * equals to {@link FormattableUtils#toXYI(Cell)}.
+	 * equals to {@link Formattables#toXYI(Cell)}.
 	 */
 	@Test
 	@Override
 	default void testToXYI() {
 		Cell<Object> cell = createValue();
 		
-		assertEquals(FormattableUtils.toXYI(cell), cell.toXYI());
+		assertEquals(Formattables.toXYI(cell), cell.toXYI());
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 * @implSpec
 	 * The default implementation for this {@code cell} only checks that {@code cell.toXYV()}
-	 * equals to {@link FormattableUtils#toXYV(Cell)}.
+	 * equals to {@link Formattables#toXYV(Cell)}.
 	 */
 	@Test
 	@Override
 	default void testToXYV() {
 		Cell<Object> cell = createValue();
 		
-		assertEquals(FormattableUtils.toXYV(cell), cell.toXYV());
+		assertEquals(Formattables.toXYV(cell), cell.toXYV());
 	}
 	
 	/**

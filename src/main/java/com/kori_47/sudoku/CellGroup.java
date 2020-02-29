@@ -36,60 +36,60 @@ public interface CellGroup<V> extends Formattable, Iterable<Cell<V>> {
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toXY(CellGroup)} to construct the desired
+	 * The default implementation uses {@link Formattables#toXY(CellGroup)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toXY() {
-		return FormattableUtils.toXY(this);
+		return Formattables.toXY(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toXYV(CellGroup)} to construct the desired
+	 * The default implementation uses {@link Formattables#toXYV(CellGroup)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toXYV() {
-		return FormattableUtils.toXYV(this);
+		return Formattables.toXYV(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toXYI(CellGroup)} to construct the desired
+	 * The default implementation uses {@link Formattables#toXYI(CellGroup)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toXYI() {
-		return FormattableUtils.toXYI(this);
+		return Formattables.toXYI(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toV(CellGroup)} to construct the desired
+	 * The default implementation uses {@link Formattables#toV(CellGroup)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toV() {
-		return FormattableUtils.toV(this);
+		return Formattables.toV(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toI(CellGroup)} to construct the desired
+	 * The default implementation uses {@link Formattables#toI(CellGroup)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toI() {
-		return FormattableUtils.toI(this);
+		return Formattables.toI(this);
 	}
 	
 	/**
