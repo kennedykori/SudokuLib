@@ -89,7 +89,7 @@ abstract class AbstractCellGroup<V> implements CellGroup<V> {
 	 */
 	@Override
 	public int hashCode() {
-		return Integer.hashCode(size) + cells.hashCode();
+		return CellGroups.hashCode(this);
 	}
 
 	/**
@@ -103,10 +103,7 @@ abstract class AbstractCellGroup<V> implements CellGroup<V> {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!(obj instanceof CellGroup)) return false;
-		CellGroup<?> _obj = (CellGroup<?>) obj;
-		return size == _obj.size() && cells.equals(_obj.cells());
+		return CellGroups.equals(this, obj);
 	}
 
 	/**

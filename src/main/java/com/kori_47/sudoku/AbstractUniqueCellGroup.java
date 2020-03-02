@@ -86,7 +86,7 @@ abstract class AbstractUniqueCellGroup<V> extends AbstractCellGroup<V> implement
 	 */
 	@Override
 	public int hashCode() {
-		return id.hashCode() + super.hashCode();
+		return CellGroups.hashCode(this);
 	}
 
 	/**
@@ -100,9 +100,6 @@ abstract class AbstractUniqueCellGroup<V> extends AbstractCellGroup<V> implement
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!(obj instanceof UniqueCellGroup)) return false;
-		UniqueCellGroup<?> _obj = (UniqueCellGroup<?>) obj;
-		return size() == _obj.size() && id.equals(_obj.id()) && cells.equals(_obj.cells());
+		return CellGroups.equals(this, obj);
 	}
 }
