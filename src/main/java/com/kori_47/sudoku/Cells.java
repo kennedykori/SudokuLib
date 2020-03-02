@@ -104,7 +104,7 @@ public final class Cells {
 	 * </ul>
 	 * 
 	 * <p>
-	 * The {@code Comparator} returned is guaranteed to be consistent with the {@link Cell#equals(Object) equals}
+	 * The {@code Comparator} returned is guaranteed to be <i>consistent with the {@link Cell#equals(Object) equals}</i>
 	 * method of a {@link Cell} as long as the {@code Cell}'s equals method implementation maintains the strict contract
 	 * of that method. It should also be noted that since the {@code Comparator} returned by this method includes the {@code id}
 	 * of a {@code Cell} when performing comparisons, it will work best with {@code Cell}s who's {@code id}s are part of a sequence.
