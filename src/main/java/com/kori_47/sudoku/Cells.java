@@ -273,8 +273,8 @@ public final class Cells {
 	 */
 	public static final String toString(Cell<?> cell, String placeholder) {
 		requireNonNull(cell, "cell cannot be null.");
-		String cellValue = (cell.value().isPresent())? cell.value().toString() : isNull(placeholder)? "-" : placeholder;
-		return String.format("Cell{id=%s, coord=(x:%d, y:%d), value=%s}", cell.id(), cell.x(),  cell.y(), cellValue);
+		String cellValue = (cell.value().isPresent())? cell.value().get().toString() : isNull(placeholder)? "-" : placeholder;
+		return String.format("Cell{id=%s, coord=(x:%d, y:%d), value=[%s], clue=%s}", cell.id(), cell.x(),  cell.y(), cellValue, cell.isClueCell());
 	}
 	
 	/**
