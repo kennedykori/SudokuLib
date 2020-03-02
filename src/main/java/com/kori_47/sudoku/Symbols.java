@@ -5,7 +5,9 @@ package com.kori_47.sudoku;
 
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.IntStream.range;
-import static java.util.Objects.hash;
+
+import java.util.Comparator;
+
 import static java.util.Objects.requireNonNull;
 
 import static com.kori_47.utils.ObjectUtils.requireGreaterThanOrEqualTo;
@@ -25,6 +27,11 @@ import java.util.Set;
  * @see Symbol
  */
 public final class Symbols {
+	
+	/**
+	 * default {@code Symbol} comparator
+	 */
+	private static final Comparator<Symbol<?>> DEFAULT_SYMBOL_COMPARATOR = Comparator.comparingInt(symbol -> symbol.id().intValue());
 
 	/**
 	 * Returns a new {@link Symbol} with the given {@code id} and {@code value}.
@@ -113,6 +120,69 @@ public final class Symbols {
 				.mapToObj(Symbols::nextLetterSymbol)
 				.collect(toSet());
 	}
+	
+	/**
+	 * Returns a default {@link Comparator} that can be used to compare two {@link Symbol}s for equality and
+	 * ordering. The comparator returned performs comparisons based on the {@code id}'s of the {@code Symbol}'s
+	 * and thus might be <i>inconsistent with equals</i> if the {@code equals} implementations of the 
+	 * {@code Symbol}s used uses more than just the {@code id} property to make equality comparisons.
+	 * 
+	 * @return a {@code Comparator} that can be used for {@code Symbol} comparisons.
+	 */
+	public static final Comparator<Symbol<?>> defaultComparator() {
+		return DEFAULT_SYMBOL_COMPARATOR;
+	}
+	
+	/**
+	 * Returns the hash code of the given {@link Symbol}. This method uses both the {@code id} and {@code value}
+	 * properties of a {@code Symbol} to calculate it's hash code.
+	 * 
+	 * @param symbol the {@code Symbol} whose hash code we want.
+	 * 
+	 * @return the hash code of the given {@code Symbol}.
+	 * 
+	 * @throws NullPointerException if {@code symbol} is {@code null}.
+	 */
+	public static final int hashCode(Symbol<?> symbol) {
+		requireNonNull(symbol, "symbol cannot be null.");
+		int hashCode = symbol.id().hashCode();
+		hashCode = 92821 * hashCode + symbol.value().hashCode();
+		return hashCode;
+	}
+	
+	/**
+	 * Compares the given {@link Symbol} and {@code Object} for equality. Returns {@code true} if
+	 * the given object is also a {@code Symbol} and the two {@code Symbol}s have equal identifiers
+	 * and values. 
+	 * 
+	 * @param symbol the {@code Symbol}  to compare to the given object for equality. Must <b>NOT</b> be {@code null}.
+	 * @param obj the object to compare for equality with the given {@code Symbol}. Maybe {@code null}.
+	 * 
+	 * @return {@code true} if the given {@code Symbol} is equal to the given object, {@code false} otherwise.
+	 * 
+	 * @throws NullPointerException if {@code symbol} is {@code null}.
+	 */
+	public static final boolean equals(Symbol<?> symbol, Object obj) {
+		requireNonNull(symbol, "symbol cannot be null.");
+		if (obj == symbol) return true;
+		if (!(obj instanceof Symbol)) return false;
+		Symbol<?> _obj = (Symbol<?>)obj;
+		return symbol.id().equals(_obj.id()) && symbol.value().equals(_obj.value());
+	}
+	
+	/**
+	 * Returns a {@code String} representation of a {@link Symbol}.
+	 * 
+	 * @param symbol the {@code Symbol} whose {@code String} representation we are interested in.
+	 * 
+	 * @return the {@code String} representation of the given {@code Symbol}.
+	 * 
+	 * @throws NullPointerException if {@code symbol} is {@code null}.
+	 */
+	public static final String toString(Symbol<?> symbol) {
+		requireNonNull(symbol, "symbol cannot be null.");
+		return String.format("Symbol{id=%d, value=%s}", symbol.id(), symbol.value()); 
+	}
 
 	/**
 	 * This helper method used internally by the {@link #letterSymbolsUpTo(int)} to convert an {@code Integer}
@@ -125,6 +195,7 @@ public final class Symbols {
 	private static final Symbol<Character> nextLetterSymbol(int offset) {
 		return of(Integer.valueOf(offset), (char)('A' + (--offset)));
 	}
+	
 	/**
 	 * This is a simple implementation of the {@link Symbol} interface.
 	 * 
@@ -153,7 +224,7 @@ public final class Symbols {
 			this.id = requireNonNull(id, "id cannot be null.");
 			this.value = requireNonNull(value, "value cannot be null.");
 			// cache the hash code
-			this.hashCode = hash(this.id, this.value);
+			this.hashCode = Symbols.hashCode(this);
 		}
 		
 		@Override
@@ -173,15 +244,12 @@ public final class Symbols {
 		
 		@Override
 		public boolean equals(Object obj) {
-			if (obj == this) return true;
-			if (!(obj instanceof Symbol)) return false;
-			Symbol<?> _obj = (Symbol<?>)obj;
-			return id.equals(_obj.id()) && value.equals(_obj.value());
+			return Symbols.equals(this, obj);
 		}
 		
 		@Override
 		public String toString() {
-			return String.format("Symbol{id=%d, value=%s}", id, value);
+			return Symbols.toString(this);
 		}
 	}
 
