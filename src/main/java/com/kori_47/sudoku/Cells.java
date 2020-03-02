@@ -29,7 +29,6 @@ public final class Cells {
 	/**
 	 * default Cell Comparator
 	 */
-	// TODO Needs further testing to ensure the comparison gives excepted results
 	private static final Comparator<Cell<?>> DEFAULT_CELL_COMPARATOR = Comparator.<Cell<?>>comparingInt(Cell::y)
 			.thenComparingInt(Cell::x)
 			.thenComparing(Cell::id);
