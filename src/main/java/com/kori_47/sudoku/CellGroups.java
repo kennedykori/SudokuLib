@@ -8,6 +8,7 @@ import static com.kori_47.utils.ObjectUtils.requireInRange;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.Comparator;
 import java.util.Map;
 
 /**
@@ -23,6 +24,21 @@ import java.util.Map;
  * @see Block
  */
 public final class CellGroups {
+	
+	/**
+	 * default {@code UniqueCellGroup} comparator
+	 */
+	private final static Comparator<UniqueCellGroup<?>> DEFAULT_UNIQUE_CELL_GROUP_COMPARATOR = Comparator.comparing(UniqueCellGroup::id);
+	
+	/**
+	 * default {@code Row} comparator
+	 */
+	private final static Comparator<Row<?>> DEFAULT_ROW_COMPARATOR = Comparator.comparingInt(Row::y);
+	
+	/**
+	 * default {@code Column} comparator
+	 */
+	private final static Comparator<Column<?>> DEFAULT_COLUMN_COMPARATOR = Comparator.comparingInt(Column::x);
 
 	/**
 	 * <p> Creates and returns an instance of a {@link Row} with the specified properties.
@@ -182,6 +198,55 @@ public final class CellGroups {
 	public static final <V> BlockFactory<V> defaultBoxBlockFactory() {
 		return (id, size, cells, startCell, endCell) -> boxBlockOf(id, size, cells, startCell, endCell);
 	}
+	
+	/**
+	 * Returns a default {@link Comparator} that can be used to compare two {@link UniqueCellGroup}s for equality and
+	 * ordering. The comparator returned performs comparisons based on the {@code id}'s of the {@code UniqueCellGroup}'s
+	 * and is thus <i>inconsistent with equals</i> as the specification of the {@link UniqueCellGroup#equals(Object) equals}
+	 * method on the {@code UniqueCellGroup} interface dictates that equality comparisons on {@code UniqueCellGroup}'s
+	 * must use other properties of the {@code UniqueCellGroup}'s other than just their identifiers. This implementation
+	 * is however justifiable for {@code UniqueCellGroup} implementations whose identifiers are part of a sequence as their
+	 * ordering can easily be determined from their identifiers.
+	 * 
+	 * @return a {@code Comparator} that can be used for {@code UniqueCellGroup} comparisons.
+	 * 
+	 * @see UniqueCellGroup#equals(Object)
+	 */
+	public static final Comparator<UniqueCellGroup<?>> defaultUniqueCellGroupComparator() {
+		return DEFAULT_UNIQUE_CELL_GROUP_COMPARATOR;
+	}
+	
+	/**
+	 * Returns a default {@link Comparator} that can be used to compare two {@link Row}s for equality and ordering. The
+	 * comparator returned performs comparisons based on the index of the {@code Row} in a {@link LatinSquare} and is thus
+	 * <i>inconsistent with equals</i> as the specification of the {@link Row#equals(Object) equals} method on the {@code Row}
+	 * interface dictates that equality comparisons on {@code Row}'s must use other properties of the {@code Row}'s other than
+	 * just their indexes. This implementation is however justifiable for {@code Row}'s as their ordering can easily be determined
+	 * from their indexes.
+	 * 
+	 * @return a {@code Comparator} that can be used for {@code Row} comparisons.
+	 * 
+	 * @see Row#equals(Object)
+	 */
+	public static final Comparator<Row<?>> defaultRowComparator() {
+		return DEFAULT_ROW_COMPARATOR;
+	}
+	
+	/**
+	 * Returns a default {@link Comparator} that can be used to compare two {@link Column}s for equality and ordering. The
+	 * comparator returned performs comparisons based on the index of the {@code Column} in a {@link LatinSquare} and is thus
+	 * <i>inconsistent with equals</i> as the specification of the {@link Column#equals(Object) equals} method on the {@code Column}
+	 * interface dictates that equality comparisons on {@code Column}'s must use other properties of the {@code Column}'s other than
+	 * just their indexes. This implementation is however justifiable for {@code Column}'s as their ordering can easily be determined
+	 * from their indexes.
+	 * 
+	 * @return a {@code Comparator} that can be used for {@code Column} comparisons.
+	 * 
+	 * @see Column#equals(Object)
+	 */
+	public static final Comparator<Column<?>> defaultColumnComparator() {
+		return DEFAULT_COLUMN_COMPARATOR;
+	}
 
 	/**
 	 * Returns the hash code of the given {@link CellGroup}. The hash code of the {@code CellGroup} should be derived from the
@@ -332,6 +397,12 @@ public final class CellGroups {
 		public int y() {
 			return y;
 		}
+		
+		@Override
+		public int compareTo(UniqueCellGroup<V> other) {
+			requireNonNull(other, "other cannot be null.");
+			return CellGroups.defaultRowComparator().compare(this, (Row<?>) other);
+		}
 	}
 
 	/**
@@ -368,6 +439,12 @@ public final class CellGroups {
 		@Override
 		public int x() {
 			return x;
+		}
+		
+		@Override
+		public int compareTo(UniqueCellGroup<V> other) {
+			requireNonNull(other, "other cannot be null.");
+			return CellGroups.defaultColumnComparator().compare(this, (Column<?>) other);
 		}
 	}
 	
