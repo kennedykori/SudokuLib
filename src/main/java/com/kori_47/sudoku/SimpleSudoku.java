@@ -79,33 +79,6 @@ class SimpleSudoku<V> extends SimpleLatinSquare<V> implements Sudoku<V> {
 		// create blocks
 		initBlocks();
 	}
-
-	public Sudoku<V> flipHorizontally() {
-		SimpleSudoku<V> nSdk= new SimpleSudoku<>(this); // new Sudoku 
-		for (int index = 0, index2 = (size() - 1); index < size(); index++, index2--) {
-			Row<V> cr = rows.get(Integer.toString(index));
-			Row<V> nr = nSdk.rows.get(Integer.toString(index2));
-			// copy the row values from the current row to the new row  
-			for (int x = 0; x < size(); x++) {
-				nr.getCell(x, nr.y()).get().changeSymbol(cr.getCell(x, cr.y()).get().value().orElse(null));
-			}
-		}		
-		return nSdk;
-	}
-
-	@Override
-	public Sudoku<V> flipVertically() {
-		SimpleSudoku<V> nSdk= new SimpleSudoku<>(this); // new Sudoku 
-		for (int index = 0, index2 = (size() - 1); index < size(); index++, index2--) {
-			Column<V> cc = columns.get(Integer.toString(index));
-			Column<V> nc = nSdk.columns.get(Integer.toString(index2));
-			// copy the column values from the current row to the new column
-			for (int y = 0; y < size(); y++) {
-				nc.getCell(nc.x(), y).get().changeSymbol(cc.getCell(cc.x(), y).get().value().orElse(null));
-			}
-		}		
-		return nSdk;
-	}
 	
 	@Override
 	public Sudoku<V> copy() {

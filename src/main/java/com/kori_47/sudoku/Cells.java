@@ -7,13 +7,15 @@ import static java.util.Collections.unmodifiableSet;
 import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
+import static com.kori_47.utils.ObjectUtils.requireNonNegative;
+
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 /**
- * This class consists exclusively of static methods that create and operate on {@link Cell}s.
+ * This class consists exclusively of static methods thiamawesomeGROOT47!at create and operate on {@link Cell}s.
  * 
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *
@@ -44,6 +46,7 @@ public final class Cells {
 	 * @return a new {@code Cell} with the given properties.
 	 * 
 	 * @throws NullPointerException if {@code id} is {@code null}.
+	 * @throws IllegalArgumentException if either {@code x} or {@code y} is negative, i.e less than zero.
 	 * 
 	 * @see #of(String, int, int, Symbol)
 	 * 
@@ -67,6 +70,7 @@ public final class Cells {
 	 * @return a new {@code Cell} with the given properties.
 	 * 
 	 * @throws NullPointerException if {@code id} is {@code null}.
+	 * @throws IllegalArgumentException if either {@code x} or {@code y} is negative, i.e less than zero.
 	 * 
 	 * @implNote
 	 * The {@link Cell#notes() notes()} method of the new {@code Cell} instances returns an immutable {@code Set}. 
@@ -269,8 +273,8 @@ public final class Cells {
 	 */
 	public static final String toString(Cell<?> cell, String placeholder) {
 		requireNonNull(cell, "cell cannot be null.");
-		String cellValue = (cell.value().isPresent())? cell.value().toString() : isNull(placeholder)? "-" : placeholder;
-		return String.format("Cell{id=%s, coord=(x:%d, y:%d), value=%s}", cell.id(), cell.x(),  cell.y(), cellValue);
+		String cellValue = (cell.value().isPresent())? cell.value().get().toString() : isNull(placeholder)? "-" : placeholder;
+		return String.format("Cell{id=%s, coord=(x:%d, y:%d), value=[%s], clue=%s}", cell.id(), cell.x(),  cell.y(), cellValue, cell.isClueCell());
 	}
 	
 	/**
@@ -309,11 +313,12 @@ public final class Cells {
 		 * @param value the {@code Symbol} to assign to the new {@code Cell}. Maybe {@code null}.
 		 * 
 		 * @throws NullPointerException if {@code id} is {@code null}.
+		 * @throws IllegalArgumentException if either {@code x} or {@code y} is negative, i.e less than zero.
 		 */
 		SimpleCell(String id, int x, int y, Symbol<V> value) {
 			this.id= requireNonNull(id, "id cannot be null.");
-			this.x = x;
-			this.y = y;
+			this.x = requireNonNegative(x, "x must be a positive integer.");
+			this.y = requireNonNegative(y, "y must be a positive integer.");
 			this.value = value;
 			this.notes = new HashSet<>();
 			this.notesView = unmodifiableSet(this.notes);
@@ -327,7 +332,7 @@ public final class Cells {
 
 		@Override
 		public void makeClueCell(Symbol<V> initialValue) {
-			changeSymbol(requireNonNull(initialValue, "initialValue cannot be null."));
+			this.value = requireNonNull(initialValue, "initialValue cannot be null.");
 			clueCell = true;
 		}
 

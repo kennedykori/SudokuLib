@@ -30,60 +30,60 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toXY(LatinSquare)} to construct the desired
+	 * The default implementation uses {@link Formattables#toXY(LatinSquare)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toXY() {
-		return FormattableUtils.toXY(this);
+		return Formattables.toXY(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toXYV(LatinSquare)} to construct the desired
+	 * The default implementation uses {@link Formattables#toXYV(LatinSquare)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toXYV() {
-		return FormattableUtils.toXYV(this);
+		return Formattables.toXYV(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toXYI(LatinSquare)} to construct the desired
+	 * The default implementation uses {@link Formattables#toXYI(LatinSquare)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toXYI() {
-		return FormattableUtils.toXYI(this);
+		return Formattables.toXYI(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toV(LatinSquare)} to construct the desired
+	 * The default implementation uses {@link Formattables#toV(LatinSquare)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toV() {
-		return FormattableUtils.toV(this);
+		return Formattables.toV(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toI(LatinSquare)} to construct the desired
+	 * The default implementation uses {@link Formattables#toI(LatinSquare)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toI() {
-		return FormattableUtils.toI(this);
+		return Formattables.toI(this);
 	}
 
 	/**
@@ -157,8 +157,8 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	boolean equals(Object obj);
 	
 	/**
-	 * Creates and returns a new {@code LatinSquare} whose {@link Cell} values are permuted so that the new {@code LatinSquare}
-	 * is upside down in relation to this one.
+	 * Permutes this {@code LatinSquare}'s {@link Cell} values so that after this method returns, the {@code LatinSquare} appears
+	 * to have been turned upside down.
 	 * 
 	 * <p>
 	 * Cosider the following {@code LatinSquare}:
@@ -174,7 +174,7 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 * 		+---+---+---+---+
 	 * </pre>
 	 * 
-	 * After calling {@code flipHorizontally()}, the {@code LatinSquare} returned should have the following {@code Cell} values:
+	 * After calling {@code flipHorizontally()}, the {@code LatinSquare} should have the following {@code Cell} values:
 	 * <pre>
 	 * 		+---+---+---+---+
 	 * 		| 4 | 1 | 2 | 3 |
@@ -186,16 +186,14 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 * 		| 1 | 2 | 3 | 4 |
 	 * 		+---+---+---+---+
 	 * </pre>
-	 * 
-	 * @return a new identical but upside down {@code LatinSquare} in relation to this one.
 	 * 
 	 * @see #flipVertically()
 	 */
-	LatinSquare<V> flipHorizontally();
+	void flipHorizontally();
 
 	/**
-	 * Creates and returns a new {@code LatinSquare} whose {@link Cell} values are permuted so that the new {@code LatinSquare}
-	 * is flipped sideways in relation to this one.
+	 * Permutes this {@code LatinSquare}'s {@link Cell} values so that after this method returns, the {@code LatinSquare} appears
+	 * to have been turned sideways.
 	 * 
 	 * <p>
 	 * Cosider the following {@code LatinSquare}:
@@ -211,7 +209,7 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 * 		+---+---+---+---+
 	 * </pre>
 	 * 
-	 * After calling {@code flipVertically()}, the {@code LatinSquare} returned should have the following {@code Cell} values:
+	 * After calling {@code flipVertically()}, the {@code LatinSquare} should have the following {@code Cell} values:
 	 * <pre>
 	 * 		+---+---+---+---+
 	 * 		| 4 | 3 | 2 | 1 |
@@ -224,18 +222,15 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 * 		+---+---+---+---+
 	 * </pre>
 	 * 
-	 * @return a new identical but flipped sideways {@code LatinSquare} in relation to this one.
-	 * 
 	 * @see #flipHorizontally()
 	 */
-	LatinSquare<V> flipVertically();
+	void flipVertically();
 
 	/**
-	 * Returns a new {@code LatinSquare} that has the same properties, {@link Cell cells} and 
+	 * Returns a new {@code LatinSquare} that is exactly identical to this one, i.e has the same properties, and 
 	 * cell values as this one.
 	 * 
-	 * @return a new {@code LatinSquare} that has the same properties, {@code Cell}s and cell
-	 * values as this one.
+	 * @return a new {@code LatinSquare} that is exactly identical to this one.
 	 */
 	LatinSquare<V> copy();
 

@@ -44,60 +44,60 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>>, Unique<String
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toXY(Cell)} to construct the desired
+	 * The default implementation uses {@link Formattables#toXY(Cell)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toXY() {
-		return FormattableUtils.toXY(this);
+		return Formattables.toXY(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toXYV(Cell)} to construct the desired
+	 * The default implementation uses {@link Formattables#toXYV(Cell)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toXYV() {
-		return FormattableUtils.toXYV(this);
+		return Formattables.toXYV(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toXYI(Cell)} to construct the desired
+	 * The default implementation uses {@link Formattables#toXYI(Cell)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toXYI() {
-		return FormattableUtils.toXYI(this);
+		return Formattables.toXYI(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toV(Cell)} to construct the desired
+	 * The default implementation uses {@link Formattables#toV(Cell)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toV() {
-		return FormattableUtils.toV(this);
+		return Formattables.toV(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * The default implementation uses {@link FormattableUtils#toI(Cell)} to construct the desired
+	 * The default implementation uses {@link Formattables#toI(Cell)} to construct the desired
 	 * representation.
 	 */
 	@Override
 	default String toI() {
-		return FormattableUtils.toI(this);
+		return Formattables.toI(this);
 	}
 
 	/**
@@ -288,7 +288,7 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>>, Unique<String
 	
 	/**
 	 * Returns the x coordinate of this cell. This is also the index of the {@link Column} in which
-	 * this cell belongs.
+	 * this cell belongs and thus should always be a positive {@code Integer}.
 	 * 
 	 * @return the x coordinate of this cell.
 	 */
@@ -296,7 +296,7 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>>, Unique<String
 	
 	/**
 	 * Returns the y coordinate of this cell. This is also the index of the {@link Row} in which
-	 * this cell belongs.
+	 * this cell belongs and thus should always be a positive {@code Integer}.
 	 * 
 	 * @return the y coordinate of this cell.
 	 */

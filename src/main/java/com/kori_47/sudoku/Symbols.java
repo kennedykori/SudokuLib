@@ -153,7 +153,7 @@ public final class Symbols {
 			this.id = requireNonNull(id, "id cannot be null.");
 			this.value = requireNonNull(value, "value cannot be null.");
 			// cache the hash code
-			this.hashCode = hash(Integer.valueOf(this.id), this.value);
+			this.hashCode = hash(this.id, this.value);
 		}
 		
 		@Override
