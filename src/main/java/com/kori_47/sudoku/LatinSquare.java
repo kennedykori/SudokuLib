@@ -123,9 +123,15 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	}
 	
 	/**
-	 * Sets the value of the given {@link Cell} to that of the given {@link Symbol} if and only if the given
-	 * {@code Cell} and {@code Symbol} are part of this {@code LatinSquare}, otherwise, a {@link SudokuException}
-	 * is thrown. It should be noted that this method isn't required to make any other checks on the {@code Cell}
+	 * Sets the value of the given {@link Cell} to that of the given {@link Symbol} <i>if and only if</i> the given {@code Cell}
+	 * and {@code Symbol} are part of this {@code LatinSquare}, otherwise, a {@link SudokuException} is thrown. A {@code Cell} is
+	 * said to be part of a {@code LatinSquare} if the {@code Cell} is contained in the {@code Cell}s {@code Map} returned by
+	 * the {@code LatinSquare}'s {@link #cells()} method. A {@code Symbol} is said to be part of a {@code LatinSquare} if the
+	 * {@code Symbol} is contained in the {@code Symbol}s {@code Map} returned by the {@code LatinSquare}'s {@link #symbols()}
+	 * method or if it is equal to the value returned by the {@code LatinSquare}'s {@link #emptySymbol()} method.
+	 * 
+	 * <p>
+	 * It should be noted that this method isn't required to make any other checks on the {@code Cell}
 	 * and as such, other exceptions such as {@link ClueCellModificationException} maybe thrown if the given
 	 * {@code Cell} is a clue {@code Cell}.
 	 * 
@@ -134,6 +140,10 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 * 
 	 * @throws NullPointerException if any of the given arguments is/are {@code null}.
 	 * @throws SudokuException if the given {@code Cell} or {@code Symbol} is not part of this {@code LatinSquare}.
+	 * 
+	 * @see #cells()
+	 * @see #emptySymbol()
+	 * @see #symbols()
 	 * 
 	 * @apiNote
 	 * {@link LatinSquare} clients are encouraged to use this method when changing the value of a {@code Cell} as
@@ -154,7 +164,7 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 * if (!latinSquare.cells().containsKey(cell.id()))
 	 * 	throw new SudokuException();
 	 * Objects.requireNonNull(symbol);
-	 * if (!latinSquare.symbols().containsKey(symbol.id()))
+	 * if (!latinSquare.symbols().containsKey(symbol.id()) && !symbol.equals(latinSquare.emptySymbol()))
 	 * 	throw new SudokuException();
 	 * 
 	 * cell.changeSymbol(symbol);
@@ -166,7 +176,7 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 		if (!cells().containsKey(requireNonNull(cell, "cell cannot be null").id()))
 			throw new SudokuException("The given cell(" + cell + ") isn't part of this LatinSquare.");
 		// start by validating that the given Symbol is part of this LatinSquare
-		if (!symbols().containsKey(requireNonNull(symbol, "symbol cannot be null").id()))
+		if (!symbols().containsKey(requireNonNull(symbol, "symbol cannot be null").id()) && !symbol.equals(emptySymbol()))
 			throw new SudokuException("The given symbol(" + cell + ") isn't one of the Symbols of this LatinSquare.");
 		// change the Cell's Symbol
 		cell.changeSymbol(symbol);
