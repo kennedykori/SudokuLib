@@ -123,6 +123,56 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	}
 	
 	/**
+	 * Sets the value of the given {@link Cell} to that of the given {@link Symbol} if and only if the given
+	 * {@code Cell} and {@code Symbol} are part of this {@code LatinSquare}, otherwise, a {@link SudokuException}
+	 * is thrown. It should be noted that this method isn't required to make any other checks on the {@code Cell}
+	 * and as such, other exceptions such as {@link ClueCellModificationException} maybe thrown if the given
+	 * {@code Cell} is a clue {@code Cell}.
+	 * 
+	 * @param cell the {@code Cell} whose value we want to change.
+	 * @param symbol the {@code Symbol} to set the given {@code Cell}.
+	 * 
+	 * @throws NullPointerException if any of the given arguments is/are {@code null}.
+	 * @throws SudokuException if the given {@code Cell} or {@code Symbol} is not part of this {@code LatinSquare}.
+	 * 
+	 * @apiNote
+	 * {@link LatinSquare} clients are encouraged to use this method when changing the value of a {@code Cell} as
+	 * it ensures that the {@code Symbol} set on the {@code Cell} is part of this {@code LatinSquare}'s {@link #symbols() symbols}
+	 * thus preserving the integrity of this {@code LatinSquare}.
+	 * 
+	 * @implSpec
+	 * This method first checks that the given {@code Cell} isn't {@code null} and if it is, throws a {@link NullPointerException}.
+	 * It then proceeds to check that the given {@code Cell} is part of this {@code LatinSquare} and throws a {@link SudokuException}
+	 * if not. The method then checks that the given {@code Symbol} isn't {@code null} and is part if this {@code LatinSquare} and if
+	 * not throws a {@code NullPointerException} and {@code SudokuException} respectively. If everything checks out, the method finishes
+	 * by setting the given {@code Symbol} on the given {@code Cell}.
+	 * 
+	 * <p>
+	 * The above steps can be summarized as, for this {@code latinSquare}:
+	 * <pre> {@code
+	 * Objects.requireNonNull(cell);
+	 * if (!latinSquare.cells().containsKey(cell.id()))
+	 * 	throw new SudokuException();
+	 * Objects.requireNonNull(symbol);
+	 * if (!latinSquare.symbols().containsKey(symbol.id()))
+	 * 	throw new SudokuException();
+	 * 
+	 * cell.changeSymbol(symbol);
+	 * }
+	 * </pre>
+	 */
+	default void changeSymbol(Cell<V> cell, Symbol<V> symbol) {
+		// start by validating that the given Cell is part of this LatinSquare
+		if (!cells().containsKey(requireNonNull(cell, "cell cannot be null").id()))
+			throw new SudokuException("The given cell(" + cell + ") isn't part of this LatinSquare.");
+		// start by validating that the given Symbol is part of this LatinSquare
+		if (!symbols().containsKey(requireNonNull(symbol, "symbol cannot be null").id()))
+			throw new SudokuException("The given symbol(" + cell + ") isn't one of the Symbols of this LatinSquare.");
+		// change the Cell's Symbol
+		cell.changeSymbol(symbol);
+	}
+	
+	/**
 	 * Returns an {@link Optional} describing the {@link Row} in which the given {@link Cell} belongs to, or
 	 * an empty {@code Optional} if the {@code Cell} doesn't belong to this {@code LatinSquare}.
 	 * 
