@@ -3,7 +3,10 @@
  */
 package com.kori_47.sudoku;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * A {@code LatinSquare} is an <i>n × n</i> matrix filled with <i>n</i> different {@link Symbol}s,
@@ -117,6 +120,52 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 */
 	default void clear() {
 		cells().values().forEach(cell -> cell.clear());
+	}
+	
+	/**
+	 * Returns an {@link Optional} describing the {@link Row} in which the given {@link Cell} belongs to, or
+	 * an empty {@code Optional} if the {@code Cell} doesn't belong to this {@code LatinSquare}.
+	 * 
+	 * @param cell the {@code Cell} whose parent {@code Row} we want to find.
+	 * 
+	 * @return an {@code Optional} describing the {@code Row} that the given {@code Cell} belongs to, or
+	 * an empty {@code Optional} if the {@code Cell} doesn't belong to this {@code LatinSquare}.
+	 * 
+	 * @throws NullPointerException if the given {@code Cell} is {@code null}.
+	 * 
+	 * @implSpec
+	 * The default implementation is equivalent to, for this {@code latinSquare}:
+	 * <pre> {@code
+	 * latinSquare.rows().values().stream().filter(row -> row.y() == cell.y()).findFirst();
+	 * }
+	 * </pre>
+	 */
+	default Optional<Row<V>> locateParentRow(Cell<V> cell) {
+		requireNonNull(cell, "cell cannot be null.");
+		return rows().values().stream().filter(row -> row.y() == cell.y()).findFirst();
+	}
+	
+	/**
+	 * Returns an {@link Optional} describing the {@link Column} in which the given {@link Cell} belongs to, or
+	 * an empty {@code Optional} if the {@code Cell} doesn't belong to this {@code LatinSquare}.
+	 * 
+	 * @param cell the {@code Cell} whose parent {@code Column} we want to find.
+	 * 
+	 * @return an {@code Optional} describing the {@code Column} that the given {@code Cell} belongs to, or
+	 * an empty {@code Optional} if the {@code Cell} doesn't belong to this {@code LatinSquare}.
+	 * 
+	 * @throws NullPointerException if the given {@code Cell} is {@code null}.
+	 * 
+	 * @implSpec
+	 * The default implementation is equivalent to, for this {@code latinSquare}:
+	 * <pre> {@code
+	 * latinSquare.columns().values().stream().filter(column -> column.x() == cell.x()).findFirst();
+	 * }
+	 * </pre>
+	 */
+	default Optional<Column<V>> locateParentColumn(Cell<V> cell) {
+		requireNonNull(cell, "cell cannot be null.");
+		return columns().values().stream().filter(column -> column.x() == cell.x()).findFirst();
 	}
 
 	/**
