@@ -277,6 +277,77 @@ public final class Cells {
 	}
 	
 	/**
+	 * This method swaps the properties of the two given {@link Cell}s such that after this method returns, {@code cell1} will
+	 * have the properties of {@code cell2} before the call and {@code cell2} will have the properties of {@code cell1} before
+	 * the call.
+	 * 
+	 * @param <V> the type of value held by the {@link Symbol}s supported by the {@code Cell}s being swapped .
+	 * 
+	 * @param cell1 the 1st {@code Cell} to be swapped.
+	 * @param cell2 the 2nd {@code Cell} to be swapped.
+	 * 
+	 * @see LatinSquare#flipHorizontally()
+	 * @see LatinSquare#flipVertically()
+	 * 
+	 * @apiNote
+	 * This method is mostly useful to {@link LatinSquare} implementations when performing flip operations making it easy to swap
+	 * {@code Cell} properties without the need to create new temporary {@code LatinSquare}'s to hold the values of the
+	 * {@code LatinSquare} in question during the flip.
+	 */
+	public static final <V> void swapCellProperties(Cell<V> cell1, Cell<V> cell2) {
+		requireNonNull(cell1, "cell1 cannot be null.");
+		requireNonNull(cell2, "cell2 cannot be null.");
+		
+		// get the clue status of the Cells
+		boolean clue1 = cell1.isClueCell();
+		boolean clue2 = cell2.isClueCell();
+		// get the Symbols of the Cells
+		Symbol<V> symbol1 = cell1.value().orElse(null);
+		Symbol<V> symbol2 = cell2.value().orElse(null);
+		// get the notes of the Cells
+		@SuppressWarnings("unchecked")
+		Symbol<V>[] notes1 = cell1.notes().toArray(new Symbol[cell1.notes().size()]);
+		@SuppressWarnings("unchecked")
+		Symbol<V>[] notes2 = cell2.notes().toArray(new Symbol[cell2.notes().size()]);
+		
+		// reset the cells
+		cell1.reset(null);
+		cell2.reset(null);
+		
+		// copy the notes
+		for (Symbol<V> symbol : notes1) cell2.makeNote(symbol);
+		for (Symbol<V> symbol : notes2) cell1.makeNote(symbol);
+		
+		/* ======== Cover the 4 Possibilities ======== */
+		// 1. Both Cells are clue Cells
+		if (clue1 && clue2) {
+			// make the Cells clue Cells
+			cell1.makeClueCell(symbol2);
+			cell2.makeClueCell(symbol1);
+		}
+		// 2. cell1 is a clue Cell but cell2 isn't
+		else if (clue1 && !clue2) {
+			// make cell2 a clue Cell
+			cell2.makeClueCell(symbol1);
+			// set the value of cell1
+			cell1.changeSymbol(symbol2);
+		}
+		// 3. cell2 is a clue Cell but cell1 isn't
+		else if (clue2 && !clue1) {
+			// make cell1 a clue Cell
+			cell1.makeClueCell(symbol2);
+			// set the value of cell2
+			cell2.changeSymbol(symbol1);
+		}
+		// 4. Both Cells are normal Cells.
+		else {
+			// set the Cell's values
+			cell1.changeSymbol(symbol2);
+			cell2.changeSymbol(symbol1);
+		}
+	}
+	
+	/**
 	 * This is a simple implementation of the {@link Cell} interface.
 	 * 
 	 * @param <V> the type of value held by the {@link Symbol}s supported by this {@code Cell}.

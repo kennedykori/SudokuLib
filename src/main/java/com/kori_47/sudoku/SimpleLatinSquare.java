@@ -146,7 +146,7 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 				Cell<V> cell1 = cr.getCell(x, cr.y()).get();
 				Cell<V> cell2 = nr.getCell(x, nr.y()).get();
 				
-				swapCellProperties(cell1, cell2);
+				Cells.swapCellProperties(cell1, cell2);
 			}
 		}		
 	}
@@ -163,7 +163,7 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 				Cell<V> cell1 = cc.getCell(cc.x(), y).get();
 				Cell<V> cell2 = nc.getCell(nc.x(), y).get();
 				
-				swapCellProperties(cell1, cell2);
+				Cells.swapCellProperties(cell1, cell2);
 			}
 		}		
 	}
@@ -306,58 +306,5 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 						symbol -> symbol,
 						(oldValue, newValue) -> newValue,
 						() -> new LinkedHashMap<Integer, Symbol<V>>(size)));
-	}
-	
-	private static final <V> void swapCellProperties(Cell<V> cell1, Cell<V> cell2) {
-		requireNonNull(cell1, "cell1 cannot be null.");
-		requireNonNull(cell2, "cell2 cannot be null.");
-		
-		// get the clue status of the Cells
-		boolean clue1 = cell1.isClueCell();
-		boolean clue2 = cell2.isClueCell();
-		// get the Symbols of the Cells
-		Symbol<V> symbol1 = cell1.value().orElse(null);
-		Symbol<V> symbol2 = cell2.value().orElse(null);
-		// get the notes of the Cells
-		@SuppressWarnings("unchecked")
-		Symbol<V>[] notes1 = cell1.notes().toArray(new Symbol[cell1.notes().size()]);
-		@SuppressWarnings("unchecked")
-		Symbol<V>[] notes2 = cell2.notes().toArray(new Symbol[cell2.notes().size()]);
-		
-		// reset the cells
-		cell1.reset(null);
-		cell2.reset(null);
-		
-		// copy the notes
-		for (Symbol<V> symbol : notes1) cell2.makeNote(symbol);
-		for (Symbol<V> symbol : notes2) cell1.makeNote(symbol);
-		
-		/* ======== Cover the 4 Possibilities ======== */
-		// 1. Both Cells are clue Cells
-		if (clue1 && clue2) {
-			// make the Cells clue Cells
-			cell1.makeClueCell(symbol2);
-			cell2.makeClueCell(symbol1);
-		}
-		// 2. cell1 is a clue Cell but cell2 isn't
-		else if (clue1 && !clue2) {
-			// make cell2 a clue Cell
-			cell2.makeClueCell(symbol1);
-			// set the value of cell1
-			cell1.changeSymbol(symbol2);
-		}
-		// 3. cell2 is a clue Cell but cell1 isn't
-		else if (clue2 && !clue1) {
-			// make cell1 a clue Cell
-			cell1.makeClueCell(symbol2);
-			// set the value of cell2
-			cell2.changeSymbol(symbol1);
-		}
-		// 4. Both Cells are normal Cells.
-		else {
-			// set the Cell's values
-			cell1.changeSymbol(symbol2);
-			cell2.changeSymbol(symbol1);
-		}
 	}
 }
