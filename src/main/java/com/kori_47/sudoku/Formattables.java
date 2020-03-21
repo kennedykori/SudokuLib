@@ -246,7 +246,7 @@ public final class Formattables {
 		requireNonNull(separator, "separator cannot be null.");
 		requireNonNull(placeholder, "placeholder cannot be null.");
 		return String.format("%d%s%d%s%s", cell.x(), separator, cell.y(), separator,
-				((cell.value().isPresent())? cell.value().get().value() : placeholder));
+				((cell.symbol().isPresent())? cell.symbol().get().value() : placeholder));
 	}
 	
 	/**
@@ -473,7 +473,7 @@ public final class Formattables {
 		requireNonNull(separator, "separator cannot be null.");
 		requireNonNull(placeholder, "placeholder cannot be null.");
 		return String.format("%d%s%d%s%s", cell.x(), separator, cell.y(), separator,
-				(cell.value().isPresent()? cell.value().get().id() : placeholder));
+				(cell.symbol().isPresent()? cell.symbol().get().id() : placeholder));
 	}
 
 	/**
@@ -664,7 +664,7 @@ public final class Formattables {
 	public static final String toV(final Cell<?> cell, final String placeholder) {
 		requireNonNull(cell, "cell cannot be null.");
 		requireNonNull(placeholder, "placeholder cannot be null.");
-		return cell.value().isPresent()? cell.value().get().value().toString() : placeholder;
+		return cell.symbol().isPresent()? cell.symbol().get().value().toString() : placeholder;
 	}
 
 	/**
@@ -855,7 +855,7 @@ public final class Formattables {
 	public static final String toI(final Cell<?> cell, final String placeholder) {
 		requireNonNull(cell, "cell cannot be null.");
 		requireNonNull(placeholder, "placeholder cannot be null.");
-		return cell.value().isPresent()? Integer.toString(cell.value().get().id()) : placeholder;
+		return cell.symbol().isPresent()? Integer.toString(cell.symbol().get().id()) : placeholder;
 	}
 
 	/**

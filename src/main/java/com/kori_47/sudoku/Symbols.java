@@ -50,18 +50,6 @@ public final class Symbols {
 	}
 
 	/**
-	 * Returns a number {@link Symbol} that can be used as an empty {@code Symbol} in a {@link LatinSquare}.
-	 * The returned {@code Symbol} has an {@code id} and {@code value} of zero.
-	 * 
-	 * @return an number {@code Symbol} that can be used as an empty {@code Symbol} in a {@code LatinSquare}.
-	 * 
-	 * @see #numberSymbolsUpTo(int)
-	 */
-	public static final Symbol<Integer> emptyNumberSymbol() {
-		return of(Integer.valueOf(0), Integer.valueOf(0));
-	}
-
-	/**
 	 * Returns a {@link Set} of number {@link Symbol}s starting from {@code 1} up to the specified limit
 	 * <strong><i>(exclusive)</i></strong>. That is, returns a {@code Set} of {@code Symbol}s with the first
 	 * {@code Symbol} having an id and value of {@code 1}, the second having an id and value of {@code 2} and so
@@ -82,19 +70,6 @@ public final class Symbols {
 				.mapToObj(Integer::valueOf)
 				.map(value -> of(value, value))
 				.collect(toSet());
-	}
-
-	/**
-	 * Returns a letter {@link Symbol} that can be used as an empty {@code Symbol} in a {@link LatinSquare}.
-	 * The returned {@code Symbol} has an {@code id} of {@code 0} and the {@code value} is the space
-	 * {@code Character}.
-	 * 
-	 * @return an letter {@code Symbol} that can be used as an empty {@code Symbol} in a {@code LatinSquare}.
-	 * 
-	 * @see #letterSymbolsUpTo(int)
-	 */
-	public static final Symbol<Character> emptyLetterSymbol() {
-		return of(Integer.valueOf(0), ' ');
 	}
 
 	/**

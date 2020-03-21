@@ -53,7 +53,6 @@ public final class LatinSquares {
 	 * 
 	 * @param size the size that the new {@code LatinSquare} should be.
 	 * @param symbols the {@link Set} of {@link Symbol}s to use when filling this {@code LatinSquare} {@link Cell}s.
-	 * @param emptySymbol the empty {@code Symbol} that the new {@code LatinSquare} should use.
 	 * 
 	 * @return a {@code LatinSquare} instance with the given properties.
 	 * 
@@ -67,8 +66,8 @@ public final class LatinSquares {
 	 * A call to this method is similar to calling {@link #latinSquareOf(int, Set, Symbol, CellFactory)} with the {@code cellFactory}
 	 * instance gotten from calling {@link Cells#defaultCellFactory()}.
 	 */
-	public static final <V> LatinSquare<V> latinSquareOf(int size, Set<Symbol<V>> symbols, Symbol<V> emptySymbol) {
-		return latinSquareOf(size, symbols, emptySymbol, Cells.defaultCellFactory());
+	public static final <V> LatinSquare<V> latinSquareOf(int size, Set<Symbol<V>> symbols) {
+		return latinSquareOf(size, symbols, Cells.defaultCellFactory());
 	}
 	
 	/**
@@ -78,7 +77,6 @@ public final class LatinSquares {
 	 * 
 	 * @param size the size that the new {@code LatinSquare} should be.
 	 * @param symbols the {@link Set} of {@link Symbol}s to use when filling this {@code LatinSquare} {@link Cell}s.
-	 * @param emptySymbol the empty {@code Symbol} that the new {@code LatinSquare} should use.
 	 * @param cellFactory the {@link CellFactory} that the new {@code LatinSquare} will use when creating new {@code Cell}s.
 	 * 
 	 * @return a {@code LatinSquare} instance with the given properties.
@@ -94,8 +92,8 @@ public final class LatinSquares {
 	 * {@code rowFactory} and {@code columnFactory} instances gotten from calling {@link CellGroups#defaultRowFactory()} and
 	 * {@link CellGroups#defaultColumnFactory()} respectfully.
 	 */
-	public static final <V> LatinSquare<V> latinSquareOf(int size, Set<Symbol<V>> symbols, Symbol<V> emptySymbol, CellFactory<V> cellFactory) {
-		return latinSquareOf(size, symbols, emptySymbol, cellFactory, CellGroups.defaultRowFactory(), CellGroups.defaultColumnFactory());
+	public static final <V> LatinSquare<V> latinSquareOf(int size, Set<Symbol<V>> symbols, CellFactory<V> cellFactory) {
+		return latinSquareOf(size, symbols, cellFactory, CellGroups.defaultRowFactory(), CellGroups.defaultColumnFactory());
 	}
 	
 	/**
@@ -105,7 +103,6 @@ public final class LatinSquares {
 	 * 
 	 * @param size the size that the new {@code LatinSquare} should be.
 	 * @param symbols the {@link Set} of {@link Symbol}s to use when filling this {@code LatinSquare} {@link Cell}s.
-	 * @param emptySymbol the empty {@code Symbol} that the new {@code LatinSquare} should use.
 	 * @param cellFactory the {@link CellFactory} that the new {@code LatinSquare} will use when creating new {@code Cell}s.
 	 * @param rowFactory the {@link RowFactory} that the new {@code LatinSquare} will use when creating new {@link Row}s.
 	 * @param columnFactory the {@link ColumnFactory} that the new {@code LatinSquare} will use when creating new {@link Column}s.
@@ -141,9 +138,9 @@ public final class LatinSquares {
 	 * accordance to their specification in the {@code LatinSquare} interface. It should also be noted that the {@code LatinSquare} instance returned
 	 * is <i>not thread safe</i>.
 	 */
-	public static final <V> LatinSquare<V> latinSquareOf(int size, Set<Symbol<V>> symbols, Symbol<V> emptySymbol, CellFactory<V> cellFactory,
-			 RowFactory<V> rowFactory, ColumnFactory<V> columnFactory) {
-		return new SimpleLatinSquare<V>(size, symbols, emptySymbol, cellFactory, rowFactory, columnFactory);
+	public static final <V> LatinSquare<V> latinSquareOf(int size, Set<Symbol<V>> symbols, CellFactory<V> cellFactory, RowFactory<V> rowFactory,
+			ColumnFactory<V> columnFactory) {
+		return new SimpleLatinSquare<V>(size, symbols, cellFactory, rowFactory, columnFactory);
 	}
 
 	/**
@@ -174,7 +171,6 @@ public final class LatinSquares {
 	 * 
 	 * @param variant the {@link SudokuVariant} that describes the new {@code Sudoku} to be created.
 	 * @param symbols the {@link Set} of {@link Symbol}s to use when filling this {@code Sudoku}'s {@link Cell}s.
-	 * @param emptySymbol the empty {@code Symbol} that the new {@code Sudoku} should use.
 	 * 
 	 * @return a {@code Sudoku} instance with the given properties.
 	 * 
@@ -187,8 +183,8 @@ public final class LatinSquares {
 	 * A call to this method is similar to calling {@link #sudokuOf(SudokuVariant, Set, Symbol, CellFactory)} with the {@code cellFactory}
 	 * instance gotten from calling {@link Cells#defaultCellFactory()}.
 	 */
-	public static final <V> Sudoku<V> sudokuOf(SudokuVariant variant, Set<Symbol<V>> symbols, Symbol<V> emptySymbol) {
-		return sudokuOf(variant, symbols, emptySymbol, Cells.defaultCellFactory());
+	public static final <V> Sudoku<V> sudokuOf(SudokuVariant variant, Set<Symbol<V>> symbols) {
+		return sudokuOf(variant, symbols, Cells.defaultCellFactory());
 	}
 
 	/**
@@ -198,7 +194,6 @@ public final class LatinSquares {
 	 * 
 	 * @param variant the {@link SudokuVariant} that describes the new {@code Sudoku} to be created.
 	 * @param symbols the {@link Set} of {@link Symbol}s to use when filling this {@code Sudoku}'s {@link Cell}s.
-	 * @param emptySymbol the empty {@code Symbol} that the new {@code Sudoku} should use.
 	 * @param cellFactory the {@link CellFactory} that the new {@code Sudoku} will use when creating new {@code Cell}s.
 	 * 
 	 * @return a {@code Sudoku} instance with the given properties.
@@ -213,8 +208,8 @@ public final class LatinSquares {
 	 * {@code rowFactory} and {@code columnFactory} instances gotten from calling {@link CellGroups#defaultRowFactory()} and
 	 * {@link CellGroups#defaultColumnFactory()} respectfully.
 	 */
-	public static final <V> Sudoku<V> sudokuOf(SudokuVariant variant, Set<Symbol<V>> symbols, Symbol<V> emptySymbol, CellFactory<V> cellFactory) {
-		return sudokuOf(variant, symbols, emptySymbol, cellFactory, CellGroups.defaultRowFactory(), CellGroups.defaultColumnFactory());
+	public static final <V> Sudoku<V> sudokuOf(SudokuVariant variant, Set<Symbol<V>> symbols, CellFactory<V> cellFactory) {
+		return sudokuOf(variant, symbols, cellFactory, CellGroups.defaultRowFactory(), CellGroups.defaultColumnFactory());
 	}
 
 	/**
@@ -224,7 +219,6 @@ public final class LatinSquares {
 	 * 
 	 * @param variant the {@link SudokuVariant} that describes the new {@code Sudoku} to be created.
 	 * @param symbols the {@link Set} of {@link Symbol}s to use when filling this {@code Sudoku}'s {@link Cell}s.
-	 * @param emptySymbol the empty {@code Symbol} that the new {@code Sudoku} should use.
 	 * @param cellFactory the {@link CellFactory} that the new {@code Sudoku} will use when creating new {@code Cell}s.
 	 * @param rowFactory the {@link RowFactory} that the new {@code Sudoku} will use when creating new {@link Row}s.
 	 * @param columnFactory the {@link ColumnFactory} that the new {@code Sudoku} will use when creating new {@link Column}s.
@@ -240,9 +234,9 @@ public final class LatinSquares {
 	 * A call to this method is similar to calling {@link #sudokuOf(SudokuVariant, Set, Symbol, CellFactory, RowFactory, ColumnFactory, BlockFactory)}
 	 * with the {@code blockFactory}instance gotten from calling {@link CellGroups#defaultBoxBlockFactory()}.
 	 */
-	public static final <V> Sudoku<V> sudokuOf(SudokuVariant variant, Set<Symbol<V>> symbols, Symbol<V> emptySymbol, CellFactory<V> cellFactory,
-			 RowFactory<V> rowFactory, ColumnFactory<V> columnFactory) {
-		return sudokuOf(variant, symbols, emptySymbol, cellFactory, rowFactory, columnFactory, CellGroups.defaultBoxBlockFactory());
+	public static final <V> Sudoku<V> sudokuOf(SudokuVariant variant, Set<Symbol<V>> symbols, CellFactory<V> cellFactory, RowFactory<V> rowFactory,
+			ColumnFactory<V> columnFactory) {
+		return sudokuOf(variant, symbols, cellFactory, rowFactory, columnFactory, CellGroups.defaultBoxBlockFactory());
 	}
 	
 	/**
@@ -252,7 +246,6 @@ public final class LatinSquares {
 	 * 
 	 * @param variant the {@link SudokuVariant} that describes the new {@code Sudoku} to be created.
 	 * @param symbols the {@link Set} of {@link Symbol}s to use when filling this {@code Sudoku}'s {@link Cell}s.
-	 * @param emptySymbol the empty {@code Symbol} that the new {@code Sudoku} should use.
 	 * @param cellFactory the {@link CellFactory} that the new {@code Sudoku} will use when creating new {@code Cell}s.
 	 * @param rowFactory the {@link RowFactory} that the new {@code Sudoku} will use when creating new {@link Row}s.
 	 * @param columnFactory the {@link ColumnFactory} that the new {@code Sudoku} will use when creating new {@link Column}s.
@@ -291,9 +284,9 @@ public final class LatinSquares {
 	 * accordance to their specification in the {@code Sudoku} interface. It should also be noted that the {@code Sudoku} instance returned
 	 * is <i>not thread safe</i>.
 	 */
-	public static final <V> Sudoku<V> sudokuOf(SudokuVariant variant, Set<Symbol<V>> symbols, Symbol<V> emptySymbol, CellFactory<V> cellFactory,
-			 RowFactory<V> rowFactory, ColumnFactory<V> columnFactory, BlockFactory<V> blockFactory) {
-		return new SimpleSudoku<V>(variant, symbols, emptySymbol, cellFactory, rowFactory, columnFactory, blockFactory);
+	public static final <V> Sudoku<V> sudokuOf(SudokuVariant variant, Set<Symbol<V>> symbols, CellFactory<V> cellFactory, RowFactory<V> rowFactory,
+			ColumnFactory<V> columnFactory, BlockFactory<V> blockFactory) {
+		return new SimpleSudoku<V>(variant, symbols, cellFactory, rowFactory, columnFactory, blockFactory);
 	}
 
 	/**
@@ -421,7 +414,6 @@ public final class LatinSquares {
 	public static final int hashCode(LatinSquare<?> latinSquare) {
 		requireNonNull(latinSquare, "latinSquare cannot be null.");
 		int hashCode = Integer.hashCode(latinSquare.size());
-		hashCode = 31 * hashCode + latinSquare.emptySymbol().hashCode();
 		hashCode = 31 * hashCode + latinSquare.cells().hashCode();
 		hashCode = 31 * hashCode + latinSquare.rows().hashCode();
 		hashCode = 31 * hashCode + latinSquare.columns().hashCode();
@@ -460,8 +452,8 @@ public final class LatinSquares {
 		if (latinSquare == obj) return true;
 		if (!(obj instanceof LatinSquare)) return false;
 		LatinSquare<?> _obj = (LatinSquare<?>) obj;
-		return latinSquare.size() == _obj.size() && latinSquare.emptySymbol().equals(_obj.emptySymbol()) && latinSquare.symbols().equals(_obj.symbols())
-				&& latinSquare.columns().equals(_obj.columns()) && latinSquare.rows().equals(_obj.rows()) && latinSquare.cells().equals(_obj.cells());
+		return latinSquare.size() == _obj.size() && latinSquare.symbols().equals(_obj.symbols()) && latinSquare.columns().equals(_obj.columns())
+				&& latinSquare.rows().equals(_obj.rows()) && latinSquare.cells().equals(_obj.cells());
 	}
 	
 	/**

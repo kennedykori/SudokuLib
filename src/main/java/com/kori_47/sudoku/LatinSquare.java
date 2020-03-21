@@ -3,6 +3,7 @@
  */
 package com.kori_47.sudoku;
 
+import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Map;
@@ -90,26 +91,8 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	}
 
 	/**
-	 * Mutates all the {@link Cell}s in this {@code LatinSquare} by setting them to the
-	 * {@link #emptySymbol() empty symbol} associated with this {@code LatinSquare}. This
-	 * mutation also clears the notes in each {@code Cell} and reverts any initial {@code Cell}
-	 * to a start {@code Cell}.
-	 * 
-	 * @implSpec
-	 * The default implementation is equivalent to, for this {@code latinSquare}:
-	 * <pre> {@code
-	 * latinSquare.cells().values().forEach(cell -> cell.reset(emptySymbol()));
-	 * }
-	 * </pre>
-	 */
-	default void reset() {
-		cells().values().forEach(cell -> cell.reset(emptySymbol()));
-	}
-
-	/**
 	 * Mutates all the {@link Cell}s in this {@code LatinSquare} by setting each {@code Cell}s
-	 * {@link Symbol} to a {@code null} value. This mutation also clears the notes in each {@code Cell}
-	 * and reverts any initial {@code Cell} to a start {@code Cell}.
+	 * {@link Symbol} to a {@code null} value.
 	 * 
 	 * @implSpec
 	 * The default implementation is equivalent to, for this {@code latinSquare}:
@@ -128,21 +111,15 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 * said to be part of a {@code LatinSquare} if the {@code Cell} is contained in the {@code Cell}s {@code Map} returned by
 	 * the {@code LatinSquare}'s {@link #cells()} method. A {@code Symbol} is said to be part of a {@code LatinSquare} if the
 	 * {@code Symbol} is contained in the {@code Symbol}s {@code Map} returned by the {@code LatinSquare}'s {@link #symbols()}
-	 * method or if it is equal to the value returned by the {@code LatinSquare}'s {@link #emptySymbol()} method.
-	 * 
-	 * <p>
-	 * It should be noted that this method isn't required to make any other checks on the {@code Cell}
-	 * and as such, other exceptions such as {@link ClueCellModificationException} maybe thrown if the given
-	 * {@code Cell} is a clue {@code Cell}.
+	 * method.
 	 * 
 	 * @param cell the {@code Cell} whose value we want to change.
 	 * @param symbol the {@code Symbol} to set the given {@code Cell}.
 	 * 
-	 * @throws NullPointerException if any of the given arguments is/are {@code null}.
+	 * @throws NullPointerException if {@code cell} is {@code null}.
 	 * @throws SudokuException if the given {@code Cell} or {@code Symbol} is not part of this {@code LatinSquare}.
 	 * 
 	 * @see #cells()
-	 * @see #emptySymbol()
 	 * @see #symbols()
 	 * 
 	 * @apiNote
@@ -153,9 +130,9 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 * @implSpec
 	 * This method first checks that the given {@code Cell} isn't {@code null} and if it is, throws a {@link NullPointerException}.
 	 * It then proceeds to check that the given {@code Cell} is part of this {@code LatinSquare} and throws a {@link SudokuException}
-	 * if not. The method then checks that the given {@code Symbol} isn't {@code null} and is part if this {@code LatinSquare} and if
-	 * not throws a {@code NullPointerException} and {@code SudokuException} respectively. If everything checks out, the method finishes
-	 * by setting the given {@code Symbol} on the given {@code Cell}.
+	 * if not. The method then checks that the given {@code Symbol} is part if this {@code LatinSquare} and if not throws a {@code SudokuException}.
+	 * If everything checks out, the method finishes by setting the given {@code Symbol} on the given {@code Cell} using the {@code Cell}'s
+	 * {@link Cell#changeSymbol(Symbol)} method.
 	 * 
 	 * <p>
 	 * The above steps can be summarized as, for this {@code latinSquare}:
@@ -163,8 +140,7 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 * Objects.requireNonNull(cell);
 	 * if (!latinSquare.cells().containsKey(cell.id()))
 	 * 	throw new SudokuException();
-	 * Objects.requireNonNull(symbol);
-	 * if (!latinSquare.symbols().containsKey(symbol.id()) && !symbol.equals(latinSquare.emptySymbol()))
+	 * if (symbol != null && !latinSquare.symbols().containsKey(symbol.id()))
 	 * 	throw new SudokuException();
 	 * 
 	 * cell.changeSymbol(symbol);
@@ -174,10 +150,10 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	default void changeSymbol(Cell<V> cell, Symbol<V> symbol) {
 		// start by validating that the given Cell is part of this LatinSquare
 		if (!cells().containsKey(requireNonNull(cell, "cell cannot be null").id()))
-			throw new SudokuException("The given cell(" + cell + ") isn't part of this LatinSquare.");
-		// start by validating that the given Symbol is part of this LatinSquare
-		if (!symbols().containsKey(requireNonNull(symbol, "symbol cannot be null").id()) && !symbol.equals(emptySymbol()))
-			throw new SudokuException("The given symbol(" + cell + ") isn't one of the Symbols of this LatinSquare.");
+			throw new SudokuException("The given Cell (" + cell + ") isn't part of this LatinSquare.");
+		// start by validating that the given Symbol is part of this LatinSquare if it isn't null
+		if (nonNull(symbol) && !symbols().containsKey(symbol.id()))
+			throw new SudokuException("The given Symbol (" + cell + ") isn't one of the Symbols of this LatinSquare.");
 		// change the Cell's Symbol
 		cell.changeSymbol(symbol);
 	}
@@ -381,13 +357,6 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 * @return a {@code Map} of the {@code Column}s contained in this {@code LatinSquare}.
 	 */
 	Map<String, Column<V>> columns();
-
-	/**
-	 * Returns the empty {@link Symbol} used by this {@code LatinSquare}.
-	 * 
-	 * @return the empty {@code Symbol} used by this {@code LatinSquare}.
-	 */
-	Symbol<V> emptySymbol();
 
 	/**
 	 * <p>Returns a {@code Map} of the {@link Symbol}s used to fill this {@code LatinSquare}'s {@link Cell}s. The

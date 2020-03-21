@@ -86,11 +86,6 @@ final class CompositeSudoku<V> implements Sudoku<V> {
 	}
 
 	@Override
-	public Symbol<V> emptySymbol() {
-		return latinSquare.emptySymbol();
-	}
-
-	@Override
 	public Map<Integer, Symbol<V>> symbols() {
 		return latinSquare.symbols();
 	}

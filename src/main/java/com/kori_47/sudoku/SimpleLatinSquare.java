@@ -30,7 +30,6 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 	// PRIMARY FIELDS
 	// ================================================
 	private final int size;
-	private final Symbol<V> emptySymbol;
 	private final CellFactory<V> cellFactory;
 	private final RowFactory<V> rowFactory;
 	private final ColumnFactory<V> columnFactory;
@@ -53,7 +52,6 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 	 * 
 	 * @param size the size that the new {@code LatinSquare} should be.
 	 * @param symbols the {@link Set} of {@link Symbol}s to use when filling this {@code LatinSquare} {@link Cell}s.
-	 * @param emptySymbol the empty {@code Symbol} that the new {@code LatinSquare} should use.
 	 * @param cellFactory the {@link CellFactory} that the new {@code LatinSquare} will use when creating new {@code Cell}s.
 	 * @param rowFactory the {@link RowFactory} that the new {@code LatinSquare} will use when creating new {@link Row}s.
 	 * @param columnFactory the {@link ColumnFactory} that the new {@code LatinSquare} will use when creating new {@link Column}s.
@@ -62,9 +60,9 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 	 * @throws IllegalArgumentException if {@code size} is less than {@code 1} and/or the size of {@code symbols} {@code Set}
 	 * 			is less than {@code size};
 	 */
-	public SimpleLatinSquare(int size, Set<Symbol<V>> symbols, Symbol<V> emptySymbol, CellFactory<V> cellFactory,
-							 RowFactory<V> rowFactory, ColumnFactory<V> columnFactory) {
-		this(size, validateSymbols(symbols, size), emptySymbol, cellFactory, rowFactory, columnFactory);
+	public SimpleLatinSquare(int size, Set<Symbol<V>> symbols, CellFactory<V> cellFactory, RowFactory<V> rowFactory,
+			ColumnFactory<V> columnFactory) {
+		this(size, validateSymbols(symbols, size), cellFactory, rowFactory, columnFactory);
 	}
 	
 	/**
@@ -79,7 +77,6 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 		this(
 			requireNonNull(latinSquare, "latinSquare cannot be null.").size(),
 			new LinkedHashMap<>(latinSquare.symbols()),
-			latinSquare.emptySymbol(),
 			latinSquare.cellFactory(),
 			latinSquare.rowFactory(),
 			latinSquare.columnFactory());
@@ -91,15 +88,13 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 	 * 
 	 * @param size the size that the new {@code LatinSquare} should be.
 	 * @param symbols the {@link Map} of {@link Symbol}s to use when filling this {@code LatinSquare} {@link Cell}s.
-	 * @param emptySymbol the empty {@code Symbol} that the new {@code LatinSquare} should use.
 	 * @param cellFactory the {@link CellFactory} that the new {@code LatinSquare} will use when creating new {@code Cell}s.
 	 * @param rowFactory the {@link RowFactory} that the new {@code LatinSquare} will use when creating new {@link Row}s.
 	 * @param columnFactory the {@link ColumnFactory} that the new {@code LatinSquare} will use when creating new {@link Column}s.
 	 */
-	private SimpleLatinSquare(int size, Map<Integer, Symbol<V>> symbols, Symbol<V> emptySymbol, CellFactory<V> cellFactory,
-							  RowFactory<V> rowFactory, ColumnFactory<V> columnFactory) {
+	private SimpleLatinSquare(int size, Map<Integer, Symbol<V>> symbols, CellFactory<V> cellFactory, RowFactory<V> rowFactory,
+			ColumnFactory<V> columnFactory) {
 		this.size = requireGreaterThanOrEqualTo(1, size, "size must be greater than or equal to 1.");
-		this.emptySymbol = requireNonNull(emptySymbol, "emptySymbol cannot be null.");
 		this.cellFactory = requireNonNull(cellFactory, "cellFactory cannot be null.");
 		this.rowFactory = requireNonNull(rowFactory, "rowFactory cannot be null.");
 		this.columnFactory = requireNonNull(columnFactory, "columnFactory cannot be null.");
@@ -173,7 +168,7 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 		SimpleLatinSquare<V> newLatinSquare = new SimpleLatinSquare<>(this);
 		// copy the current Latin square's cell values to the new Latin square
 		cells.values().forEach(cell -> {
-			newLatinSquare.cells.get(cell.id()).changeSymbol(cell.value().orElse(null));
+			newLatinSquare.cells.get(cell.id()).changeSymbol(cell.symbol().orElse(null));
 		});
 		return newLatinSquare;
 	}
@@ -196,11 +191,6 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 	@Override
 	public ColumnFactory<V> columnFactory() {
 		return columnFactory;
-	}
-	
-	@Override
-	public Symbol<V> emptySymbol() {
-		return emptySymbol;
 	}
 
 	@Override
@@ -229,34 +219,27 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 	 * @implSpec
 	 * This implementation is equivalent to, for this {@code ls}:
 	 * <pre> {@code
-	 * return Integer.hashCode(ls.size()) + ls.emptySymbol().hashCode() + ls.cells().hashCode()
-			+ ls.columns().hashCode() + ls.rows().hashCode() + ls.symbols().hashCode();
+	 * return LatinSquares.hashCode(ls);
 	 * }
 	 * </pre>
 	 */
 	@Override
 	public int hashCode() {
-		return Integer.hashCode(size) + emptySymbol.hashCode() + cells.hashCode()
-			+ columns.hashCode() + rows.hashCode() + symbols.hashCode();
+		return LatinSquares.hashCode(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * This implementation first checks if the specified object is this {@code LatinSquare}; if so it
-	 * returns {@code true}. Then it checks if the specified object is a {@code LatinSquare} whose size,
-	 * empty {@code Symbol}, symbols {@code Map}, columns {@code Map}, rows {@code Map} and cells {@code Map}
-	 * are equal to the equivalent properties of this {@code LatinSquare}; if not, it returns {@code false}. If so,
-	 * it returns {@code true}.
+	 * This implementation is equivalent to, for this {@code ls}:
+	 * <pre> {@code
+	 * return LatinSquares.equals(ls, obj);
+	 * }
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!(obj instanceof LatinSquare)) return false;
-		LatinSquare<?> _obj = (LatinSquare<?>) obj;
-		return size == _obj.size() && emptySymbol.equals(_obj.emptySymbol()) && symbols.equals(_obj.symbols())
-				&& columns.equals(_obj.columns()) && rows.equals(_obj.rows()) && cells.equals(_obj.cells());
+		return LatinSquares.equals(this, obj);
 	}
 	
 	@Override
@@ -268,7 +251,7 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 		// create cells
 		for (int x = 0; x < size; x++) {
 			for (int y = 0; y < size; y++) {
-				Cell<V> cell = cellFactory.createCell(x + "/" + y , x, y, emptySymbol);
+				Cell<V> cell = cellFactory.createCell(x + "/" + y , x, y, null);
 				cells.put(cell.id(), cell);
 			}
 		}

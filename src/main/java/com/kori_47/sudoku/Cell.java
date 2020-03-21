@@ -10,11 +10,11 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * A {@code Cell} is an intersection between a column and a row in a {@code LatinSquare}. Each cell holds a 
- * {@link Symbol} and has an x and y coordinate which are the column and row respectfully, that this cell
- * belongs to. The x coordinate of a cell is the <strong><i>i<sup>th</sup></i></strong> column of the {@link LatinSquare}
- * <strong><i>L</i></strong> and the y coordinate of a cell is the <strong><i>j<sup>th</sup></i></strong> row 
- * of the {@code LatinSquare} <strong><i>L</i></strong> such that:
+ * A {@code Cell} is an intersection between a {@link Column} and a {@link Row} in a {@link LatinSquare}. Each cell holds
+ * a {@link Symbol} and has an x and y coordinate which are the {@code Column} and {@code Row} respectfully, that this
+ * {@code Cell} belongs to. The x coordinate of a {@code Cell} is the <strong><i>i<sup>th</sup></i></strong> {@code Column}
+ * of the {@link LatinSquare} <strong><i>L</i></strong> and the y coordinate of a {@code Cell} is the
+ * <strong><i>j<sup>th</sup></i></strong>{@code Row} of the {@code LatinSquare} <strong><i>L</i></strong> such that:
  * <pre>
  * 				x = i and 0 <= i < s
  * 		and		y = j and 0 <= j < s
@@ -22,14 +22,12 @@ import java.util.Set;
  * </pre>
  * 
  * <p>
- * A {@code Cell} can be marked as a clue cell making it non editable until it is changed back to a normal cell.
- * Attempting to modify an clue cell should result in the {@link ClueCellModificationException} being thrown.
- * Modification in this context refers to changing a cell's {@code Symbol} and making or removing notes on the cell.
- * </p>
- * 
- * <p>
- * Apart from having a {@code Symbol}, a cell can also have notes which is a collection of possible symbols
- * for the cell and are typically populated by the player.
+ * <i>
+ * <strong>NOTE:</strong> {@code Cell}s are mutable since they permit modification of their {@code Symbol}. As such,
+ * the {@code equals} and {@code hashCode} implementations of the {@code Cell} are based on the non-mutable properties of the
+ * {@code Cell}, that is, the {@code id}, {@code x} and {@code y} coordinates of the {@code Cell}. For more comprehensive
+ * equality comparisons, implementors can override the {@link #deepEquals(Object)} method and provide a more thural implementation.
+ * </i>
  * </p>
  * 
  * @param <V> the type of value held by the {@code Symbol}s supported by this {@code Cell}.
@@ -37,6 +35,11 @@ import java.util.Set;
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *
  * @since Oct 17, 2019, 12:38:39 AM
+ * 
+ * @see LatinSquare
+ * @see Column
+ * @see Row
+ * @see Symbol
  */
 public interface Cell<V> extends Formattable, Comparable<Cell<V>>, Unique<String> {
 
@@ -126,19 +129,17 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>>, Unique<String
 	}
 	
 	/**
-	 * Clears this {@code Cell} by changing the {@code Cell}s {@link Symbol} to a {@code null}
-	 * value, clears any notes that this {@code Cell} might have and reverts this {@code Cell} to
-	 * a normal {@code Cell} if this is marked as a clue {@code Cell}.
+	 * Clears this {@code Cell} by changing the {@code Cell}s {@link Symbol} to a {@code null} value.
 	 * 
 	 * @implSpec
 	 * The default implementation is equivalent to, for this {@code cell}:
 	 * <pre> {@code
-	 * cell.reset(null);
+	 * cell.changeSymbol(null);
 	 * }
 	 * </pre>
 	 */
 	default void clear() {
-		reset(null);
+		changeSymbol(null);
 	}
 	
 	/**
@@ -216,75 +217,12 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>>, Unique<String
 	boolean equals(Object obj);
 
 	/**
-	 * <p> Changes the {@link Symbol} of this cell to a new value. If this is an initial cell, then this call 
-	 * will fail with an {@link ClueCellModificationException}. {@code null} values are allowed.
+	 * <p> Changes the {@link Symbol} of this cell to a new value. {@code null} values are allowed.
 	 * 
 	 * @param value the new {@code Symbol} to set on this cell.
-	 * 
-	 * @throws ClueCellModificationException if this is a clue cell.
  	 */
 	void changeSymbol(Symbol<V> value);
 	
-	/**
-	 * <p>
-	 * Marks this cell as a clue cell and sets the given {@link Symbol} as the {@code Symbol} for this cell. Any
-	 * modifications attempts on this cell after this call will result in an {@link ClueCellModificationException}
-	 * being thrown until this cell is changed back to an normal cell.
-	 * </p>
-	 * 
-	 * <p>
-	 * Multiple calls of this method on a cell that is already marked as a clue cell are allowed and should not
-	 * throw a {@code ClueCellModificationException}.
-	 * </p>
-	 * 
-	 * @param initialValue the {@code Symbol} to set to this clue cell.
-	 * 
-	 * @throws NullPointerException if {@code initialValue} is {@code null}.
-	 */
-	void makeClueCell(Symbol<V> initialValue);
-	
-	/**
-	 * Marks this cell as a normal cell allowing modification of the cell. 
-	 * 
-	 * <p>
-	 * Multiple calls of this method on a normal cell are allowed and should return cleanly.
-	 * </p>
-	 */
-	void makeNormalCell();
-	
-	/**
-	 * Adds the given {@link Symbol} as a possible value for this cell. Adding an already noted {@code Symbol} should
-	 * have no effect and should result in a clean return.
-	 * 
-	 * @param note the {@code Symbol} to mark as a possible value for this cell.
-	 * 
-	 * @throws NullPointerException if {@code note} is {@code null}.
-	 * @throws ClueCellModificationException if this a clue cell.
-	 */
-	void makeNote(Symbol<V> note);
-	
-	/**
-	 * Removes the given {@link Symbol} from the {@code Set} of noted possible values of this
-	 * cell. Removing a non noted {@code Symbol} should have no effect and should result in a
-	 * clean return.
-	 * 
-	 * @param note the {@code Symbol} to remove from the {@code Set} of noted possible values
-	 * of this cell.
-	 * 
-	 * @throws NullPointerException if {@code note} is {@code null}.
-	 * @throws ClueCellModificationException if this a clue cell.
-	 */
-	void removeNote(Symbol<V> note);
-
-	/**
-	 * Resets this {@code Cell} by changing the {@code Cell}s {@link Symbol} to a given value,
-	 * clears any notes that this {@code Cell} might have and reverts this {@code Cell} to
-	 * a normal {@code Cell} if this is marked as a clue {@code Cell}.
-	 * 
-	 * @param symbol the {@code Symbol} to set this {@code Cell} to after the reset. {@code null}
-	 * is allowed and should not result in a {@code NullPointerException}.
-	 */
-	void reset(Symbol<V> symbol);
 	
 	/**
 	 * Returns the x coordinate of this cell. This is also the index of the {@link Column} in which
@@ -316,21 +254,5 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>>, Unique<String
 	 * @return an {@code Optional} describing the {@code Symbol} set on this cell or an empty if no
 	 * {@code Symbol} is currently set on the cell.
 	 */
-	Optional<Symbol<V>> value();
-	
-	/**
-	 * Returns a {@link Set} of {@code Symbol}s marked as possible values for this cell. Modification
-	 * of the returned {@code Set} should not alter the notes this {@code Cell}.
-	 * 
-	 * @return a {@code Set} of {@code Symbol}s marked as possible values for this cell.
-	 */
-	Set<Symbol<V>> notes();
-	
-	/**
-	 * Indicates whether this cell is marked as a clue cell or not. Returns {@code true} if this
-	 * is an clue cell or {@code false} otherwise.
-	 * 
-	 * @return {@code true} if this is a clue cell or {@code false} otherwise.
-	 */
-	boolean isClueCell();
+	Optional<Symbol<V>> symbol();
 }
