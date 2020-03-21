@@ -146,7 +146,7 @@ public interface Sudoku<V> extends LatinSquare<V> {
 	 * @since Sat, 28 Dec 2019 11:30:27
 	 * 
 	 * @see Sudoku
-	 * @see BoxSudokuVariant
+	 * @see BoxBlocksSudokuVariant
 	 */
 	static interface SudokuVariant {
 
@@ -176,7 +176,7 @@ public interface Sudoku<V> extends LatinSquare<V> {
 	}
 	
 	/**
-	 * This represent the properties needed to describe a valid {@link Sudoku} with equally sized box shaped
+	 * This represents the properties needed to describe a valid {@link Sudoku} with equally sized box shaped
 	 * {@link Block}s, i.e. all the {@code Block}s have the same number of {@link Row}s and {@link Column}s.
 	 * Examples of {@code Sudoku}s that can be described by this variant are the famous <strong><i>9x9</i></strong>
 	 * classical {@code Sudoku}, the <strong><i>6x6</i></strong> {@code Sudoku}, the <strong><i>25x25</i></strong>
@@ -377,7 +377,7 @@ public interface Sudoku<V> extends LatinSquare<V> {
 			return sudoku.cells().values().stream()
 					.filter(cell -> cell.x() >= x && x < x1)
 					.filter(cell -> cell.y() >= y && y < y1)
-					.collect(toMap(cell -> cell.id(), cell -> cell));
+					.collect(toMap(Cell::id, cell -> cell));
 		}
 	}
 }

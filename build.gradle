@@ -17,8 +17,8 @@ plugins {
     id "com.jfrog.bintray" version "1.8.4"
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
 
 group = 'com.kori_47'
 version = '0.1.0'
