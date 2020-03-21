@@ -101,13 +101,13 @@ public interface CellTest extends TestHashCode<Cell<Object>>, ComparableTest<Cel
 		cell.changeSymbol(Symbols.of(Integer.valueOf(0), new Object()));
 		
 		// assert that the Cell has a value
-		assertTrue(cell.value().isPresent());
+		assertTrue(cell.symbol().isPresent());
 		
 		// clear the cell
 		cell.clear();
 		
 		// assert that cell.value() returns an empty Optional
-		assertFalse(cell.value().isPresent());
+		assertFalse(cell.symbol().isPresent());
 		
 		// assert that clearing an already cleared Cell doesn'throw an exception
 		assertDoesNotThrow(() -> cell.clear());
@@ -136,7 +136,7 @@ public interface CellTest extends TestHashCode<Cell<Object>>, ComparableTest<Cel
 		cell.clear();  // clear the Cell
 		
 		// assert that the Cell has no set Symbol
-		assertFalse(cell.value().isPresent());
+		assertFalse(cell.symbol().isPresent());
 		
 		// create a Symbol to set to the Cell
 		Symbol<Object> symbol = Symbols.of(Integer.valueOf(0), new Object());
@@ -146,19 +146,19 @@ public interface CellTest extends TestHashCode<Cell<Object>>, ComparableTest<Cel
 		cell.changeSymbol(symbol);
 		
 		// assert that the Cell's Symbol was changed
-		assertTrue(cell.value().isPresent());
-		assertEquals(symbol, cell.value().get());
+		assertTrue(cell.symbol().isPresent());
+		assertEquals(symbol, cell.symbol().get());
 		
 		// change the Cell's Symbol
 		cell.changeSymbol(symbol1);	
 		
 		// assert that the Cell's Symbol was changed
-		assertTrue(cell.value().isPresent());
-		assertEquals(symbol1, cell.value().get());
+		assertTrue(cell.symbol().isPresent());
+		assertEquals(symbol1, cell.symbol().get());
 		
 		// assert that we can pass null when changing the Cell's Symbol
 		assertDoesNotThrow(() -> cell.changeSymbol(null));
-		assertFalse(cell.value().isPresent());
+		assertFalse(cell.symbol().isPresent());
 	}
 	
 	/**
@@ -179,18 +179,18 @@ public interface CellTest extends TestHashCode<Cell<Object>>, ComparableTest<Cel
 		int x = cell.x();
 		int y = cell.y();
 		String id = cell.id();
-		Symbol<Object> value = cell.value().get();
+		Symbol<Object> value = cell.symbol().get();
 		
 		// assert that multiple calls of the Cell accessors return the same value
 		// as long as no information has changed.
 		assertEquals(x, cell.x());
 		assertEquals(y, cell.y());
 		assertEquals(id, cell.id());
-		assertEquals(value, cell.value().get());
+		assertEquals(value, cell.symbol().get());
 		
 		assertEquals(x, cell.x());
 		assertEquals(y, cell.y());
 		assertEquals(id, cell.id());
-		assertEquals(value, cell.value().get());
+		assertEquals(value, cell.symbol().get());
 	}
 }

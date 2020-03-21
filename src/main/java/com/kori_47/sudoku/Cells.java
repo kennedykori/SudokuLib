@@ -269,7 +269,7 @@ public final class Cells {
 	 */
 	public static final String toString(Cell<?> cell, String placeholder) {
 		requireNonNull(cell, "cell cannot be null.");
-		String cellValue = (cell.value().isPresent())? cell.value().get().toString() : isNull(placeholder)? "-" : placeholder;
+		String cellValue = (cell.symbol().isPresent())? cell.symbol().get().toString() : isNull(placeholder)? "-" : placeholder;
 		return String.format("Cell{id=%s, coord=(x:%d, y:%d), value=[%s]}", cell.id(), cell.x(),  cell.y(), cellValue);
 	}
 	
@@ -296,8 +296,8 @@ public final class Cells {
 		requireNonNull(cell2, "cell2 cannot be null.");
 		
 		// get the Symbols of the Cells
-		Symbol<V> symbol1 = cell1.value().orElse(null);
-		Symbol<V> symbol2 = cell2.value().orElse(null);
+		Symbol<V> symbol1 = cell1.symbol().orElse(null);
+		Symbol<V> symbol2 = cell2.symbol().orElse(null);
 
 		// clear the cells
 		cell1.clear();
@@ -367,7 +367,7 @@ public final class Cells {
 		}
 
 		@Override
-		public Optional<Symbol<V>> value() {
+		public Optional<Symbol<V>> symbol() {
 			return Optional.ofNullable(value);
 		}
 
@@ -382,7 +382,7 @@ public final class Cells {
 			if (obj == this) return true;
 			if (!(obj instanceof Cell)) return false;
 			Cell<?> _obj =  (Cell<?>)obj;
-			boolean valuesEqual = (isNull(value))? _obj.value().orElse(null) == null : value.equals(_obj.value().orElse(null));
+			boolean valuesEqual = (isNull(value))? _obj.symbol().orElse(null) == null : value.equals(_obj.symbol().orElse(null));
 			return valuesEqual && x == _obj.x() && y == _obj.y() && id.equals(_obj.id());
 		}
 		

@@ -84,7 +84,7 @@ class SimpleSudoku<V> extends SimpleLatinSquare<V> implements Sudoku<V> {
 		SimpleSudoku<V> newSudoku = new SimpleSudoku<>(this);
 		// copy the current Sudoku's cell values to the new Sudoku
 		cells.values().forEach(cell -> {
-			newSudoku.cells.get(cell.id()).changeSymbol(cell.value().orElse(null));
+			newSudoku.cells.get(cell.id()).changeSymbol(cell.symbol().orElse(null));
 		});
 		return newSudoku;
 	}

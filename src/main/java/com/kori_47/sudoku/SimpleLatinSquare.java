@@ -168,7 +168,7 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 		SimpleLatinSquare<V> newLatinSquare = new SimpleLatinSquare<>(this);
 		// copy the current Latin square's cell values to the new Latin square
 		cells.values().forEach(cell -> {
-			newLatinSquare.cells.get(cell.id()).changeSymbol(cell.value().orElse(null));
+			newLatinSquare.cells.get(cell.id()).changeSymbol(cell.symbol().orElse(null));
 		});
 		return newLatinSquare;
 	}

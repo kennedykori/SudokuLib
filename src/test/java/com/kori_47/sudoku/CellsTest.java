@@ -48,10 +48,10 @@ public class CellsTest {
 		assertEquals(3, cell2.y());
 		
 		// assert that the Cells returned have the correct values
-		assertEquals(Symbols.emptyNumberSymbol(), cell1.value().get());
-		assertEquals(null, cell2.value().orElse(null));
-		assertEquals(Symbols.emptyLetterSymbol(), Cells.of("", 0, 0, Symbols.emptyLetterSymbol()).value().get());
-		assertEquals(null, Cells.of("", 0, 0, null).value().orElse(null));
+		assertEquals(Symbols.emptyNumberSymbol(), cell1.symbol().get());
+		assertEquals(null, cell2.symbol().orElse(null));
+		assertEquals(Symbols.emptyLetterSymbol(), Cells.of("", 0, 0, Symbols.emptyLetterSymbol()).symbol().get());
+		assertEquals(null, Cells.of("", 0, 0, null).symbol().orElse(null));
 		
 		// assert that a NullPointerException is thrown if id is null
 		assertThrows(NullPointerException.class, () -> Cells.of(null, 0, 0));

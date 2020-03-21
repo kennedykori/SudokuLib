@@ -254,5 +254,5 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>>, Unique<String
 	 * @return an {@code Optional} describing the {@code Symbol} set on this cell or an empty if no
 	 * {@code Symbol} is currently set on the cell.
 	 */
-	Optional<Symbol<V>> value();
+	Optional<Symbol<V>> symbol();
 }
