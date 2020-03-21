@@ -137,8 +137,6 @@ public class CellsTest {
 		// as per the specification of the Cell#hashCode() method.
 		cell1.changeSymbol(Symbols.emptyNumberSymbol());  // assign a value to cell1
 		cell2.changeSymbol(Symbols.of(Integer.valueOf(1), Character.valueOf('A'))); // assign a value to cell2
-		cell2.makeNote(Symbols.of(Integer.valueOf(2), Character.valueOf('B')));		// add notes to cell2
-		cell2.makeNote(Symbols.of(Integer.valueOf(3), Character.valueOf('C')));
 		assertEquals(hash1, cell1.hashCode());
 		assertEquals(hash2, cell2.hashCode());
 		
@@ -166,8 +164,6 @@ public class CellsTest {
 		
 		// assert that even after modification of a Cell, it's equality results isn't affected
 		cell2.changeSymbol(Symbols.of(Integer.valueOf(1), Character.valueOf('A'))); // assign a value to cell2
-		cell2.makeNote(Symbols.of(Integer.valueOf(2), Character.valueOf('B')));		// add notes to cell2
-		cell2.makeNote(Symbols.of(Integer.valueOf(3), Character.valueOf('C')));
 		assertTrue(Cells.equals(cell2, cell3));  // cell2 and cell3 should still be equal
 		
 		// assert that the method throws a NullPointerException when the 1st parameter is null
@@ -185,34 +181,10 @@ public class CellsTest {
 		Cell<Integer> cell3 = Cells.of("2", 3, 2, Symbols.emptyNumberSymbol());
 		
 		// assert the methods return the expected values
-		assertEquals(
-				"Cell{id=1, coord=(x:2, y:3), value=[-], clue=false}",
-				Cells.toString(cell1)
-		);
-		assertEquals(
-				"Cell{id=1, coord=(x:2, y:3), value=[-], clue=false}",
-				Cells.toString(cell1, null)
-		);
-		assertEquals(
-				"Cell{id=1, coord=(x:2, y:3), value=[*], clue=false}",
-				Cells.toString(cell1, "*")
-		);
-		assertEquals(
-				"Cell{id=2, coord=(x:3, y:2), value=[-], clue=false}",
-				Cells.toString(cell2)
-		);
-		assertEquals(
-				"Cell{id=2, coord=(x:3, y:2), value=[Symbol{id=0, value=0}], clue=false}",
-				Cells.toString(cell3)
-		);
-		
-		// make cell2 a clue cell
-		cell2.makeClueCell(Symbols.of(Integer.valueOf(1), Character.valueOf('A')));
-		
-		// assert that we get the correct String representation of a clue Cell
-		assertEquals(
-				"Cell{id=2, coord=(x:3, y:2), value=[Symbol{id=1, value=A}], clue=true}",
-				Cells.toString(cell2)
-		);
+		assertEquals("Cell{id=1, coord=(x:2, y:3), value=[-]}", Cells.toString(cell1));
+		assertEquals("Cell{id=1, coord=(x:2, y:3), value=[-]}", Cells.toString(cell1, null));
+		assertEquals("Cell{id=1, coord=(x:2, y:3), value=[*]}", Cells.toString(cell1, "*"));
+		assertEquals("Cell{id=2, coord=(x:3, y:2), value=[-]}", Cells.toString(cell2));
+		assertEquals("Cell{id=2, coord=(x:3, y:2), value=[Symbol{id=0, value=0}]}", Cells.toString(cell3));
 	}
 }

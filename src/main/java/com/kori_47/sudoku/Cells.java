@@ -3,16 +3,13 @@
  */
 package com.kori_47.sudoku;
 
-import static java.util.Collections.unmodifiableSet;
 import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 import static com.kori_47.utils.ObjectUtils.requireNonNegative;
 
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * This class consists exclusively of static methods thiamawesomeGROOT47!at create and operate on {@link Cell}s.
@@ -273,7 +270,7 @@ public final class Cells {
 	public static final String toString(Cell<?> cell, String placeholder) {
 		requireNonNull(cell, "cell cannot be null.");
 		String cellValue = (cell.value().isPresent())? cell.value().get().toString() : isNull(placeholder)? "-" : placeholder;
-		return String.format("Cell{id=%s, coord=(x:%d, y:%d), value=[%s], clue=%s}", cell.id(), cell.x(),  cell.y(), cellValue, cell.isClueCell());
+		return String.format("Cell{id=%s, coord=(x:%d, y:%d), value=[%s]}", cell.id(), cell.x(),  cell.y(), cellValue);
 	}
 	
 	/**
@@ -298,53 +295,17 @@ public final class Cells {
 		requireNonNull(cell1, "cell1 cannot be null.");
 		requireNonNull(cell2, "cell2 cannot be null.");
 		
-		// get the clue status of the Cells
-		boolean clue1 = cell1.isClueCell();
-		boolean clue2 = cell2.isClueCell();
 		// get the Symbols of the Cells
 		Symbol<V> symbol1 = cell1.value().orElse(null);
 		Symbol<V> symbol2 = cell2.value().orElse(null);
-		// get the notes of the Cells
-		@SuppressWarnings("unchecked")
-		Symbol<V>[] notes1 = cell1.notes().toArray(new Symbol[cell1.notes().size()]);
-		@SuppressWarnings("unchecked")
-		Symbol<V>[] notes2 = cell2.notes().toArray(new Symbol[cell2.notes().size()]);
+
+		// clear the cells
+		cell1.clear();
+		cell2.clear();;
 		
-		// reset the cells
-		cell1.reset(null);
-		cell2.reset(null);
-		
-		// copy the notes
-		for (Symbol<V> symbol : notes1) cell2.makeNote(symbol);
-		for (Symbol<V> symbol : notes2) cell1.makeNote(symbol);
-		
-		/* ======== Cover the 4 Possibilities ======== */
-		// 1. Both Cells are clue Cells
-		if (clue1 && clue2) {
-			// make the Cells clue Cells
-			cell1.makeClueCell(symbol2);
-			cell2.makeClueCell(symbol1);
-		}
-		// 2. cell1 is a clue Cell but cell2 isn't
-		else if (clue1 && !clue2) {
-			// make cell2 a clue Cell
-			cell2.makeClueCell(symbol1);
-			// set the value of cell1
-			cell1.changeSymbol(symbol2);
-		}
-		// 3. cell2 is a clue Cell but cell1 isn't
-		else if (clue2 && !clue1) {
-			// make cell1 a clue Cell
-			cell1.makeClueCell(symbol2);
-			// set the value of cell2
-			cell2.changeSymbol(symbol1);
-		}
-		// 4. Both Cells are normal Cells.
-		else {
-			// set the Cell's values
-			cell1.changeSymbol(symbol2);
-			cell2.changeSymbol(symbol1);
-		}
+		// set the Cell's values
+		cell1.changeSymbol(symbol2);
+		cell2.changeSymbol(symbol1);
 	}
 	
 	/**
@@ -364,16 +325,9 @@ public final class Cells {
 		private final String id;
 		private final int x;
 		private final int y;
-		private final Set<Symbol<V>> notes;
 		// mutable fields
 		private Symbol<V> value;
-		private boolean clueCell;
-		
-		// ================================================
-		// COLLECTION VIEWS
-		// ================================================
-		private final Set<Symbol<V>> notesView;
-		
+
 		/**
 		 * Creates a {@link Cell} instance with the given properties.
 		 * 
@@ -390,48 +344,11 @@ public final class Cells {
 			this.x = requireNonNegative(x, "x must be a positive integer.");
 			this.y = requireNonNegative(y, "y must be a positive integer.");
 			this.value = value;
-			this.notes = new HashSet<>();
-			this.notesView = unmodifiableSet(this.notes);
 		}
 
 		@Override
 		public void changeSymbol(Symbol<V> value) {
-			checkIsClueCell();
 			this.value = value;
-		}
-
-		@Override
-		public void makeClueCell(Symbol<V> initialValue) {
-			this.value = requireNonNull(initialValue, "initialValue cannot be null.");
-			clueCell = true;
-		}
-
-		@Override
-		public void makeNormalCell() {
-			clueCell = false;
-		}
-
-		@Override
-		public void makeNote(Symbol<V> note) {
-			checkIsClueCell();
-			notes.add(requireNonNull(note, "note cannot be null."));
-		}
-
-		@Override
-		public void removeNote(Symbol<V> note) {
-			checkIsClueCell();
-			notes.remove(requireNonNull(note, "note cannot be null."));
-		}
-
-		@Override
-		public void reset(Symbol<V> symbol) {
-			// start by converting this to a normal Cell if this is a clue Cell
-			if (clueCell)
-				makeNormalCell();
-			// clear any notes that this Cell my have
-			notes.clear();
-			// change the value of this Cell to the given Symbol
-			changeSymbol(symbol);
 		}
 
 		@Override
@@ -454,15 +371,6 @@ public final class Cells {
 			return Optional.ofNullable(value);
 		}
 
-		@Override
-		public Set<Symbol<V>> notes() {
-			return notesView;
-		}
-
-		@Override
-		public boolean isClueCell() {
-			return clueCell;
-		}
 		
 		@Override
 		public int hashCode() {
@@ -475,8 +383,7 @@ public final class Cells {
 			if (!(obj instanceof Cell)) return false;
 			Cell<?> _obj =  (Cell<?>)obj;
 			boolean valuesEqual = (isNull(value))? _obj.value().orElse(null) == null : value.equals(_obj.value().orElse(null));
-			return x == _obj.x() && y == _obj.y() && id.equals(_obj.id()) && valuesEqual && notes().equals(_obj.notes())
-					&& clueCell == _obj.isClueCell();
+			return valuesEqual && x == _obj.x() && y == _obj.y() && id.equals(_obj.id());
 		}
 		
 		@Override
@@ -487,16 +394,6 @@ public final class Cells {
 		@Override
 		public String toString() {
 			return Cells.toString(this);
-		}
-		
-		/**
-		 * This method checks if this {@code Cell} is currently a clue {@code Cell} and throws
-		 * a {@link ClueCellModificationException} if this is a clue {@code Cell}. Otherwise,
-		 * it returns silently.
-		 */
-		private void checkIsClueCell() {
-			if (clueCell)
-				throw new ClueCellModificationException(this);
 		}
 	}
 

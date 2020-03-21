@@ -3,7 +3,6 @@
  */
 package com.kori_47.sudoku;
 
-import static java.util.stream.Collectors.toSet;
 import static java.util.Objects.requireNonNull;
 
 import static com.kori_47.utils.ObjectUtils.requireInRange;
@@ -11,7 +10,6 @@ import static com.kori_47.utils.ObjectUtils.requireInRange;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.Spliterator;
 
 /**
@@ -180,47 +178,6 @@ public interface CellGroup<V> extends Formattable, Iterable<Cell<V>> {
 	@Override
 	default Spliterator<Cell<V>> spliterator() {
 		return cells().values().spliterator();
-	}
-
-	/**
-	 * Returns a {@link Set} of all the {@link Cell#isClueCell() clue} {@link Cell}s in this
-	 * {@code CellGroup}. Modification of the returned {@code Set} should not alter the contents of 
-	 * this {@code CellGroup}. Implementations of this interface can also choose to return an immutable
-	 * {@code Set} instead to prevent modifications.
-	 * 
-	 * @return a {@code Set} of all the clue {@code Cell}s in this {@code CellGroup}.
-	 * 
-	 * @implSpec
-	 * The default implementation is equivalent to, for this {@code cellGroup}:
-	 * <pre> {@code
-	 * return cellGroup.cells().values().stream()
-	 * 		.filter(cell -> cell.isClueCell())
-	 * 		.collect(Collectors.toSet());
-	 * }
-	 * </pre>
-	 */
-	default Set<Cell<V>> clueCells() {
-		return cells().values().stream().filter(cell -> cell.isClueCell()).collect(toSet());
-	}
-
-	/**
-	 * Returns a {@link Set} of all the normal {@link Cell}s in this {@code CellGroup}. Modification of the
-	 * returned {@code Set} should not alter the contents of this {@code CellGroup}. Implementations of this
-	 * interface can also choose to return an immutable {@code Set} instead to prevent modifications.
-	 * 
-	 * @return a {@code Set} of all the normal {@code Cell}s in this {@code CellGroup}.
-	 * 
-	 * @implSpec
-	 * The default implementation is equivalent to, for this {@code cellGroup}:
-	 * <pre> {@code
-	 * return cellGroup.cells().values().stream()
-	 * 		.filter(cell -> !cell.isClueCell())
-	 * 		.collect(Collectors.toSet());
-	 * }
-	 * </pre>
-	 */
-	default Set<Cell<V>> normalCells() {
-		return cells().values().stream().filter(cell -> !cell.isClueCell()).collect(toSet());
 	}
 
 	/**
