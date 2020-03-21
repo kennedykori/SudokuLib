@@ -37,7 +37,6 @@ class SimpleSudoku<V> extends SimpleLatinSquare<V> implements Sudoku<V> {
 	 * 
 	 * @param variant the {@link SudokuVariant} that describes the new {@code Sudoku}.
 	 * @param symbols the {@link Set} of {@link Symbol}s to use when filling this {@code Sudoku} {@link Cell}s.
-	 * @param emptySymbol the empty {@code Symbol} that the new {@code Sudoku} should use.
 	 * @param cellFactory the {@link CellFactory} that the new {@code Sudoku} will use when creating new {@code Cell}s.
 	 * @param rowFactory the {@link RowFactory} that the new {@code Sudoku} will use when creating new {@link Row}s.
 	 * @param columnFactory the {@link ColumnFactory} that the new {@code Sudoku} will use when creating new {@link Column}s.
@@ -46,9 +45,9 @@ class SimpleSudoku<V> extends SimpleLatinSquare<V> implements Sudoku<V> {
 	 * @throws NullPointerException if any of the following arguments to this constructor are/is {@code null}.
 	 * @throws IllegalArgumentException if the size of the {@code symbols} {@code Set} is less than {@code variant.size()};
 	 */
-	public SimpleSudoku(SudokuVariant variant, Set<Symbol<V>> symbols, Symbol<V> emptySymbol, CellFactory<V> cellFactory,
-			RowFactory<V> rowFactory, ColumnFactory<V> columnFactory, BlockFactory<V> blockFactory) {
-		super(requireNonNull(variant, "variant can't be null.").size(), symbols, emptySymbol, cellFactory, rowFactory, columnFactory);
+	public SimpleSudoku(SudokuVariant variant, Set<Symbol<V>> symbols, CellFactory<V> cellFactory, RowFactory<V> rowFactory,
+			ColumnFactory<V> columnFactory, BlockFactory<V> blockFactory) {
+		super(requireNonNull(variant, "variant can't be null.").size(), symbols, cellFactory, rowFactory, columnFactory);
 		this.variant = variant;
 		this.blockFactory = requireNonNull(blockFactory, "blockFactory cannot be null.");
 		this.blocks = new LinkedHashMap<String, Block<V>>(this.variant.size());
@@ -109,36 +108,29 @@ class SimpleSudoku<V> extends SimpleLatinSquare<V> implements Sudoku<V> {
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * This implementation is equivalent to, for this {@code sdk}:
+	 * The default implementation is equivalent to, for this {@code sdk}:
 	 * <pre> {@code
-	 * return sdk.variant().hashCode() + sdk.emptySymbol().hashCode() + sdk.cells().hashCode()
-			+ sdk.columns().hashCode() + sdk.rows().hashCode() + sdk.symbols().hashCode() + sdk.blocks().hashCode();
+	 * return LatinSquares.hashCode(sdk);
 	 * }
 	 * </pre>
 	 */
 	@Override
 	public int hashCode() {
-		return variant.hashCode() + emptySymbol().hashCode() + cells.hashCode() + columns.hashCode() + rows.hashCode()
-			+ symbols.hashCode() + blocks.hashCode();
+		return LatinSquares.hashCode(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @implSpec
-	 * This implementation first checks if the specified object is this {@code Sudoku}; if so it returns {@code true}.
-	 * Then it checks if the specified object is a {@code Sudoku} whose id, empty {@code Symbol}, variant, symbols {@code Map},
-	 * columns {@code Map}, rows {@code Map}, blocks {@code Map} and cells {@code Map} are equal to the equivalent
-	 * properties of this {@code Sudoku}; if not, it returns {@code false}. If so, it returns {@code true}.
+	 * The default implementation is equivalent to, for this {@code sdk}:
+	 * <pre> {@code
+	 * return LatinSquares.equals(sdk, obj);
+	 * }
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!(obj instanceof Sudoku)) return false;
-		Sudoku<?> _obj = (Sudoku<?>) obj;
-		return emptySymbol().equals(_obj.emptySymbol()) && variant.equals(_obj.variant()) && symbols.equals(_obj.symbols())
-				&& columns.equals(_obj.columns()) && rows.equals(_obj.rows()) && blocks.equals(_obj.blocks())
-				&& cells.equals(_obj.cells());
+		return LatinSquares.equals(this, obj);
 	}
 	
 	/**
