@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Comparator;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -111,5 +112,32 @@ public class SymbolsTest {
 	 	// assert that an IllegalArgumentException is thrown if upTo > 27
 		assertThrows(IllegalArgumentException.class, () -> Symbols.letterSymbolsUpTo(28));
 		assertThrows(IllegalArgumentException.class, () -> Symbols.letterSymbolsUpTo(200));
+	}
+	
+	/**
+	 * Test {@link Symbols#defaultComparator()} static utility method.
+	 */
+	@Test
+	public void testDefaultComparator() {
+		Comparator<Symbol<?>> comparator = Symbols.defaultComparator();
+		
+		// assert that the Comparator returned isn't null
+		assertNotNull(comparator);
+		
+		// create Cells for testing the Comparator
+		Symbol<Integer> symbol1 = Symbols.of(Integer.valueOf(0), Integer.valueOf(0));
+		Symbol<Integer> symbol2 = Symbols.of(Integer.valueOf(1), Integer.valueOf(1));
+		Symbol<Integer> symbol3 = Symbols.of(Integer.valueOf(2), Integer.valueOf(2));
+		Symbol<Integer> symbol4 = Symbols.of(Integer.valueOf(3), Integer.valueOf(3));
+		Symbol<Integer> symbol5 = Symbols.of(Integer.valueOf(5), Integer.valueOf(5));
+		Symbol<Integer> symbol6 = Symbols.of(Integer.valueOf(5), Integer.valueOf(5));
+		
+		// assert the Comparator returns the correct values
+		assertTrue(comparator.compare(symbol1, symbol2) < 0);
+		assertTrue(comparator.compare(symbol2, symbol1) > 0);
+		assertTrue(comparator.compare(symbol3, symbol2) > 0);
+		assertTrue(comparator.compare(symbol1, symbol4) < 0);
+		assertTrue(comparator.compare(symbol2, symbol2) == 0);
+		assertTrue(comparator.compare(symbol5, symbol6) == 0);
 	}
 }
