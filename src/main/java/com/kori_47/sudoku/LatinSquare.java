@@ -92,8 +92,7 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 
 	/**
 	 * Mutates all the {@link Cell}s in this {@code LatinSquare} by setting each {@code Cell}s
-	 * {@link Symbol} to a {@code null} value. This mutation also clears the notes in each {@code Cell}
-	 * and reverts any initial {@code Cell} to a start {@code Cell}.
+	 * {@link Symbol} to a {@code null} value.
 	 * 
 	 * @implSpec
 	 * The default implementation is equivalent to, for this {@code latinSquare}:
