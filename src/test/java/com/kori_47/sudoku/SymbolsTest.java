@@ -50,36 +50,6 @@ public class SymbolsTest {
 	}
 	
 	/**
-	 * Tests the {@link Symbols#emptyNumberSymbol()} static utility method.
-	 */
-	@Test
-	public void testEmptyNumberSymbol() {
-		Symbol<Integer> emptyNumberSymbol = Symbols.emptyNumberSymbol();
-		
-		// assert that the method doesn't return a null value
-		assertNotNull(emptyNumberSymbol);
-		
-		// assert that the Symbol returned has being assigned the correct id and value
-		assertEquals(Integer.valueOf(0), emptyNumberSymbol.id());
-		assertEquals(Integer.valueOf(0), emptyNumberSymbol.value());
-	}
-	
-	/**
-	 * Tests the {@link Symbols#emptyLetterSymbol()} static utility method.
-	 */
-	@Test
-	public void testEmptyLetterSymbol() {
-		Symbol<Character> emptyLetterSymbol = Symbols.emptyLetterSymbol();
-		
-		// assert that the method doesn't return a null value
-		assertNotNull(emptyLetterSymbol);
-		
-		// assert that the Symbol returned has being assigned the correct id and value
-		assertEquals(Integer.valueOf(0), emptyLetterSymbol.id());
-		assertEquals(Character.valueOf(' '), emptyLetterSymbol.value());
-	}
-	
-	/**
 	 * Tests the {@link Symbols#numberSymbolsUpTo(int)} static utility method.
 	 */
 	@Test

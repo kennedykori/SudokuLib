@@ -55,7 +55,7 @@ public class ReferenceCellImplementationTest implements CellTest {
 		CellTest.super.testDeapEquals();
 		
 		// add more test
-		Cell<Integer> cell = Cells.of("0/0", 0, 0, Symbols.emptyNumberSymbol());
+		Cell<Integer> cell = Cells.of("0/0", 0, 0, Symbols.of(Integer.valueOf(0), Integer.valueOf(0)));
 		Cell<Integer> cell1 = Cells.of("0/0", 0, 0, Symbols.of(Integer.valueOf(10), Integer.valueOf(10)));
 		Cell<Integer> cell2 = Cells.of("1/1", 1, 1);
 		
@@ -63,14 +63,14 @@ public class ReferenceCellImplementationTest implements CellTest {
 		assertFalse(cell.deepEquals(cell2));
 		assertFalse(cell2.deepEquals(cell));
 		// a Cell is not a Symbol
-		assertFalse(cell.deepEquals(Symbols.emptyLetterSymbol()));
+		assertFalse(cell.deepEquals(Symbols.of(Integer.valueOf(0), Character.valueOf(' '))));
 	}
 	
 	
 	@Test
 	public void testToString() {
-		Cell<Integer> cell = Cells.of("0/0", 0, 0, Symbols.emptyNumberSymbol());
-		Cell<Character> cell1 = Cells.of("1/1", 1, 1, Symbols.emptyLetterSymbol());
+		Cell<Integer> cell = Cells.of("0/0", 0, 0, Symbols.of(Integer.valueOf(0), Integer.valueOf(0)));
+		Cell<Character> cell1 = Cells.of("1/1", 1, 1, Symbols.of(Integer.valueOf(0), Character.valueOf(' ')));
 		
 		assertEquals(Cells.toString(cell), cell.toString());
 		assertEquals(Cells.toString(cell1), cell1.toString());

@@ -28,7 +28,7 @@ public class CellsTest {
 	 */
 	@Test
 	public void testOf() {
-		Cell<Integer> cell1 = Cells.of("0/0", 0, 0, Symbols.emptyNumberSymbol());
+		Cell<Integer> cell1 = Cells.of("0/0", 0, 0, Symbols.of(Integer.valueOf(0), Integer.valueOf(0)));
 		Cell<Character> cell2 = Cells.of("1/3", 1, 3);
 		
 		// assert that the Cells returned aren't null
@@ -48,9 +48,10 @@ public class CellsTest {
 		assertEquals(3, cell2.y());
 		
 		// assert that the Cells returned have the correct values
-		assertEquals(Symbols.emptyNumberSymbol(), cell1.symbol().get());
+		assertEquals(Symbols.of(Integer.valueOf(0), Integer.valueOf(0)), cell1.symbol().get());
 		assertEquals(null, cell2.symbol().orElse(null));
-		assertEquals(Symbols.emptyLetterSymbol(), Cells.of("", 0, 0, Symbols.emptyLetterSymbol()).symbol().get());
+		assertEquals(Symbols.of(Integer.valueOf(0), Character.valueOf(' ')),
+				Cells.of("", 0, 0, Symbols.of(Integer.valueOf(0), Character.valueOf(' '))).symbol().get());
 		assertEquals(null, Cells.of("", 0, 0, null).symbol().orElse(null));
 		
 		// assert that a NullPointerException is thrown if id is null
@@ -74,7 +75,7 @@ public class CellsTest {
 		// assert that the CellFactory returned isn't null
 		assertNotNull(cellFactory);
 		
-		Cell<Integer> cell1 = cellFactory.createCell("0/0", 0, 0, Symbols.emptyNumberSymbol());
+		Cell<Integer> cell1 = cellFactory.createCell("0/0", 0, 0, Symbols.of(Integer.valueOf(0), Integer.valueOf(0)));
 		Cell<Integer> cell2 = cellFactory.createCell("0/0", 0, 0, null);
 		
 		// assert that the Cells returned aren't null
@@ -118,7 +119,7 @@ public class CellsTest {
 		// create Cells for testing the hash code
 		Cell<Integer> cell1 = Cells.of("1", 2, 3);
 		Cell<Character> cell2 = Cells.of("2", 3, 2);
-		Cell<Character> cell3 = Cells.of("2", 3, 2, Symbols.emptyLetterSymbol());
+		Cell<Character> cell3 = Cells.of("2", 3, 2, Symbols.of(Integer.valueOf(0), Character.valueOf(' ')));
 		
 		// assert that multiple calls of the method with the same Cell returns
 		// the same value.
@@ -135,7 +136,7 @@ public class CellsTest {
 		
 		// assert that even after modification of a Cell, it still has the same hash code
 		// as per the specification of the Cell#hashCode() method.
-		cell1.changeSymbol(Symbols.emptyNumberSymbol());  // assign a value to cell1
+		cell1.changeSymbol(Symbols.of(Integer.valueOf(0), Integer.valueOf(0)));  // assign a value to cell1
 		cell2.changeSymbol(Symbols.of(Integer.valueOf(1), Character.valueOf('A'))); // assign a value to cell2
 		assertEquals(hash1, cell1.hashCode());
 		assertEquals(hash2, cell2.hashCode());
@@ -152,14 +153,14 @@ public class CellsTest {
 		// create Cells for testing for equality
 		Cell<Integer> cell1 = Cells.of("1", 2, 3);
 		Cell<Character> cell2 = Cells.of("2", 3, 2);
-		Cell<Character> cell3 = Cells.of("2", 3, 2, Symbols.emptyLetterSymbol());
+		Cell<Character> cell3 = Cells.of("2", 3, 2, Symbols.of(Integer.valueOf(0), Character.valueOf(' ')));
 		
 		// assert that the Cell method works as intended
 		assertFalse(Cells.equals(cell1, cell2)); // cell1 and cell2 aren't equal
 		assertTrue(Cells.equals(cell1, cell1));  // a Cell is equal to itself
 		assertTrue(Cells.equals(cell2, cell2));  // a Cell is equal to itself
 		assertTrue(Cells.equals(cell2, cell3));  // cell2 and cell3 should be equal
-		assertFalse(Cells.equals(cell2, Symbols.emptyLetterSymbol()));  // comparison to a non Cell should be false
+		assertFalse(Cells.equals(cell2, Symbols.of(Integer.valueOf(0), Character.valueOf(' '))));  // comparison to a non Cell should be false
 		assertFalse(Cells.equals(cell1, null));  // comparison to null should always return false
 		
 		// assert that even after modification of a Cell, it's equality results isn't affected
@@ -178,7 +179,7 @@ public class CellsTest {
 		// create Cells for testing the toString method
 		Cell<Integer> cell1 = Cells.of("1", 2, 3);
 		Cell<Character> cell2 = Cells.of("2", 3, 2);
-		Cell<Integer> cell3 = Cells.of("2", 3, 2, Symbols.emptyNumberSymbol());
+		Cell<Integer> cell3 = Cells.of("2", 3, 2, Symbols.of(Integer.valueOf(0), Integer.valueOf(0)));
 		
 		// assert the methods return the expected values
 		assertEquals("Cell{id=1, coord=(x:2, y:3), value=[-]}", Cells.toString(cell1));
