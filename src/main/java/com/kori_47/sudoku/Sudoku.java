@@ -11,6 +11,7 @@ import java.util.HashSet;
 import static com.kori_47.utils.ObjectUtils.requireGreaterThanOrEqualTo;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -32,6 +33,35 @@ import java.util.Set;
  * @see BoxBlocksSudokuVariants
  */
 public interface Sudoku<V> extends LatinSquare<V> {
+	
+	/**
+	 * Returns an {@link Optional} describing the {@link Block} in which the given {@link Cell} belongs to, or
+	 * an empty {@code Optional} if the {@code Cell} doesn't belong to this {@code Sudoku}.
+	 * 
+	 * @param cell the {@code Cell} whose parent {@code Block} we want to find.
+	 * 
+	 * @return an {@code Optional} describing the {@code Block} that the given {@code Cell} belongs to, or
+	 * an empty {@code Optional} if the {@code Cell} doesn't belong to this {@code Sudoku}.
+	 * 
+	 * @throws NullPointerException if the given {@code Cell} is {@code null}.
+	 * 
+	 * @implSpec
+	 * The default implementation is equivalent to, for this {@code sudoku}:
+	 * <pre> {@code
+	 * sudoku.blocks().values().stream()
+	 * 	.filter(block -> block.startCell().x() >= cell.x() && block.startCell().y() >= cell.y())
+	 * 	.filter(block -> block.endCell().x() <= cell.x() && block.endCell().y() <= cell.y())
+	 * 	.findFirst();
+	 * }
+	 * </pre>
+	 */
+	default Optional<Block<V>> locateParentBlock(Cell<V> cell) {
+		requireNonNull(cell, "cell cannot be null.");
+		return blocks().values().stream()
+				.filter(block -> block.startCell().x() >= cell.x() && block.startCell().y() >= cell.y())
+				.filter(block -> block.endCell().x() <= cell.x() && block.endCell().y() <= cell.y())
+				.findFirst();
+	}
 
 	/**
 	 * Returns the hash code value for this {@code Sudoku}. The hash code of a {@code Sudoku} should

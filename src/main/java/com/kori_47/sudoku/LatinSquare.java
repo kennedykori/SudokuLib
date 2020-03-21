@@ -3,7 +3,10 @@
  */
 package com.kori_47.sudoku;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * A {@code LatinSquare} is an <i>n × n</i> matrix filled with <i>n</i> different {@link Symbol}s,
@@ -117,6 +120,112 @@ public interface LatinSquare<V> extends InterpolatableCellGroup<V> {
 	 */
 	default void clear() {
 		cells().values().forEach(cell -> cell.clear());
+	}
+	
+	/**
+	 * Sets the value of the given {@link Cell} to that of the given {@link Symbol} <i>if and only if</i> the given {@code Cell}
+	 * and {@code Symbol} are part of this {@code LatinSquare}, otherwise, a {@link SudokuException} is thrown. A {@code Cell} is
+	 * said to be part of a {@code LatinSquare} if the {@code Cell} is contained in the {@code Cell}s {@code Map} returned by
+	 * the {@code LatinSquare}'s {@link #cells()} method. A {@code Symbol} is said to be part of a {@code LatinSquare} if the
+	 * {@code Symbol} is contained in the {@code Symbol}s {@code Map} returned by the {@code LatinSquare}'s {@link #symbols()}
+	 * method or if it is equal to the value returned by the {@code LatinSquare}'s {@link #emptySymbol()} method.
+	 * 
+	 * <p>
+	 * It should be noted that this method isn't required to make any other checks on the {@code Cell}
+	 * and as such, other exceptions such as {@link ClueCellModificationException} maybe thrown if the given
+	 * {@code Cell} is a clue {@code Cell}.
+	 * 
+	 * @param cell the {@code Cell} whose value we want to change.
+	 * @param symbol the {@code Symbol} to set the given {@code Cell}.
+	 * 
+	 * @throws NullPointerException if any of the given arguments is/are {@code null}.
+	 * @throws SudokuException if the given {@code Cell} or {@code Symbol} is not part of this {@code LatinSquare}.
+	 * 
+	 * @see #cells()
+	 * @see #emptySymbol()
+	 * @see #symbols()
+	 * 
+	 * @apiNote
+	 * {@link LatinSquare} clients are encouraged to use this method when changing the value of a {@code Cell} as
+	 * it ensures that the {@code Symbol} set on the {@code Cell} is part of this {@code LatinSquare}'s {@link #symbols() symbols}
+	 * thus preserving the integrity of this {@code LatinSquare}.
+	 * 
+	 * @implSpec
+	 * This method first checks that the given {@code Cell} isn't {@code null} and if it is, throws a {@link NullPointerException}.
+	 * It then proceeds to check that the given {@code Cell} is part of this {@code LatinSquare} and throws a {@link SudokuException}
+	 * if not. The method then checks that the given {@code Symbol} isn't {@code null} and is part if this {@code LatinSquare} and if
+	 * not throws a {@code NullPointerException} and {@code SudokuException} respectively. If everything checks out, the method finishes
+	 * by setting the given {@code Symbol} on the given {@code Cell}.
+	 * 
+	 * <p>
+	 * The above steps can be summarized as, for this {@code latinSquare}:
+	 * <pre> {@code
+	 * Objects.requireNonNull(cell);
+	 * if (!latinSquare.cells().containsKey(cell.id()))
+	 * 	throw new SudokuException();
+	 * Objects.requireNonNull(symbol);
+	 * if (!latinSquare.symbols().containsKey(symbol.id()) && !symbol.equals(latinSquare.emptySymbol()))
+	 * 	throw new SudokuException();
+	 * 
+	 * cell.changeSymbol(symbol);
+	 * }
+	 * </pre>
+	 */
+	default void changeSymbol(Cell<V> cell, Symbol<V> symbol) {
+		// start by validating that the given Cell is part of this LatinSquare
+		if (!cells().containsKey(requireNonNull(cell, "cell cannot be null").id()))
+			throw new SudokuException("The given cell(" + cell + ") isn't part of this LatinSquare.");
+		// start by validating that the given Symbol is part of this LatinSquare
+		if (!symbols().containsKey(requireNonNull(symbol, "symbol cannot be null").id()) && !symbol.equals(emptySymbol()))
+			throw new SudokuException("The given symbol(" + cell + ") isn't one of the Symbols of this LatinSquare.");
+		// change the Cell's Symbol
+		cell.changeSymbol(symbol);
+	}
+	
+	/**
+	 * Returns an {@link Optional} describing the {@link Row} in which the given {@link Cell} belongs to, or
+	 * an empty {@code Optional} if the {@code Cell} doesn't belong to this {@code LatinSquare}.
+	 * 
+	 * @param cell the {@code Cell} whose parent {@code Row} we want to find.
+	 * 
+	 * @return an {@code Optional} describing the {@code Row} that the given {@code Cell} belongs to, or
+	 * an empty {@code Optional} if the {@code Cell} doesn't belong to this {@code LatinSquare}.
+	 * 
+	 * @throws NullPointerException if the given {@code Cell} is {@code null}.
+	 * 
+	 * @implSpec
+	 * The default implementation is equivalent to, for this {@code latinSquare}:
+	 * <pre> {@code
+	 * latinSquare.rows().values().stream().filter(row -> row.y() == cell.y()).findFirst();
+	 * }
+	 * </pre>
+	 */
+	default Optional<Row<V>> locateParentRow(Cell<V> cell) {
+		requireNonNull(cell, "cell cannot be null.");
+		return rows().values().stream().filter(row -> row.y() == cell.y()).findFirst();
+	}
+	
+	/**
+	 * Returns an {@link Optional} describing the {@link Column} in which the given {@link Cell} belongs to, or
+	 * an empty {@code Optional} if the {@code Cell} doesn't belong to this {@code LatinSquare}.
+	 * 
+	 * @param cell the {@code Cell} whose parent {@code Column} we want to find.
+	 * 
+	 * @return an {@code Optional} describing the {@code Column} that the given {@code Cell} belongs to, or
+	 * an empty {@code Optional} if the {@code Cell} doesn't belong to this {@code LatinSquare}.
+	 * 
+	 * @throws NullPointerException if the given {@code Cell} is {@code null}.
+	 * 
+	 * @implSpec
+	 * The default implementation is equivalent to, for this {@code latinSquare}:
+	 * <pre> {@code
+	 * latinSquare.columns().values().stream().filter(column -> column.x() == cell.x()).findFirst();
+	 * }
+	 * </pre>
+	 */
+	default Optional<Column<V>> locateParentColumn(Cell<V> cell) {
+		requireNonNull(cell, "cell cannot be null.");
+		return columns().values().stream().filter(column -> column.x() == cell.x()).findFirst();
 	}
 
 	/**

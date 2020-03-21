@@ -23,7 +23,7 @@ public final class Formattables {
 	/**
 	 * A comparator used to sort rows on reverse based on their index
 	 */
-	private static final Comparator<Row<?>> REVERSE_ROW_COMPARATOR = (row1, row2) -> Integer.compare(row2.y(), row1.y());
+	private static final Comparator<Row<?>> REVERSE_ROW_COMPARATOR = CellGroups.defaultRowComparator().reversed();
 	
 	/**
 	 * The default delimiter used by methods in this class when none is provided.
