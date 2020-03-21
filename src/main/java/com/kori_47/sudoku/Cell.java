@@ -217,12 +217,9 @@ public interface Cell<V> extends Formattable, Comparable<Cell<V>>, Unique<String
 	boolean equals(Object obj);
 
 	/**
-	 * <p> Changes the {@link Symbol} of this cell to a new value. If this is an initial cell, then this call 
-	 * will fail with an {@link ClueCellModificationException}. {@code null} values are allowed.
+	 * <p> Changes the {@link Symbol} of this cell to a new value. {@code null} values are allowed.
 	 * 
 	 * @param value the new {@code Symbol} to set on this cell.
-	 * 
-	 * @throws ClueCellModificationException if this is a clue cell.
  	 */
 	void changeSymbol(Symbol<V> value);
 	
