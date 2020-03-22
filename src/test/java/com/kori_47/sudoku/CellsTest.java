@@ -172,6 +172,37 @@ public class CellsTest {
 	}
 	
 	/**
+	 * Test {@link Cells#deepEquals(Cell, Object)} static utility method.
+	 */
+	@Test
+	public void testDeepEquals() {
+		// create Cells for testing for equality
+		Cell<Integer> cell1 = Cells.of("1", 2, 3);
+		Cell<Character> cell2 = Cells.of("2", 3, 2);
+		Cell<Character> cell3 = Cells.of("2", 3, 2, Symbols.of(Integer.valueOf(0), Character.valueOf(' ')));
+		Cell<Character> cell4 = Cells.of("2", 3, 2, Symbols.of(Integer.valueOf(1), Character.valueOf('A')));
+		Cell<Character> cell5 = Cells.of("2", 3, 2, Symbols.of(Integer.valueOf(0), Character.valueOf(' ')));
+		
+		// assert that the Cell method works as intended
+		assertFalse(Cells.deepEquals(cell1, cell2)); // cell1 and cell2 aren't equal
+		assertTrue(Cells.deepEquals(cell1, cell1));  // a Cell is equal to itself
+		assertTrue(Cells.deepEquals(cell2, cell2));  // a Cell is equal to itself
+		assertTrue(Cells.deepEquals(cell3, cell5));  // cell3 and cell5 should be equal
+		assertFalse(Cells.deepEquals(cell2, cell3));  // cell2 and cell3 should not be equal
+		assertFalse(Cells.deepEquals(cell2, cell4));  // cell2 and cell4 should not be equal
+		assertFalse(Cells.deepEquals(cell3, cell4));  // cell3 and cell4 should not be equal, they have different Symbols
+		assertFalse(Cells.deepEquals(cell2, Symbols.of(Integer.valueOf(0), Character.valueOf(' '))));  // comparison to a non Cell should be false
+		assertFalse(Cells.deepEquals(cell1, null));  // comparison to null should always return false
+		
+		// assert that after modification of a Cell, it's equality results is affected
+		cell2.changeSymbol(Symbols.of(Integer.valueOf(1), Character.valueOf('A'))); // assign a value to cell2
+		assertTrue(Cells.deepEquals(cell2, cell4));  // cell2 and cell4 should now be equal
+		
+		// assert that the method throws a NullPointerException when the 1st parameter is null
+		assertThrows(NullPointerException.class, () -> Cells.equals(null, cell2));
+	}
+	
+	/**
 	 * Test {@link Cells#toString(Cell, String)} and it's derivertives.
 	 */
 	@Test
@@ -187,5 +218,39 @@ public class CellsTest {
 		assertEquals("Cell{id=1, coord=(x:2, y:3), value=[*]}", Cells.toString(cell1, "*"));
 		assertEquals("Cell{id=2, coord=(x:3, y:2), value=[-]}", Cells.toString(cell2));
 		assertEquals("Cell{id=2, coord=(x:3, y:2), value=[Symbol{id=0, value=0}]}", Cells.toString(cell3));
+	}
+	
+	/**
+	 * Test {@link Cells#swapCellSymbols(Cell, Cell)} static utility method.
+	 */
+	@Test
+	public void testSwapCellSymbols() {
+		// create Cells for testing the swapCellProperties method
+		Cell<Integer> cell1 = Cells.of("1", 2, 3);
+		Cell<Character> cell2 = Cells.of("2", 3, 2);
+		Cell<Integer> cell3 = Cells.of("2", 3, 2, Symbols.of(Integer.valueOf(0), Integer.valueOf(0)));
+		Cell<Character> cell4 = Cells.of("2", 3, 2, Symbols.of(Integer.valueOf(1), Character.valueOf('A')));
+		Cell<Character> cell5 = Cells.of("1/0", 1, 0, Symbols.of(Integer.valueOf(9), Character.valueOf('I')));
+		Cell<Character> cell6 = Cells.of("2/1", 2, 1, Symbols.of(Integer.valueOf(5), Character.valueOf('E')));
+		// Cell copies
+		Cell<Integer> cell1Copy = Cells.of(cell1.id(), cell1.x(), cell1.y(), cell1.symbol().orElse(null));
+		Cell<Character> cell2Copy = Cells.of(cell2.id(), cell2.x(), cell2.y(), cell2.symbol().orElse(null));
+		Cell<Integer> cell3Copy = Cells.of(cell3.id(), cell3.x(), cell3.y(), cell3.symbol().orElse(null));
+		Cell<Character> cell4Copy = Cells.of(cell4.id(), cell4.x(), cell4.y(), cell4.symbol().orElse(null));
+		Cell<Character> cell5Copy = Cells.of(cell5.id(), cell5.x(), cell5.y(), cell5.symbol().orElse(null));
+		Cell<Character> cell6Copy = Cells.of(cell6.id(), cell6.x(), cell6.y(), cell6.symbol().orElse(null));
+		
+		// swap the cell pairs
+		Cells.swapCellSymbols(cell1, cell3);
+		Cells.swapCellSymbols(cell2, cell4);
+		Cells.swapCellSymbols(cell5, cell6);
+		
+		// check that the swapping worked as expected
+		assertEquals(cell1.symbol().orElse(null), cell3Copy.symbol().orElse(null)); // cell1's symbol should now be equal to what cell3's symbol was, i.e cell3Copy symbol
+		assertEquals(cell3.symbol().orElse(null), cell1Copy.symbol().orElse(null)); // cell3's symbol should now be equal to what cell1's symbol was, i.e cell1Copy symbol
+		assertEquals(cell2.symbol().orElse(null), cell4Copy.symbol().orElse(null)); // cell2's symbol should now be equal to what cell4's symbol was, i.e cell4Copy symbol
+		assertEquals(cell4.symbol().orElse(null), cell2Copy.symbol().orElse(null)); // cell4's symbol should now be equal to what cell2's symbol was, i.e cell2Copy symbol
+		assertEquals(cell5.symbol().orElse(null), cell6Copy.symbol().orElse(null)); // cell5's symbol should now be equal to what cell6's symbol was, i.e cell6Copy symbol
+		assertEquals(cell6.symbol().orElse(null), cell5Copy.symbol().orElse(null)); // cell6's symbol should now be equal to what cell5's symbol was, i.e cell5Copy symbol
 	}
 }
