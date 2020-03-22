@@ -305,9 +305,9 @@ public final class Cells {
 	}
 	
 	/**
-	 * This method swaps the properties of the two given {@link Cell}s such that after this method returns, {@code cell1} will
-	 * have the properties of {@code cell2} before the call and {@code cell2} will have the properties of {@code cell1} before
-	 * the call.
+	 * This method swaps the {@link Symbol}s of the two given {@link Cell}s such that after this method returns, {@code cell1}
+	 * will have the {@code Symbol} of {@code cell2} before the call and {@code cell2} will have the {@code Symbol} of {@code cell1}
+	 * before the call.
 	 * 
 	 * @param <V> the type of value held by the {@link Symbol}s supported by the {@code Cell}s being swapped .
 	 * 
@@ -319,10 +319,10 @@ public final class Cells {
 	 * 
 	 * @apiNote
 	 * This method is mostly useful to {@link LatinSquare} implementations when performing flip operations making it easy to swap
-	 * {@code Cell} properties without the need to create new temporary {@code LatinSquare}'s to hold the values of the
+	 * {@code Cell} {@code Symbol}s without the need to create new temporary {@code LatinSquare}'s to hold the values of the
 	 * {@code LatinSquare} in question during the flip.
 	 */
-	public static final <V> void swapCellProperties(Cell<V> cell1, Cell<V> cell2) {
+	public static final <V> void swapCellSymbols(Cell<V> cell1, Cell<V> cell2) {
 		requireNonNull(cell1, "cell1 cannot be null.");
 		requireNonNull(cell2, "cell2 cannot be null.");
 		
