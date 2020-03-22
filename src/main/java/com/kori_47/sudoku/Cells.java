@@ -332,7 +332,7 @@ public final class Cells {
 
 		// clear the cells
 		cell1.clear();
-		cell2.clear();;
+		cell2.clear();
 		
 		// set the Cell's values
 		cell1.changeSymbol(symbol2);
