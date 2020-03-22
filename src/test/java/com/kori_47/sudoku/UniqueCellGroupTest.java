@@ -10,6 +10,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
 
 /**
+ * This is a test interface that implementors of the {@link UniqueCellGroup} interface can use to test
+ * and validate their implementations.
+ * 
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *
  * @since Sun, 22 Mar 2020 21:38:36
