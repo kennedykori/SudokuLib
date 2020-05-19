@@ -15,14 +15,16 @@ import org.junit.jupiter.api.Test;
  *
  * @since Sun, 22 Mar 2020 22:14:52
  */
-public interface RowTest extends UniqueCellGroupTest<Row<Object>>, Comparable<Row<Object>> {
+public interface RowTest extends UniqueCellGroupTest<Row<Object>>, InterpolatableCellGroupTest<Row<Object>> {
 	
 	@Test
 	@Override
 	default void testCellGroupAccessors() {
 		UniqueCellGroupTest.super.testCellGroupAccessors();
+		InterpolatableCellGroupTest.super.testCellGroupAccessors();
+
 		Row<Object> row = createValue();
-		
+
 		// assert that the index of this Row is a positive number but less than size
 		assertTrue(row.y() >= 0);
 		assertTrue(row.y() < row.size());
