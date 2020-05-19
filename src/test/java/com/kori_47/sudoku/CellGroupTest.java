@@ -114,7 +114,7 @@ public interface CellGroupTest<T extends CellGroup<Object>> extends TestHashCode
 	}
 	
 	/**
-	 * Tests a {@code CellGroup}'s {@link CellGroup#spliterator() spliterator()} method.
+	 * Tests a {@code CellGroup}'s accessor methods.
 	 */
 	@Test
 	default void testCellGroupAccessors() {
