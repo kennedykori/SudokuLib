@@ -11,7 +11,7 @@ package com.kori_47.sudoku;
  *
  * @since Tue, 19 May 2020 13:22:44
  */
-public interface BlockTest extends UniqueCellGroupTest<Block<Object>>, InterpolatableCellGroupTest<Block<Object>> {
+public interface BlockTest<T extends Block<Object>> extends UniqueCellGroupTest<T>, InterpolatableCellGroupTest<T> {
 
 	@Override
 	default void testCellGroupAccessors() {
