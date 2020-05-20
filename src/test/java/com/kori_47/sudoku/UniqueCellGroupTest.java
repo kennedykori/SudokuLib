@@ -4,7 +4,6 @@
 package com.kori_47.sudoku;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -32,12 +31,6 @@ public interface UniqueCellGroupTest<T extends UniqueCellGroup<Object>> extends 
 		assertNotNull(cellGroup.id());
 		assertNotNull(cellGroup1.id());
 		assertNotNull(cellGroup2.id());
-		
-		// assert that equal CellGroups have the same id
-		assertEquals(cellGroup.id(), cellGroup1.id());
-		
-		// assert that non equal CellGroups don't have the same id
-		assertNotEquals(cellGroup.id(), cellGroup2.id());
 	}
 
 	/**

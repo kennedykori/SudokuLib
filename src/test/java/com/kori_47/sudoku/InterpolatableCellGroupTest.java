@@ -3,8 +3,6 @@
  */
 package com.kori_47.sudoku;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
@@ -30,13 +28,9 @@ public interface InterpolatableCellGroupTest<T extends InterpolatableCellGroup<O
 		// assert that the return values aren't null
 		assertNotNull(cellGroup.startCell());
 		assertNotNull(cellGroup.endCell());
-		
-		// assert that equal CellGroups have equal values
-		assertEquals(cellGroup.startCell(), cellGroup1.startCell());
-		assertEquals(cellGroup.endCell(), cellGroup1.endCell());
-		
-		// assert that non equal CellGroups don't have equal values
-		assertNotEquals(cellGroup.startCell(), cellGroup2.startCell());
-		assertNotEquals(cellGroup.endCell(), cellGroup2.endCell());
+		assertNotNull(cellGroup1.startCell());
+		assertNotNull(cellGroup1.endCell());
+		assertNotNull(cellGroup2.startCell());
+		assertNotNull(cellGroup2.endCell());
 	}
 }
