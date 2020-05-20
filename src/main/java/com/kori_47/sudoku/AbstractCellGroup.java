@@ -132,6 +132,7 @@ abstract class AbstractCellGroup<V> implements CellGroup<V> {
 		// return a new LinkedHashMap containing cells.
 		return cells.values().stream()
 				.sorted()
+				.limit(size) // truncate any extra Cells given
 				.collect(toMap(cell -> cell.id(), cell -> cell,
 						(oldValue, newValue) -> newValue,
 						() -> new LinkedHashMap<String, Cell<V>>(cells.size())));
