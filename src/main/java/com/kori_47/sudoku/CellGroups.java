@@ -7,8 +7,10 @@ import static com.kori_47.utils.ObjectUtils.requireGreaterThanOrEqualTo;
 import static com.kori_47.utils.ObjectUtils.requireInRange;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,7 +49,8 @@ public final class CellGroups {
 	 * <ul>
 	 * <li>The given size must be greater than or equal to {@code 1}.</li>
 	 * <li>The number of cells given must be equal to the size given.</li>
-	 * <li>The index provided must be greater than or equal to {@code 0} but less than the given size.</li>
+	 * <li>The y index provided must be greater than or equal to {@code 0} but less than the given size.</li>
+	 * <li>The cells provided must have an x coordinate starting from {@code 0} to {@code size - 1} when ordered.</li>
 	 * </ul>
 	 * 
 	 * @param <V> the type of value held by the {@link Symbol}s supported by this {@link Row}.
@@ -74,7 +77,8 @@ public final class CellGroups {
 	 * <ul>
 	 * <li>The given size must be greater than or equal to {@code 1}.</li>
 	 * <li>The number of cells given must be equal to the size given.</li>
-	 * <li>The index provided must be greater than or equal to {@code 0} but less than the given size.</li>
+	 * <li>The x index provided must be greater than or equal to {@code 0} but less than the given size.</li>
+	 * <li>The cells provided must have a y coordinate starting from {@code 0} to {@code size - 1} when ordered.</li>
 	 * </ul>
 	 * 
 	 * @param <V> the type of value held by the {@link Symbol}s supported by this {@link Column}.
@@ -446,6 +450,7 @@ public final class CellGroups {
 			requireNonNull(other, "other cannot be null.");
 			return CellGroups.defaultColumnComparator().compare(this, (Column<?>) other);
 		}
+
 	}
 	
 	/**
@@ -516,11 +521,26 @@ public final class CellGroups {
 		requireNonNull(cells, "cells cannot be null.");
 		requireEquals(size, cells.size(), "You must provide axactly " + size + " cells");
 		requireInRange(0, size, xOry, coordinate + " must be greater than 0 but less than " + size);
-		// validate all the given cells have the given x or y coordinate
-		if (coordinate.equals("y"))
-			cells.forEach((id, cell) -> requireEquals(xOry, cell.y(), "The " + coordinate + " coordinate of " + cell + " must be " + xOry));
-		else
-			cells.forEach((id, cell) -> requireEquals(xOry, cell.x(), "The " + coordinate + " coordinate of " + cell + " must be " + xOry));
+
+		List<Cell<V>> cellsList = cells.values().stream().sorted(Cells.defaultComparator()).distinct().collect(toList());
+
+		for (int index = 0; index < size; index++) {
+			Cell<V> cell = cellsList.get(index);
+
+			// validate all the given cells have the given x or y coordinate
+			if (coordinate.equals("y")) {
+				requireEquals(index, cell.x(),
+						"The provided cells must have an x coordinate ranging from 0 to " + (size - 1) +
+						". " + cell + "'s x coordinates was expected to be " + index + ".");
+				requireEquals(xOry, cell.y(), "The " + coordinate + " coordinate of " + cell + " must be " + xOry);
+			} else {
+				requireEquals(index, cell.y(),
+						"The provided cells must have a y coordinate ranging from 0 to " + (size - 1) +
+						". " + cell + "'s y coordinates was expected to be " + index + ".");
+				requireEquals(xOry, cell.x(), "The " + coordinate + " coordinate of " + cell + " must be " + xOry);
+			}
+		}
+
 		return cells;
 	}
 	
