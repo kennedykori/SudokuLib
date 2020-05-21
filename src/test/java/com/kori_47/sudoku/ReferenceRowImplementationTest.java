@@ -143,7 +143,7 @@ public class ReferenceRowImplementationTest implements RowTest {
 		Row<Object> row3 = createLargerValue();
 		Row<Object> row4 = createNonEqualValue();
 
-		// assert that we have the correct start Cells
+		// assert that we have the correct end Cells
 		assertEquals(row1.endCell(), Cells.of("8/1", 8, 1));
 		assertEquals(row2.endCell(), Cells.of("8/2", 8, 2));
 		assertEquals(row3.endCell(), Cells.of("8/3", 8, 3));

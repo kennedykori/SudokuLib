@@ -143,7 +143,7 @@ public class ReferenceColumnImplementationTest implements ColumnTest {
 		Column<Object> column3 = createLargerValue();
 		Column<Object> column4 = createNonEqualValue();
 
-		// assert that we have the correct start Cells
+		// assert that we have the correct end Cells
 		assertEquals(column1.endCell(), Cells.of("1/8", 1, 8));
 		assertEquals(column2.endCell(), Cells.of("2/8", 2, 8));
 		assertEquals(column3.endCell(), Cells.of("3/8", 3, 8));
