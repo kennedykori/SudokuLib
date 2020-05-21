@@ -120,6 +120,36 @@ public class ReferenceRowImplementationTest implements RowTest {
 		assertEquals(cell2.get(), Cells.of("2/2", 2, 2));
 	}
 
+	@Test
+	@Override
+	public void testStartCell() {
+		Row<Object> row1 = createSmallerValue();
+		Row<Object> row2 = createValue();
+		Row<Object> row3 = createLargerValue();
+		Row<Object> row4 = createNonEqualValue();
+
+		// assert that we have the correct start Cells
+		assertEquals(row1.startCell(), Cells.of("0/1", 0, 1));
+		assertEquals(row2.startCell(), Cells.of("0/2", 0, 2));
+		assertEquals(row3.startCell(), Cells.of("0/3", 0, 3));
+		assertEquals(row4.startCell(), Cells.of("0/2", 0, 2));
+	}
+
+	@Test
+	@Override
+	public void testEndCell() {
+		Row<Object> row1 = createSmallerValue();
+		Row<Object> row2 = createValue();
+		Row<Object> row3 = createLargerValue();
+		Row<Object> row4 = createNonEqualValue();
+
+		// assert that we have the correct start Cells
+		assertEquals(row1.endCell(), Cells.of("8/1", 8, 1));
+		assertEquals(row2.endCell(), Cells.of("8/2", 8, 2));
+		assertEquals(row3.endCell(), Cells.of("8/3", 8, 3));
+		assertEquals(row4.endCell(), Cells.of("4/2", 4, 2));
+	}
+
 	@Override
 	public Row<Object> createAnotherEqualValue() {
 		return CellGroups.rowOf(

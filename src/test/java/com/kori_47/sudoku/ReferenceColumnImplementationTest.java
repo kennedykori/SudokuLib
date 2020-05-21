@@ -120,6 +120,36 @@ public class ReferenceColumnImplementationTest implements ColumnTest {
 		assertEquals(cell2.get(), Cells.of("2/2", 2, 2));
 	}
 
+	@Test
+	@Override
+	public void testStartCell() {
+		Column<Object> column1 = createSmallerValue();
+		Column<Object> column2 = createValue();
+		Column<Object> column3 = createLargerValue();
+		Column<Object> column4 = createNonEqualValue();
+
+		// assert that we have the correct start Cells
+		assertEquals(column1.startCell(), Cells.of("1/0", 1, 0));
+		assertEquals(column2.startCell(), Cells.of("2/0", 2, 0));
+		assertEquals(column3.startCell(), Cells.of("3/0", 3, 0));
+		assertEquals(column4.startCell(), Cells.of("2/0", 2, 0));
+	}
+
+	@Test
+	@Override
+	public void testEndCell() {
+		Column<Object> column1 = createSmallerValue();
+		Column<Object> column2 = createValue();
+		Column<Object> column3 = createLargerValue();
+		Column<Object> column4 = createNonEqualValue();
+
+		// assert that we have the correct start Cells
+		assertEquals(column1.endCell(), Cells.of("1/8", 1, 8));
+		assertEquals(column2.endCell(), Cells.of("2/8", 2, 8));
+		assertEquals(column3.endCell(), Cells.of("3/8", 3, 8));
+		assertEquals(column4.endCell(), Cells.of("2/4", 2, 4));
+	}
+
 	@Override
 	public Column<Object> createAnotherEqualValue() {
 		return CellGroups.columnOf(
