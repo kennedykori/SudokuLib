@@ -99,18 +99,29 @@ public final class CellGroups {
 	}
 	
 	/**
-	 * <p> Creates and returns an instance of a {@link BoxBlock} with the specified properties.
+	 * <p> Creates and returns an instance of a {@link BoxBlock} with the specified properties. The coordinates of the
+	 * {@link BoxBlock#endCell() endCell} of the returned {@code BoxBlock} are calculated by adding the provided {@code blockColumns}
+	 * and {@code blockRows} to the given {@code startCell}'s {@code x coordinate - 1} and {@code y coordinate - 1} respectively.
+	 * That is :-
+	 * <pre> {@code
+	 * int endCellXCoordinate = startCell.x() + (blockColumns - 1);
+	 * int endCellYCoordinate = startCell.y() + (blockRows - 1);
+	 * }
+	 * </pre>
 	 * 
-	 * <p> This method throws an {@link IllegalArgumentException} if the following conditions aren't met.
+	 * <p>
+	 * If a {@link Cell} with the calculated coordinates isn't present on the provided {@code cells Map}, then a {@link SudokuException}
+	 * is thrown. This method also throws an {@link IllegalArgumentException} if the following conditions aren't met.
 	 * <ul>
 	 * <li>The given size must be greater than or equal to {@code 1}.</li>
 	 * <li>The number of cells given must be equal to the size given.</li>
 	 * <li>The start {@code Cell} given must be in the provided cells {@code Map}.</li>
 	 * <li>The given block {@link Row}s must be greater than or equal to {@code 1}.</li>
 	 * <li>The given block {@link Column}s must be greater than or equal to {@code 1}.</li>
+	 * <li>The product of the given block {@code Row}s and {@code Column}s isn't equal to the provided size.</li>
 	 * </ul>
 	 * 
-	 * @param <V> the type of value held by the {@link Symbol}s supported by this {@link Column}.
+	 * @param <V> the type of value held by the {@link Symbol}s supported by this {@link BoxBlock}.
 	 * 
 	 * @param id the identifier of the {@code BoxBlock} instance to be created.
 	 * @param size the size of the {@code BoxBlock} instance to be created. This is also the number of {@link Cell}s
@@ -133,7 +144,14 @@ public final class CellGroups {
 	}
 	
 	/**
-	 * <p> Creates and returns an instance of a {@link BoxBlock} with the specified properties.
+	 * <p> Creates and returns an instance of a {@link BoxBlock} with the specified properties. The {@link BoxBlock#blockRows() boxRows}
+	 * and {@link BoxBlock#blockColumns() boxColumns} of the returned {@code BoxBlock} are calculated by subtracting the given {@code endCell}'s
+	 * and {@code startCell}'s {@code y coordinates + 1} and {@code x coordinates + 1} respectively. That is :-
+	 * <pre> {@code
+	 * int blockRows = (endCell.y() - startCell.y()) + 1;
+	 * int blockColumns = (endCell.x() - startCell.x()) + 1;
+	 * }
+	 * </pre>
 	 * 
 	 * <p> This method throws an {@link IllegalArgumentException} if the following conditions aren't met.
 	 * <ul>
@@ -471,13 +489,15 @@ public final class CellGroups {
 		
 		SimpleBoxBlock(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, int blockRows, int blockColumns) {
 			super(id, size, cells);
+			requireEquals(size, blockRows * blockColumns, 
+					"The product of the given blockRows and blockColumns(" + blockRows * blockColumns + ") should be equal to the given size(" + size + ").");
 			this.startCell = validateCellInCellsMap(requireNonNull(startCell, "startCell cannot be null."), cells, startCell + " must be in " + cells);
 			this.blockRows = requireGreaterThanOrEqualTo(1, blockRows);
 			this.blockColumns = requireGreaterThanOrEqualTo(1, blockColumns);
 			this.endCell = this.cells.values().stream()
-					.filter(cell -> cell.x() == (this.startCell.x() + blockRows))
-					.filter(cell -> cell.y() == (this.startCell.y() + blockColumns))
-					.findAny().get();
+					.filter(cell -> cell.x() == (this.startCell.x() + (blockColumns - 1)))
+					.filter(cell -> cell.y() == (this.startCell.y() + (blockRows - 1)))
+					.findAny().orElseThrow(() -> new SudokuException("The endCell of this BoxBlock could not be determined from the given properties."));
 		}
 		
 		/* this constructor is useful because of BlockFactory.createBlock() method */ 
@@ -485,8 +505,8 @@ public final class CellGroups {
 			super(id, size, cells);
 			this.startCell = validateCellInCellsMap(requireNonNull(startCell, "startCell cannot be null."), cells, startCell + " must be in " + cells);
 			this.endCell = validateCellInCellsMap(requireNonNull(endCell, "endCell cannot be null."), cells, startCell + " must be in " + cells);
-			this.blockRows = (this.endCell.x() - this.startCell.x()) + 1;
-			this.blockColumns = (this.endCell.y() - this.startCell.y()) + 1;
+			this.blockRows = (this.endCell.y() - this.startCell.y()) + 1;
+			this.blockColumns = (this.endCell.x() - this.startCell.x()) + 1;
 		}
 
 		@Override
