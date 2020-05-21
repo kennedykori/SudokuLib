@@ -33,4 +33,10 @@ public interface InterpolatableCellGroupTest<T extends InterpolatableCellGroup<O
 		assertNotNull(cellGroup2.startCell());
 		assertNotNull(cellGroup2.endCell());
 	}
+
+	@Test
+	void testStartCell();
+
+	@Test
+	void testEndCell();
 }
