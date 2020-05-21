@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
  * @since Tue, 19 May 2020 13:47:06
  */
 public interface BoxBlockTest extends BlockTest<BoxBlock<Object>> {
-	
+
 	@Test
 	@Override
 	default void testCellGroupAccessors() {
@@ -30,4 +30,10 @@ public interface BoxBlockTest extends BlockTest<BoxBlock<Object>> {
 		assertTrue(value.blockRows() > 0);
 		assertEquals((value.blockColumns() * value.blockRows()), value.size());
 	}
+
+	@Test
+	void testBlockRows();
+
+	@Test
+	void testBlockColumns();
 }

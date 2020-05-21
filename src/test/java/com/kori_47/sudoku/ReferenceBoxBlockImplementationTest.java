@@ -142,11 +142,33 @@ public class ReferenceBoxBlockImplementationTest implements BoxBlockTest {
 		BoxBlock<Object> boxBlock3 = createLargerValue();
 		BoxBlock<Object> boxBlock4 = createNonEqualValue();
 
-		// assert that we have the correct start Cells
+		// assert that we have the correct end Cells
 		assertEquals(boxBlock1.endCell(), Cells.of("2/2", 2, 2));
 		assertEquals(boxBlock2.endCell(), Cells.of("5/5", 5, 5));
 		assertEquals(boxBlock3.endCell(), Cells.of("8/8", 8, 8));
 		assertEquals(boxBlock4.endCell(), Cells.of("5/2", 5, 2));
+	}
+
+	@Test
+	@Override
+	public void testBlockRows() {
+		BoxBlock<Object> boxBlock1 = createValue();
+		BoxBlock<Object> boxBlock2 = createNonEqualValue();
+
+		// assert that we have the correct blockRows values
+		assertEquals(boxBlock1.blockRows(), 3);
+		assertEquals(boxBlock2.blockRows(), 3);
+	}
+
+	@Test
+	@Override
+	public void testBlockColumns() {
+		BoxBlock<Object> boxBlock1 = createValue();
+		BoxBlock<Object> boxBlock2 = createNonEqualValue();
+
+		// assert that we have the correct blockColumns values
+		assertEquals(boxBlock1.blockColumns(), 3);
+		assertEquals(boxBlock2.blockColumns(), 3);
 	}
 
 	@Override
@@ -180,7 +202,7 @@ public class ReferenceBoxBlockImplementationTest implements BoxBlockTest {
 			Cells.of("5/2", 5, 2)
 		).stream().collect(toMap(cell -> cell.id(), cell -> cell));
 		
-		return CellGroups.boxBlockOf("2", 9, cells, Cells.of("3/0", 3, 0), 3, 3);
+		return CellGroups.boxBlockOf("2", 9, cells, Cells.of("3/0", 3, 0), Cells.of("5/2", 5, 2));
 	}
 
 	@Override
