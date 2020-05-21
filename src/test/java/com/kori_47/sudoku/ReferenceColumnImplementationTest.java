@@ -14,6 +14,10 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 /**
+ * This class is used to define and run tests on the reference implementation of {@link Column},
+ * i.e, the {@code Row} instances returned by {@link CellGroups#columnOf(String, int, java.util.Map, int)}
+ * method and it's derivetives.
+ * 
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *
  * @since Wed, 20 May 2020 14:32:36
