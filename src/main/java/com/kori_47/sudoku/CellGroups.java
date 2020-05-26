@@ -43,6 +43,12 @@ public final class CellGroups {
 	private final static Comparator<Column<?>> DEFAULT_COLUMN_COMPARATOR = Comparator.comparingInt(Column::x);
 
 	/**
+	 * default {@code BoxBlock} comparator
+	 */
+	private final static Comparator<BoxBlock<?>> DEFAULT_BOX_BLOCK_COMPARATOR = Comparator.<BoxBlock<?>, Cell<?>>comparing(
+				BoxBlock::startCell, Cells.defaultComparator()).thenComparing(BoxBlock::endCell);
+
+	/**
 	 * <p> Creates and returns an instance of a {@link Row} with the specified properties. The coordinates of the
 	 * {@link InterpolatableCellGroup#startCell() startCell} and {@link InterpolatableCellGroup#endCell() endCell}
 	 * are derived as follows:
@@ -263,8 +269,8 @@ public final class CellGroups {
 	 * comparator returned performs comparisons based on the index of the {@code Row} in a {@link LatinSquare} and is thus
 	 * <i>inconsistent with equals</i> as the specification of the {@link Row#equals(Object) equals} method on the {@code Row}
 	 * interface dictates that equality comparisons on {@code Row}'s must use other properties of the {@code Row}'s other than
-	 * just their indexes. This implementation is however justifiable for {@code Row}'s as their ordering can easily be determined
-	 * from their indexes.
+	 * just their indexes. This implementation is however justifiable for {@code Row}'s as their natural ordering in a
+	 * {@code LatinSquare} can easily be determined from their indexes.
 	 * 
 	 * @return a {@code Comparator} that can be used for {@code Row} comparisons.
 	 * 
@@ -279,8 +285,8 @@ public final class CellGroups {
 	 * comparator returned performs comparisons based on the index of the {@code Column} in a {@link LatinSquare} and is thus
 	 * <i>inconsistent with equals</i> as the specification of the {@link Column#equals(Object) equals} method on the {@code Column}
 	 * interface dictates that equality comparisons on {@code Column}'s must use other properties of the {@code Column}'s other than
-	 * just their indexes. This implementation is however justifiable for {@code Column}'s as their ordering can easily be determined
-	 * from their indexes.
+	 * just their indexes. This implementation is however justifiable for {@code Column}'s as their natural ordering in a {@code LatinSquare}
+	 * can easily be determined from their indexes.
 	 * 
 	 * @return a {@code Comparator} that can be used for {@code Column} comparisons.
 	 * 
@@ -288,6 +294,22 @@ public final class CellGroups {
 	 */
 	public static final Comparator<Column<?>> defaultColumnComparator() {
 		return DEFAULT_COLUMN_COMPARATOR;
+	}
+
+	/**
+	 * Returns a default {@link Comparator} that can be used to compare two {@link BoxBlock}s for equality and ordering. The
+	 * comparator returned performs comparisons based on the {@link BoxBlock#startCell() startCell} and {@link BoxBlock#endCell() endCell}
+	 * of the {@code BoxBlock}s and is thus <i>inconsistent with equals</i> as the specification of the {@link BoxBlock#equals(Object) equals}
+	 * method on the {@code BoxBlock} interface dictates that equality comparisons on {@code BoxBlock}'s must use other properties in
+	 * addition to the start and end {@code Cell}s. This implementation is however justifiable for {@code BoxBlock}'s as their natural
+	 * ordering in a {@link Sudoku} can easily be determined from their start and end {@code Cell}s.
+	 * 
+	 * @return a {@code Comparator} that can be used for {@code BoxBlock} comparisons.
+	 * 
+	 * @see BoxBlock#equals(Object)
+	 */
+	public static final Comparator<BoxBlock<?>> defaultBoxBlockComparator() {
+		return DEFAULT_BOX_BLOCK_COMPARATOR;
 	}
 
 	/**
@@ -549,6 +571,12 @@ public final class CellGroups {
 		@Override
 		public int blockColumns() {
 			return blockColumns;
+		}
+
+		@Override
+		public int compareTo(UniqueCellGroup<V> other) {
+			requireNonNull(other, "other cannot be null.");
+			return CellGroups.defaultBoxBlockComparator().compare(this, (BoxBlock<?>) other);
 		}
 	}
 	
