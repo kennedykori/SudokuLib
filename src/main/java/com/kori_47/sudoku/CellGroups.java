@@ -43,14 +43,22 @@ public final class CellGroups {
 	private final static Comparator<Column<?>> DEFAULT_COLUMN_COMPARATOR = Comparator.comparingInt(Column::x);
 
 	/**
-	 * <p> Creates and returns an instance of a {@link Row} with the specified properties.
+	 * <p> Creates and returns an instance of a {@link Row} with the specified properties. The coordinates of the
+	 * {@link InterpolatableCellGroup#startCell() startCell} and {@link InterpolatableCellGroup#endCell() endCell}
+	 * are derived as follows:
+	 * <pre>
+	 * 	{@code int startCellXCoordinate = 0, endCellXCoordinate = (size - 1);}
+	 * 	{@code int startCellYCoordinate = y, endCellXCoordinate = y;}
+	 * 	
+	 * 	where {@code size} and {@code y} are the provided {@code size} and {@code y} values respectively. 
+	 * </pre>
 	 * 
 	 * <p> This method throws an {@link IllegalArgumentException} if the following conditions aren't met.
 	 * <ul>
 	 * <li>The given size must be greater than or equal to {@code 1}.</li>
 	 * <li>The number of cells given must be equal to the size given.</li>
 	 * <li>The y index provided must be greater than or equal to {@code 0} but less than the given size.</li>
-	 * <li>The cells provided must have an x coordinate starting from {@code 0} to {@code size - 1} when ordered.</li>
+	 * <li>The cells provided must have an x coordinate ranging from {@code 0}, 1, 2, ..., to {@code size - 1} when ordered.</li>
 	 * </ul>
 	 * 
 	 * @param <V> the type of value held by the {@link Symbol}s supported by this {@link Row}.
@@ -71,14 +79,22 @@ public final class CellGroups {
 	}
 
 	/**
-	 * <p> Creates and returns an instance of a {@link Column} with the specified properties.
+	 * <p> Creates and returns an instance of a {@link Column} with the specified properties. The coordinates of the
+	 * {@link InterpolatableCellGroup#startCell() startCell} and {@link InterpolatableCellGroup#endCell() endCell}
+	 * are derived as follows:
+	 * <pre>
+	 * 	{@code int startCellXCoordinate = x, endCellXCoordinate = x;}
+	 * 	{@code int startCellYCoordinate = 0, endCellXCoordinate = (size - 1);}
+	 * 	
+	 * 	where {@code size} and {@code x} are the provided {@code size} and {@code x} values respectively. 
+	 * </pre>
 	 * 
 	 * <p> This method throws an {@link IllegalArgumentException} if the following conditions aren't met.
 	 * <ul>
 	 * <li>The given size must be greater than or equal to {@code 1}.</li>
 	 * <li>The number of cells given must be equal to the size given.</li>
 	 * <li>The x index provided must be greater than or equal to {@code 0} but less than the given size.</li>
-	 * <li>The cells provided must have a y coordinate starting from {@code 0} to {@code size - 1} when ordered.</li>
+	 * <li>The cells provided must have a y coordinate ranging from {@code 0}, 1, 2, ..., to {@code size - 1} when ordered.</li>
 	 * </ul>
 	 * 
 	 * @param <V> the type of value held by the {@link Symbol}s supported by this {@link Column}.
@@ -118,7 +134,7 @@ public final class CellGroups {
 	 * <li>The start {@code Cell} given must be in the provided cells {@code Map}.</li>
 	 * <li>The given block {@link Row}s must be greater than or equal to {@code 1}.</li>
 	 * <li>The given block {@link Column}s must be greater than or equal to {@code 1}.</li>
-	 * <li>The product of the given block {@code Row}s and {@code Column}s isn't equal to the provided size.</li>
+	 * <li>The product of the given block {@code Row}s and {@code Column}s must be equal to the provided size.</li>
 	 * </ul>
 	 * 
 	 * @param <V> the type of value held by the {@link Symbol}s supported by this {@link BoxBlock}.
@@ -136,6 +152,7 @@ public final class CellGroups {
 	 * 
 	 * @throws NullPointerException if any of the given arguments is {@code null}.
 	 * @throws IllegalArgumentException if any of the conditions stated above isn't met.
+	 * @throws SudokuException if the endCell can't be calculated from the given properties.
 	 * 
 	 * @see #boxBlockOf(String, int, Map, Cell, Cell)
 	 */
@@ -468,7 +485,6 @@ public final class CellGroups {
 			requireNonNull(other, "other cannot be null.");
 			return CellGroups.defaultColumnComparator().compare(this, (Column<?>) other);
 		}
-
 	}
 	
 	/**
@@ -540,7 +556,7 @@ public final class CellGroups {
 		requireGreaterThanOrEqualTo(1, size, "size must be greater than or equal to 1.");
 		requireNonNull(cells, "cells cannot be null.");
 		requireEquals(size, cells.size(), "You must provide axactly " + size + " cells");
-		requireInRange(0, size, xOry, coordinate + " must be greater than 0 but less than " + size);
+		requireInRange(0, size, xOry, coordinate + " must be greater than or equal to 0 but less than size(" + size + ").");
 
 		List<Cell<V>> cellsList = cells.values().stream().sorted(Cells.defaultComparator()).distinct().collect(toList());
 
