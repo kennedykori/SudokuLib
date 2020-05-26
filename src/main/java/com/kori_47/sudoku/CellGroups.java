@@ -170,7 +170,8 @@ public final class CellGroups {
 	 * }
 	 * </pre>
 	 * 
-	 * <p> This method throws an {@link IllegalArgumentException} if the following conditions aren't met.
+	 * <p>If the product of the calculated {@code blockRows} and {@code blockColumns} is <i>not</i> equal to the provided {@code size}, then
+	 * a {@link SudokuException} is thrown. This method also throws an {@link IllegalArgumentException} if the following conditions aren't met.
 	 * <ul>
 	 * <li>The given size must be greater than or equal to {@code 1}.</li>
 	 * <li>The number of cells given must be equal to the size given.</li>
@@ -192,6 +193,8 @@ public final class CellGroups {
 	 * 
 	 * @throws NullPointerException if any of the given arguments is {@code null}.
 	 * @throws IllegalArgumentException if any of the conditions stated above isn't met.
+	 * @throws SudokuException if the product of the calculated {@code blockRows} and {@code blockColumns} is <i>not</i> equal
+	 * 		to the provided {@code size}.
 	 * 
 	 * @see #boxBlockOf(String, int, Map, Cell, int, int)
 	 */
@@ -506,7 +509,7 @@ public final class CellGroups {
 		SimpleBoxBlock(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, int blockRows, int blockColumns) {
 			super(id, size, cells);
 			requireEquals(size, blockRows * blockColumns, 
-					"The product of the given blockRows and blockColumns(" + blockRows * blockColumns + ") should be equal to the given size(" + size + ").");
+					"The product(" + blockRows * blockColumns + ") of the given blockRows and blockColumns should be equal to the given size(" + size + ").");
 			this.startCell = validateCellInCellsMap(requireNonNull(startCell, "startCell cannot be null."), cells, startCell + " must be in " + cells);
 			this.blockRows = requireGreaterThanOrEqualTo(1, blockRows);
 			this.blockColumns = requireGreaterThanOrEqualTo(1, blockColumns);
@@ -516,13 +519,16 @@ public final class CellGroups {
 					.findAny().orElseThrow(() -> new SudokuException("The endCell of this BoxBlock could not be determined from the given properties."));
 		}
 		
-		/* this constructor is useful because of BlockFactory.createBlock() method */ 
+		/* this constructor is needed because of BlockFactory.createBlock() method */ 
 		SimpleBoxBlock(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, Cell<V> endCell) {
 			super(id, size, cells);
 			this.startCell = validateCellInCellsMap(requireNonNull(startCell, "startCell cannot be null."), cells, startCell + " must be in " + cells);
 			this.endCell = validateCellInCellsMap(requireNonNull(endCell, "endCell cannot be null."), cells, startCell + " must be in " + cells);
 			this.blockRows = (this.endCell.y() - this.startCell.y()) + 1;
 			this.blockColumns = (this.endCell.x() - this.startCell.x()) + 1;
+			if (size != (blockRows * blockColumns))
+				throw new SudokuException("The product(" + blockRows * blockColumns + ") of the interpolated blockRows(" + blockRows + ") and blockColumns(" + blockColumns +
+					") should be equal to the given size(" + size + ").");
 		}
 
 		@Override
