@@ -694,7 +694,7 @@ public class CellGroupsTest {
 		// assert the value returned isn't null
 		assertNotNull(boxBlock);
 		assertNotNull(boxBlock1);
-	
+
 		// assert that the returned blocks were initialized correctly
 		assertEquals(6, boxBlock.size());
 		assertEquals(6, boxBlock.cells().size());
@@ -703,7 +703,7 @@ public class CellGroupsTest {
 		assertEquals("4", boxBlock.id());
 		assertEquals(Cells.of("3/2", 3, 2), boxBlock.startCell());
 		assertEquals(Cells.of("5/3", 5, 3), boxBlock.endCell());
-	
+
 		assertEquals(10, boxBlock1.size());
 		assertEquals(10, boxBlock1.cells().size());
 		assertEquals(5, boxBlock1.blockColumns());
@@ -711,5 +711,14 @@ public class CellGroupsTest {
 		assertEquals("3", boxBlock1.id());
 		assertEquals(Cells.of("0/2", 0, 2), boxBlock1.startCell());
 		assertEquals(Cells.of("4/3", 4, 3), boxBlock1.endCell());
+	}
+
+	/**
+	 * Test {@link CellGroups#defaultUniqueCellGroupComparator()} performs comparisons as expected.
+	 */
+	@Test
+	public void testDefaultUniqueCellGroupComparator() {
+		// create test values
+		CellGroups.defaultUniqueCellGroupComparator();
 	}
 }
