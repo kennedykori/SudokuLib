@@ -7,8 +7,10 @@ import static com.kori_47.utils.ObjectUtils.requireGreaterThanOrEqualTo;
 import static com.kori_47.utils.ObjectUtils.requireInRange;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,13 +43,28 @@ public final class CellGroups {
 	private final static Comparator<Column<?>> DEFAULT_COLUMN_COMPARATOR = Comparator.comparingInt(Column::x);
 
 	/**
-	 * <p> Creates and returns an instance of a {@link Row} with the specified properties.
+	 * default {@code BoxBlock} comparator
+	 */
+	private final static Comparator<BoxBlock<?>> DEFAULT_BOX_BLOCK_COMPARATOR = Comparator.<BoxBlock<?>, Cell<?>>comparing(
+				BoxBlock::startCell, Cells.defaultComparator()).thenComparing(BoxBlock::endCell);
+
+	/**
+	 * <p> Creates and returns an instance of a {@link Row} with the specified properties. The coordinates of the
+	 * {@link InterpolatableCellGroup#startCell() startCell} and {@link InterpolatableCellGroup#endCell() endCell}
+	 * are derived as follows:
+	 * <pre>
+	 * 	{@code int startCellXCoordinate = 0, endCellXCoordinate = (size - 1);}
+	 * 	{@code int startCellYCoordinate = y, endCellXCoordinate = y;}
+	 * 	
+	 * 	where {@code size} and {@code y} are the provided {@code size} and {@code y} values respectively. 
+	 * </pre>
 	 * 
 	 * <p> This method throws an {@link IllegalArgumentException} if the following conditions aren't met.
 	 * <ul>
 	 * <li>The given size must be greater than or equal to {@code 1}.</li>
 	 * <li>The number of cells given must be equal to the size given.</li>
-	 * <li>The index provided must be greater than or equal to {@code 0} but less than the given size.</li>
+	 * <li>The y index provided must be greater than or equal to {@code 0} but less than the given size.</li>
+	 * <li>The cells provided must have an x coordinate ranging from {@code 0}, 1, 2, ..., to {@code size - 1} when ordered.</li>
 	 * </ul>
 	 * 
 	 * @param <V> the type of value held by the {@link Symbol}s supported by this {@link Row}.
@@ -63,18 +80,27 @@ public final class CellGroups {
 	 * @throws NullPointerException if either {@code id} or {@code cells} is {@code null}.
 	 * @throws IllegalArgumentException if any of the conditions stated above isn't met.
 	 */
-	public static final <V> Row<V> rowOf(String id, int size, Map<String, Cell<V>> cells, int y) {
+	public static <V> Row<V> rowOf(String id, int size, Map<String, Cell<V>> cells, int y) {
 		return new SimpleRow<V>(id, size, cells, y);
 	}
 
 	/**
-	 * <p> Creates and returns an instance of a {@link Column} with the specified properties.
+	 * <p> Creates and returns an instance of a {@link Column} with the specified properties. The coordinates of the
+	 * {@link InterpolatableCellGroup#startCell() startCell} and {@link InterpolatableCellGroup#endCell() endCell}
+	 * are derived as follows:
+	 * <pre>
+	 * 	{@code int startCellXCoordinate = x, endCellXCoordinate = x;}
+	 * 	{@code int startCellYCoordinate = 0, endCellXCoordinate = (size - 1);}
+	 * 	
+	 * 	where {@code size} and {@code x} are the provided {@code size} and {@code x} values respectively. 
+	 * </pre>
 	 * 
 	 * <p> This method throws an {@link IllegalArgumentException} if the following conditions aren't met.
 	 * <ul>
 	 * <li>The given size must be greater than or equal to {@code 1}.</li>
 	 * <li>The number of cells given must be equal to the size given.</li>
-	 * <li>The index provided must be greater than or equal to {@code 0} but less than the given size.</li>
+	 * <li>The x index provided must be greater than or equal to {@code 0} but less than the given size.</li>
+	 * <li>The cells provided must have a y coordinate ranging from {@code 0}, 1, 2, ..., to {@code size - 1} when ordered.</li>
 	 * </ul>
 	 * 
 	 * @param <V> the type of value held by the {@link Symbol}s supported by this {@link Column}.
@@ -90,23 +116,34 @@ public final class CellGroups {
 	 * @throws NullPointerException if either {@code id} or {@code cells} is {@code null}.
 	 * @throws IllegalArgumentException if any of the conditions stated above isn't met.
 	 */
-	public static final <V> Column<V> columnOf(String id, int size, Map<String, Cell<V>> cells, int x) {
+	public static <V> Column<V> columnOf(String id, int size, Map<String, Cell<V>> cells, int x) {
 		return new SimpleColumn<V>(id, size, cells, x);
 	}
 	
 	/**
-	 * <p> Creates and returns an instance of a {@link BoxBlock} with the specified properties.
+	 * <p> Creates and returns an instance of a {@link BoxBlock} with the specified properties. The coordinates of the
+	 * {@link BoxBlock#endCell() endCell} of the returned {@code BoxBlock} are calculated by adding the provided {@code blockColumns}
+	 * and {@code blockRows} to the given {@code startCell}'s {@code x coordinate - 1} and {@code y coordinate - 1} respectively.
+	 * That is :-
+	 * <pre> {@code
+	 * int endCellXCoordinate = startCell.x() + (blockColumns - 1);
+	 * int endCellYCoordinate = startCell.y() + (blockRows - 1);
+	 * }
+	 * </pre>
 	 * 
-	 * <p> This method throws an {@link IllegalArgumentException} if the following conditions aren't met.
+	 * <p>
+	 * If a {@link Cell} with the calculated coordinates isn't present on the provided {@code cells Map}, then a {@link SudokuException}
+	 * is thrown. This method also throws an {@link IllegalArgumentException} if the following conditions aren't met.
 	 * <ul>
 	 * <li>The given size must be greater than or equal to {@code 1}.</li>
 	 * <li>The number of cells given must be equal to the size given.</li>
 	 * <li>The start {@code Cell} given must be in the provided cells {@code Map}.</li>
 	 * <li>The given block {@link Row}s must be greater than or equal to {@code 1}.</li>
 	 * <li>The given block {@link Column}s must be greater than or equal to {@code 1}.</li>
+	 * <li>The product of the given block {@code Row}s and {@code Column}s must be equal to the provided size.</li>
 	 * </ul>
 	 * 
-	 * @param <V> the type of value held by the {@link Symbol}s supported by this {@link Column}.
+	 * @param <V> the type of value held by the {@link Symbol}s supported by this {@link BoxBlock}.
 	 * 
 	 * @param id the identifier of the {@code BoxBlock} instance to be created.
 	 * @param size the size of the {@code BoxBlock} instance to be created. This is also the number of {@link Cell}s
@@ -121,17 +158,26 @@ public final class CellGroups {
 	 * 
 	 * @throws NullPointerException if any of the given arguments is {@code null}.
 	 * @throws IllegalArgumentException if any of the conditions stated above isn't met.
+	 * @throws SudokuException if the endCell can't be calculated from the given properties.
 	 * 
 	 * @see #boxBlockOf(String, int, Map, Cell, Cell)
 	 */
-	public static final <V> BoxBlock<V> boxBlockOf(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, int blockRows, int blockColumns) {
+	public static <V> BoxBlock<V> boxBlockOf(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, int blockRows, int blockColumns) {
 		return new SimpleBoxBlock<V>(id, size, cells, startCell, blockRows, blockColumns);
 	}
 	
 	/**
-	 * <p> Creates and returns an instance of a {@link BoxBlock} with the specified properties.
+	 * <p> Creates and returns an instance of a {@link BoxBlock} with the specified properties. The {@link BoxBlock#blockRows() boxRows}
+	 * and {@link BoxBlock#blockColumns() boxColumns} of the returned {@code BoxBlock} are calculated by subtracting the given {@code endCell}'s
+	 * and {@code startCell}'s {@code y coordinates + 1} and {@code x coordinates + 1} respectively. That is :-
+	 * <pre> {@code
+	 * int blockRows = (endCell.y() - startCell.y()) + 1;
+	 * int blockColumns = (endCell.x() - startCell.x()) + 1;
+	 * }
+	 * </pre>
 	 * 
-	 * <p> This method throws an {@link IllegalArgumentException} if the following conditions aren't met.
+	 * <p>If the product of the calculated {@code blockRows} and {@code blockColumns} is <i>not</i> equal to the provided {@code size}, then
+	 * a {@link SudokuException} is thrown. This method also throws an {@link IllegalArgumentException} if the following conditions aren't met.
 	 * <ul>
 	 * <li>The given size must be greater than or equal to {@code 1}.</li>
 	 * <li>The number of cells given must be equal to the size given.</li>
@@ -153,10 +199,12 @@ public final class CellGroups {
 	 * 
 	 * @throws NullPointerException if any of the given arguments is {@code null}.
 	 * @throws IllegalArgumentException if any of the conditions stated above isn't met.
+	 * @throws SudokuException if the product of the calculated {@code blockRows} and {@code blockColumns} is <i>not</i> equal
+	 * 		to the provided {@code size}.
 	 * 
 	 * @see #boxBlockOf(String, int, Map, Cell, int, int)
 	 */
-	public static final <V> BoxBlock<V> boxBlockOf(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, Cell<V> endCell) {
+	public static <V> BoxBlock<V> boxBlockOf(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, Cell<V> endCell) {
 		return new SimpleBoxBlock<V>(id, size, cells, startCell, endCell);
 	}
 	
@@ -169,8 +217,8 @@ public final class CellGroups {
 	 * 
 	 * @return a {@code RowFactory} instance that can be used for instantiating {@code Row}s.
 	 */
-	public static final <V> RowFactory<V> defaultRowFactory() {
-		return (id, size, cells, y) -> rowOf(id, size, cells, y);
+	public static <V> RowFactory<V> defaultRowFactory() {
+		return CellGroups::rowOf;
 	}
 	
 	/**
@@ -182,8 +230,8 @@ public final class CellGroups {
 	 * 
 	 * @return a {@code ColumnFactory} instance that can be used for instantiating {@code Column}s.
 	 */
-	public static final <V> ColumnFactory<V> defaultColumnFactory() {
-		return (id, size, cells, x) -> columnOf(id, size, cells, x);
+	public static <V> ColumnFactory<V> defaultColumnFactory() {
+		return CellGroups::columnOf;
 	}
 	
 	/**
@@ -195,8 +243,8 @@ public final class CellGroups {
 	 * 
 	 * @return a {@code BlockFactory} instance that can be used for instantiating {@code BoxBlock}s.
 	 */
-	public static final <V> BlockFactory<V> defaultBoxBlockFactory() {
-		return (id, size, cells, startCell, endCell) -> boxBlockOf(id, size, cells, startCell, endCell);
+	public static <V> BlockFactory<V> defaultBoxBlockFactory() {
+		return CellGroups::boxBlockOf;
 	}
 	
 	/**
@@ -212,7 +260,7 @@ public final class CellGroups {
 	 * 
 	 * @see UniqueCellGroup#equals(Object)
 	 */
-	public static final Comparator<UniqueCellGroup<?>> defaultUniqueCellGroupComparator() {
+	public static Comparator<UniqueCellGroup<?>> defaultUniqueCellGroupComparator() {
 		return DEFAULT_UNIQUE_CELL_GROUP_COMPARATOR;
 	}
 	
@@ -221,14 +269,14 @@ public final class CellGroups {
 	 * comparator returned performs comparisons based on the index of the {@code Row} in a {@link LatinSquare} and is thus
 	 * <i>inconsistent with equals</i> as the specification of the {@link Row#equals(Object) equals} method on the {@code Row}
 	 * interface dictates that equality comparisons on {@code Row}'s must use other properties of the {@code Row}'s other than
-	 * just their indexes. This implementation is however justifiable for {@code Row}'s as their ordering can easily be determined
-	 * from their indexes.
+	 * just their indexes. This implementation is however justifiable for {@code Row}'s as their natural ordering in a
+	 * {@code LatinSquare} can easily be determined from their indexes.
 	 * 
 	 * @return a {@code Comparator} that can be used for {@code Row} comparisons.
 	 * 
 	 * @see Row#equals(Object)
 	 */
-	public static final Comparator<Row<?>> defaultRowComparator() {
+	public static Comparator<Row<?>> defaultRowComparator() {
 		return DEFAULT_ROW_COMPARATOR;
 	}
 	
@@ -237,15 +285,31 @@ public final class CellGroups {
 	 * comparator returned performs comparisons based on the index of the {@code Column} in a {@link LatinSquare} and is thus
 	 * <i>inconsistent with equals</i> as the specification of the {@link Column#equals(Object) equals} method on the {@code Column}
 	 * interface dictates that equality comparisons on {@code Column}'s must use other properties of the {@code Column}'s other than
-	 * just their indexes. This implementation is however justifiable for {@code Column}'s as their ordering can easily be determined
-	 * from their indexes.
+	 * just their indexes. This implementation is however justifiable for {@code Column}'s as their natural ordering in a {@code LatinSquare}
+	 * can easily be determined from their indexes.
 	 * 
 	 * @return a {@code Comparator} that can be used for {@code Column} comparisons.
 	 * 
 	 * @see Column#equals(Object)
 	 */
-	public static final Comparator<Column<?>> defaultColumnComparator() {
+	public static Comparator<Column<?>> defaultColumnComparator() {
 		return DEFAULT_COLUMN_COMPARATOR;
+	}
+
+	/**
+	 * Returns a default {@link Comparator} that can be used to compare two {@link BoxBlock}s for equality and ordering. The
+	 * comparator returned performs comparisons based on the {@link BoxBlock#startCell() startCell} and {@link BoxBlock#endCell() endCell}
+	 * of the {@code BoxBlock}s and is thus <i>inconsistent with equals</i> as the specification of the {@link BoxBlock#equals(Object) equals}
+	 * method on the {@code BoxBlock} interface dictates that equality comparisons on {@code BoxBlock}'s must use other properties in
+	 * addition to the start and end {@code Cell}s. This implementation is however justifiable for {@code BoxBlock}'s as their natural
+	 * ordering in a {@link Sudoku} can easily be determined from their start and end {@code Cell}s.
+	 * 
+	 * @return a {@code Comparator} that can be used for {@code BoxBlock} comparisons.
+	 * 
+	 * @see BoxBlock#equals(Object)
+	 */
+	public static Comparator<BoxBlock<?>> defaultBoxBlockComparator() {
+		return DEFAULT_BOX_BLOCK_COMPARATOR;
 	}
 
 	/**
@@ -268,7 +332,7 @@ public final class CellGroups {
 	 * 
 	 * @see CellGroup#hashCode()
 	 */
-	public static final int hashCode(CellGroup<?> cellGroup) {
+	public static int hashCode(CellGroup<?> cellGroup) {
 		requireNonNull(cellGroup, "cellGroup cannot be null.");
 		int hashCode = Integer.hashCode(cellGroup.size());
 		return 31 * hashCode + cellGroup.cells().hashCode();
@@ -296,7 +360,7 @@ public final class CellGroups {
 	 * 
 	 * @see CellGroup#equals(Object)
 	 */
-	public static final boolean equals(CellGroup<?> cellGroup, Object obj) {
+	public static boolean equals(CellGroup<?> cellGroup, Object obj) {
 		requireNonNull(cellGroup, "cellGroup cannot be null.");
 		if (cellGroup == obj) return true;
 		if (!(obj instanceof CellGroup)) return false;
@@ -325,7 +389,7 @@ public final class CellGroups {
 	 * 
 	 * @see UniqueCellGroup#hashCode()
 	 */
-	public static final int hashCode(UniqueCellGroup<?> uniqueCellGroup) {
+	public static int hashCode(UniqueCellGroup<?> uniqueCellGroup) {
 		requireNonNull(uniqueCellGroup, "uniqueCellGroup cannot be null.");
 		int hashCode = hashCode(((CellGroup<?>) uniqueCellGroup));
 		return 31 * hashCode + uniqueCellGroup.id().hashCode();
@@ -354,7 +418,7 @@ public final class CellGroups {
 	 * 
 	 * @see UniqueCellGroup#equals(Object)
 	 */
-	public static final boolean equals(UniqueCellGroup<?> uniqueCellGroup, Object obj) {
+	public static boolean equals(UniqueCellGroup<?> uniqueCellGroup, Object obj) {
 		requireNonNull(uniqueCellGroup, "uniqueCellGroup cannot be null.");
 		if (uniqueCellGroup == obj) return true;
 		if (!(obj instanceof UniqueCellGroup)) return false;
@@ -466,22 +530,27 @@ public final class CellGroups {
 		
 		SimpleBoxBlock(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, int blockRows, int blockColumns) {
 			super(id, size, cells);
+			requireEquals(size, blockRows * blockColumns, 
+					"The product(" + blockRows * blockColumns + ") of the given blockRows and blockColumns should be equal to the given size(" + size + ").");
 			this.startCell = validateCellInCellsMap(requireNonNull(startCell, "startCell cannot be null."), cells, startCell + " must be in " + cells);
 			this.blockRows = requireGreaterThanOrEqualTo(1, blockRows);
 			this.blockColumns = requireGreaterThanOrEqualTo(1, blockColumns);
 			this.endCell = this.cells.values().stream()
-					.filter(cell -> cell.x() == (this.startCell.x() + blockRows))
-					.filter(cell -> cell.y() == (this.startCell.y() + blockColumns))
-					.findAny().get();
+					.filter(cell -> cell.x() == (this.startCell.x() + (blockColumns - 1)))
+					.filter(cell -> cell.y() == (this.startCell.y() + (blockRows - 1)))
+					.findAny().orElseThrow(() -> new SudokuException("The endCell of this BoxBlock could not be determined from the given properties."));
 		}
 		
-		/* this constructor is useful because of BlockFactory.createBlock() method */ 
+		/* this constructor is needed because of BlockFactory.createBlock() method */ 
 		SimpleBoxBlock(String id, int size, Map<String, Cell<V>> cells, Cell<V> startCell, Cell<V> endCell) {
 			super(id, size, cells);
 			this.startCell = validateCellInCellsMap(requireNonNull(startCell, "startCell cannot be null."), cells, startCell + " must be in " + cells);
 			this.endCell = validateCellInCellsMap(requireNonNull(endCell, "endCell cannot be null."), cells, startCell + " must be in " + cells);
-			this.blockRows = (this.endCell.x() - this.startCell.x()) + 1;
-			this.blockColumns = (this.endCell.y() - this.startCell.y()) + 1;
+			this.blockRows = (this.endCell.y() - this.startCell.y()) + 1;
+			this.blockColumns = (this.endCell.x() - this.startCell.x()) + 1;
+			if (size != (blockRows * blockColumns))
+				throw new SudokuException("The product(" + blockRows * blockColumns + ") of the interpolated blockRows(" + blockRows + ") and blockColumns(" + blockColumns +
+					") should be equal to the given size(" + size + ").");
 		}
 
 		@Override
@@ -503,28 +572,49 @@ public final class CellGroups {
 		public int blockColumns() {
 			return blockColumns;
 		}
+
+		@Override
+		public int compareTo(UniqueCellGroup<V> other) {
+			requireNonNull(other, "other cannot be null.");
+			return CellGroups.defaultBoxBlockComparator().compare(this, (BoxBlock<?>) other);
+		}
 	}
 	
-	private static final int requireEquals(int baseValue, int value, String message) {
+	private static int requireEquals(int baseValue, int value, String message) {
 		if(value != baseValue) throw new IllegalArgumentException(message);
 		return value;
 	}
 	
-	private final static <V> Map<String, Cell<V>> validateRowAndColumnArgs(int size, Map<String, Cell<V>> cells, int xOry, String coordinate) {
+	private static <V> Map<String, Cell<V>> validateRowAndColumnArgs(int size, Map<String, Cell<V>> cells, int xOry, String coordinate) {
 		// validate method args
 		requireGreaterThanOrEqualTo(1, size, "size must be greater than or equal to 1.");
 		requireNonNull(cells, "cells cannot be null.");
 		requireEquals(size, cells.size(), "You must provide axactly " + size + " cells");
-		requireInRange(0, size, xOry, coordinate + " must be greater than 0 but less than " + size);
-		// validate all the given cells have the given x or y coordinate
-		if (coordinate.equals("y"))
-			cells.forEach((id, cell) -> requireEquals(xOry, cell.y(), "The " + coordinate + " coordinate of " + cell + " must be " + xOry));
-		else
-			cells.forEach((id, cell) -> requireEquals(xOry, cell.x(), "The " + coordinate + " coordinate of " + cell + " must be " + xOry));
+		requireInRange(0, size, xOry, coordinate + " must be greater than or equal to 0 but less than size(" + size + ").");
+
+		List<Cell<V>> cellsList = cells.values().stream().sorted(Cells.defaultComparator()).distinct().collect(toList());
+
+		for (int index = 0; index < size; index++) {
+			Cell<V> cell = cellsList.get(index);
+
+			// validate all the given cells have the given x or y coordinate
+			if (coordinate.equals("y")) {
+				requireEquals(index, cell.x(),
+						"The provided cells must have an x coordinate ranging from 0 to " + (size - 1) +
+						". " + cell + "'s x coordinates was expected to be " + index + ".");
+				requireEquals(xOry, cell.y(), "The " + coordinate + " coordinate of " + cell + " must be " + xOry);
+			} else {
+				requireEquals(index, cell.y(),
+						"The provided cells must have a y coordinate ranging from 0 to " + (size - 1) +
+						". " + cell + "'s y coordinates was expected to be " + index + ".");
+				requireEquals(xOry, cell.x(), "The " + coordinate + " coordinate of " + cell + " must be " + xOry);
+			}
+		}
+
 		return cells;
 	}
 	
-	private final static <V> Cell<V> validateCellInCellsMap(Cell<V> cell, Map<String, Cell<V>> cells, String errorMessage) {
+	private static <V> Cell<V> validateCellInCellsMap(Cell<V> cell, Map<String, Cell<V>> cells, String errorMessage) {
 		// validate that the args aren't null.
 		requireNonNull(cell, "cell cannot be null.");
 		requireNonNull(cells, "cells cannot be null.");

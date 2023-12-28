@@ -9,3 +9,7 @@ build
 .project
 /bin/
 /.settings/
+
+
+# Ignore IntelliJ IDEA project files
+.idea

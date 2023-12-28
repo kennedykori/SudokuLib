@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * A {@code LatinSquare} is an <i>n × n</i> matrix filled with <i>n</i> different {@link Symbol}s,
+ * A {@code LatinSquare} is an <i>n * n</i> matrix filled with <i>n</i> different {@link Symbol}s,
  * such that entries in each {@link Row} and {@link Column} are distinct. This interface describes a
  * {@code LatinSquare} where <i>n</i> is the {@link #size()} of the {@code LatinSquare} and {@link #symbols()}
  * is the set of {@code Symbol}s that can be used as entries on this {@code LatinSquare}.

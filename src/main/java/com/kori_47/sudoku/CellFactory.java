@@ -7,7 +7,7 @@ package com.kori_47.sudoku;
  * An object that creates new {@link Cell}s. Using cell factories avoids hardwiring and
  * enables clients to use special {@code Cell} subclasses.
  * 
- * <p>This is a functional interface whose functional method is {@link #createCell(int, int, Symbol)}.
+ * <p>This is a functional interface whose functional method is {@link #createCell(String, int, int, Symbol)}.
  * 
  * @param <V> the type of value held by the {@link Symbol}s supported by the {@code Cell}s created
  * using this {@code CellFactory}.

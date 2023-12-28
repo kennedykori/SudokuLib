@@ -16,8 +16,8 @@ import java.util.Set;
  * of the {@link LatinSquare} <strong><i>L</i></strong> and the y coordinate of a {@code Cell} is the
  * <strong><i>j<sup>th</sup></i></strong>{@code Row} of the {@code LatinSquare} <strong><i>L</i></strong> such that:
  * <pre>
- * 				x = i and 0 <= i < s
- * 		and		y = j and 0 <= j < s
+ * 				x = i and 0 &le; i &lt; s
+ * 		and		y = j and 0 &le; j &lt; s
  * 		where	s is the size of L
  * </pre>
  * 

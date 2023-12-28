@@ -210,9 +210,9 @@ public final class Cells {
 	 * to {@link Cell#equals(Object)} method, two {@code Cell}s are equal if the following of their
 	 * properties are equal:
 	 * <ul>
-	 * <li>The <i>{@link #id() ids}</i> of the {@code Cell}s</li>
-	 * <li>The <i>{@link #x() x coordinates}</i> of the {@code Cell}s.</li>
-	 * <li>The <i>{@link #y() y coordinates}</i> of the {@code Cell}s.</li>
+	 * <li>The <i>{@link Cell#id() ids}</i> of the {@code Cell}s</li>
+	 * <li>The <i>{@link Cell#x() x coordinates}</i> of the {@code Cell}s.</li>
+	 * <li>The <i>{@link Cell#y() y coordinates}</i> of the {@code Cell}s.</li>
 	 * </ul>
 	 *
 	 * <p>
@@ -234,6 +234,37 @@ public final class Cells {
 		if (!(obj instanceof Cell)) return false;
 		Cell<?> _obj =  (Cell<?>)obj;
 		return cell.x() == _obj.x() && cell.y() == _obj.y() && cell.id().equals(_obj.id());
+	}
+	
+	/**
+	 * Compares the given {@link Cell} and {@code Object} for equality. Returns {@code true} if
+	 * the given object is also a {@code Cell} and the two {@code Cell}s are identical. In addition
+	 * to comparing the two {@code Cell}s for equality using the properties specified in the
+	 * {@link Cell#equals(Object) equals(Object)} method of the {@code Cell} interface, this method
+	 * also uses the {@link Symbol} of the {@code Cell} in the comparison. That is, according to this
+	 * method, two {@code Cell}s are equal if the following of their properties are equal:
+	 * <ul>
+	 * <li>The <i>{@link Cell#id() ids}</i> of the {@code Cell}s</li>
+	 * <li>The <i>{@link Cell#x() x coordinates}</i> of the {@code Cell}s.</li>
+	 * <li>The <i>{@link Cell#y() y coordinates}</i> of the {@code Cell}s.</li>
+	 * <li>The <i>{@link Cell#symbol() symbols}</i> of the {@code Cell}s.</li>
+	 * </ul>
+	 * 
+	 * @param cell the {@code Cell} to compare to the given object for equality. Must <b>NOT</b> be {@code null}.
+	 * @param obj the object to compare for equality with the given {@code Cell}. Maybe {@code null}.
+	 * 
+	 * @return {@code true} if the given {@code Cell} is equal to the given object, {@code false} otherwise.
+	 * 
+	 * @throws NullPointerException if {@code cell} is {@code null}.
+	 * 
+	 * @see Cell#deepEquals(Object)
+	 * @see Cell#equals(Object)
+	 */
+	public static final boolean deepEquals(Cell<?> cell, Object obj) {
+		if (!Cells.equals(cell, obj)) return false;
+		Cell<?> _obj =  (Cell<?>) obj;
+		return ((!cell.symbol().isPresent()))? _obj.symbol().orElse(null) == null :
+				cell.symbol().get().equals(_obj.symbol().orElse(null));
 	}
 	
 	/**
@@ -274,9 +305,9 @@ public final class Cells {
 	}
 	
 	/**
-	 * This method swaps the properties of the two given {@link Cell}s such that after this method returns, {@code cell1} will
-	 * have the properties of {@code cell2} before the call and {@code cell2} will have the properties of {@code cell1} before
-	 * the call.
+	 * This method swaps the {@link Symbol}s of the two given {@link Cell}s such that after this method returns, {@code cell1}
+	 * will have the {@code Symbol} of {@code cell2} before the call and {@code cell2} will have the {@code Symbol} of {@code cell1}
+	 * before the call.
 	 * 
 	 * @param <V> the type of value held by the {@link Symbol}s supported by the {@code Cell}s being swapped .
 	 * 
@@ -288,10 +319,10 @@ public final class Cells {
 	 * 
 	 * @apiNote
 	 * This method is mostly useful to {@link LatinSquare} implementations when performing flip operations making it easy to swap
-	 * {@code Cell} properties without the need to create new temporary {@code LatinSquare}'s to hold the values of the
+	 * {@code Cell} {@code Symbol}s without the need to create new temporary {@code LatinSquare}'s to hold the values of the
 	 * {@code LatinSquare} in question during the flip.
 	 */
-	public static final <V> void swapCellProperties(Cell<V> cell1, Cell<V> cell2) {
+	public static final <V> void swapCellSymbols(Cell<V> cell1, Cell<V> cell2) {
 		requireNonNull(cell1, "cell1 cannot be null.");
 		requireNonNull(cell2, "cell2 cannot be null.");
 		
@@ -301,7 +332,7 @@ public final class Cells {
 
 		// clear the cells
 		cell1.clear();
-		cell2.clear();;
+		cell2.clear();
 		
 		// set the Cell's values
 		cell1.changeSymbol(symbol2);

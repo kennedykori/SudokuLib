@@ -4,12 +4,12 @@
 package com.kori_47.sudoku;
 
 /**
- * This represents a {@link CellGroup} whose region<i>(the {@link Cell}s in the {@code CellGroup})</i> 
- * can easily be determined using a simple formula when given the starting position/{@link Cell} 
- * or end position/{@code Cell} and the size of the {@code CellGroup}. {@link Row}s and 
- * {@link Column}s are examples of {@code InterpolatableCellGroup}s. A {@link LatinSquare} is also 
+ * This represents a {@link CellGroup} whose region <i>(the {@link Cell}s in the {@code CellGroup})</i> 
+ * can easily be determined <i>(interpolated)</i> using a simple formula when given the {@link #startCell()
+ * starting position} or {@link #endCell() end position} and the size of the {@code CellGroup}. {@link Row}s
+ * and {@link Column}s are examples of {@code InterpolatableCellGroup}s. A {@link LatinSquare} is also 
  * a special type of an {@code InterpolatableCellGroup} since it's region can be easily calculated 
- * when given the first {@code Cell} and size of the {@code LatinSquare}.
+ * when given the first/last {@code Cell} and size of the {@code LatinSquare}.
  * 
  * @author <a href="https://github.com/kennedykori">Kennedy Kori</a>
  *

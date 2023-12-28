@@ -141,7 +141,7 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 				Cell<V> cell1 = cr.getCell(x, cr.y()).get();
 				Cell<V> cell2 = nr.getCell(x, nr.y()).get();
 				
-				Cells.swapCellProperties(cell1, cell2);
+				Cells.swapCellSymbols(cell1, cell2);
 			}
 		}		
 	}
@@ -158,7 +158,7 @@ class SimpleLatinSquare<V> implements LatinSquare<V> {
 				Cell<V> cell1 = cc.getCell(cc.x(), y).get();
 				Cell<V> cell2 = nc.getCell(nc.x(), y).get();
 				
-				Cells.swapCellProperties(cell1, cell2);
+				Cells.swapCellSymbols(cell1, cell2);
 			}
 		}		
 	}

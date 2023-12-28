@@ -62,7 +62,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if {@code cell} is {@code null}.
 	 */
-	public static final String toXY(final Cell<?> cell) {
+	public static String toXY(final Cell<?> cell) {
 		return toXY(cell, DEFAULT_SEPARATOR);
 	}
 
@@ -80,7 +80,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toXY(final Cell<?> cell, final String separator) {
+	public static String toXY(final Cell<?> cell, final String separator) {
 		requireNonNull(cell, "cell cannot be null.");
 		requireNonNull(separator, "separator cannot be null.");
 		return cell.x() + separator + cell.y();
@@ -104,7 +104,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if {@code cellGroup} is {@code null}.
 	 */
-	public static final String toXY(final CellGroup<?> cellGroup) {
+	public static String toXY(final CellGroup<?> cellGroup) {
 		return toXY(cellGroup, DEFAULT_DELIMITER);
 	}
 
@@ -124,14 +124,15 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toXY(final CellGroup<?> cellGroup, final String delimiter) {
+	public static String toXY(final CellGroup<?> cellGroup, final String delimiter) {
 		requireNonNull(cellGroup, "cellGroup cannot be null.");
 		requireNonNull(delimiter, "delimiter cannot be null.");
 		return cellGroup.cells().values().stream().sorted().collect(of(
 				() -> new StringJoiner(delimiter),
 				(joiner, cell) -> joiner.add(cell.toXY()),
-				(joiner1, joiner2) -> joiner1.merge(joiner2), 
-				StringJoiner::toString ));
+                StringJoiner::merge,
+				StringJoiner::toString
+		));
 	}
 
 	/**
@@ -152,7 +153,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if {@code latinSquare} is {@code null}.
 	 */
-	public static final String toXY(final LatinSquare<?> latinSquare) {
+	public static String toXY(final LatinSquare<?> latinSquare) {
 		return toXY(latinSquare, DEFAULT_DELIMITER);
 	}
 	
@@ -172,14 +173,15 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toXY(final LatinSquare<?> latinSquare, final String delimiter) {
+	public static String toXY(final LatinSquare<?> latinSquare, final String delimiter) {
 		requireNonNull(latinSquare, "latinSquare cannot be null.");
 		requireNonNull(delimiter, "delimiter cannot be null.");
 		return latinSquare.rows().values().stream().sorted(REVERSE_ROW_COMPARATOR).collect(of(
 				() -> new StringJoiner(delimiter),
 				(joiner, row) -> joiner.add(row.toXY()),
-				(joiner1, joiner2) -> joiner1.merge(joiner2), 
-				StringJoiner::toString ));
+                StringJoiner::merge,
+				StringJoiner::toString
+		));
 	}
 
 	/* ============================================================================
@@ -201,7 +203,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if {@code Cell} is {@code null}.
 	 */
-	public static final String toXYV(final Cell<?> cell) {
+	public static String toXYV(final Cell<?> cell) {
 		return toXYV(cell, DEFAULT_SEPARATOR);
 	}
 
@@ -222,7 +224,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toXYV(final Cell<?> cell, final String separator) {
+	public static String toXYV(final Cell<?> cell, final String separator) {
 		return toXYV(cell, separator, DEFAULT_PLACEHOLDER);
 	}
 	
@@ -241,7 +243,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toXYV(final Cell<?> cell, final String separator, final String placeholder) {
+	public static String toXYV(final Cell<?> cell, final String separator, final String placeholder) {
 		requireNonNull(cell, "cell cannot be null.");
 		requireNonNull(separator, "separator cannot be null.");
 		requireNonNull(placeholder, "placeholder cannot be null.");
@@ -268,7 +270,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if {@code cellGroup} is {@code null}.
 	 */
-	public static final String toXYV(final CellGroup<?> cellGroup) {
+	public static String toXYV(final CellGroup<?> cellGroup) {
 		return toXYV(cellGroup, DEFAULT_DELIMITER);
 	}
 
@@ -292,7 +294,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toXYV(final CellGroup<?> cellGroup, final String delimiter) {
+	public static String toXYV(final CellGroup<?> cellGroup, final String delimiter) {
 		return toXYV(cellGroup, delimiter, DEFAULT_PLACEHOLDER);
 	}
 	
@@ -314,15 +316,16 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toXYV(final CellGroup<?> cellGroup, final String delimiter, final String placeholder) {
+	public static String toXYV(final CellGroup<?> cellGroup, final String delimiter, final String placeholder) {
 		requireNonNull(cellGroup, "cellGroup cannot be null.");
 		requireNonNull(delimiter, "delimiter cannot be null.");
 		requireNonNull(placeholder, "placeholder cannot be null.");
 		return cellGroup.cells().values().stream().sorted().collect(of(
 				() -> new StringJoiner(delimiter),
 				(joiner, cell) -> joiner.add(cell.toXYV()),
-				(joiner1, joiner2) -> joiner1.merge(joiner2), 
-				StringJoiner::toString ));
+                StringJoiner::merge,
+				StringJoiner::toString
+		));
 	}
 	
 	/**
@@ -344,7 +347,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if {@code latinSquare} is {@code null}.
 	 */
-	public static final String toXYV(final LatinSquare<?> latinSquare) {
+	public static String toXYV(final LatinSquare<?> latinSquare) {
 		return toXYV(latinSquare, DEFAULT_DELIMITER);
 	}
 
@@ -368,7 +371,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toXYV(final LatinSquare<?> latinSquare, final String delimiter) {
+	public static String toXYV(final LatinSquare<?> latinSquare, final String delimiter) {
 		return toXYV(latinSquare, delimiter, DEFAULT_PLACEHOLDER);
 	}
 	
@@ -390,15 +393,16 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toXYV(final LatinSquare<?> latinSquare, final String delimiter, final String placeholder) {
+	public static String toXYV(final LatinSquare<?> latinSquare, final String delimiter, final String placeholder) {
 		requireNonNull(latinSquare, "latinSquare cannot be null.");
 		requireNonNull(delimiter, "delimiter cannot be null.");
 		requireNonNull(placeholder, "placeholder cannot be null.");
 		return latinSquare.rows().values().stream().sorted(REVERSE_ROW_COMPARATOR).collect(of(
 				() -> new StringJoiner(delimiter),
 				(joiner, row) -> joiner.add(row.toXYV()),
-				(joiner1, joiner2) -> joiner1.merge(joiner2), 
-				StringJoiner::toString ));
+                StringJoiner::merge,
+				StringJoiner::toString
+		));
 	}
 	/* ============================================================================
 	 * toXYI()
@@ -423,7 +427,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if {@code cell} is {@code null}.
 	 */
-	public static final String toXYI(final Cell<?> cell) {
+	public static String toXYI(final Cell<?> cell) {
 		return toXYI(cell, DEFAULT_SEPARATOR);
 	}
 
@@ -447,7 +451,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toXYI(final Cell<?> cell, final String separator) {
+	public static String toXYI(final Cell<?> cell, final String separator) {
 		return toXYI(cell, separator, DEFAULT_PLACEHOLDER);
 	}
 
@@ -468,7 +472,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toXYI(final Cell<?> cell, final String separator, final String placeholder) {
+	public static String toXYI(final Cell<?> cell, final String separator, final String placeholder) {
 		requireNonNull(cell, "cell cannot be null.");
 		requireNonNull(separator, "separator cannot be null.");
 		requireNonNull(placeholder, "placeholder cannot be null.");
@@ -494,7 +498,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if {@code cellGroup} is {@code null}.
 	 */
-	public static final String toXYI(final CellGroup<?> cellGroup) {
+	public static String toXYI(final CellGroup<?> cellGroup) {
 		return toXYI(cellGroup, DEFAULT_DELIMITER);
 	}
 
@@ -517,7 +521,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toXYI(final CellGroup<?> cellGroup, final String delimiter) {
+	public static String toXYI(final CellGroup<?> cellGroup, final String delimiter) {
 		return toXYI(cellGroup, delimiter, DEFAULT_PLACEHOLDER);
 	}
 	
@@ -538,15 +542,16 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toXYI(final CellGroup<?> cellGroup, final String delimiter, final String placeholder) {
+	public static String toXYI(final CellGroup<?> cellGroup, final String delimiter, final String placeholder) {
 		requireNonNull(cellGroup, "cellGroup cannot be null.");
 		requireNonNull(delimiter, "delimiter cannot be null.");
 		requireNonNull(placeholder, "placeholder cannot be null.");
 		return cellGroup.cells().values().stream().sorted().collect(of(
 				() -> new StringJoiner(delimiter),
 				(joiner, cell) -> joiner.add(cell.toXYI()),
-				(joiner1, joiner2) -> joiner1.merge(joiner2), 
-				StringJoiner::toString ));
+                StringJoiner::merge,
+				StringJoiner::toString
+		));
 	}
 	
 	/**
@@ -567,7 +572,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if {@code latinSquare} is {@code null}.
 	 */
-	public static final String toXYI(final LatinSquare<?> latinSquare) {
+	public static String toXYI(final LatinSquare<?> latinSquare) {
 		return toXYI(latinSquare, DEFAULT_DELIMITER);
 	}
 
@@ -590,7 +595,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toXYI(final LatinSquare<?> latinSquare, final String delimiter) {
+	public static String toXYI(final LatinSquare<?> latinSquare, final String delimiter) {
 		return toXYI(latinSquare, delimiter, DEFAULT_PLACEHOLDER);
 	}
 	
@@ -611,15 +616,16 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toXYI(final LatinSquare<?> latinSquare, final String delimiter, final String placeholder) {
+	public static String toXYI(final LatinSquare<?> latinSquare, final String delimiter, final String placeholder) {
 		requireNonNull(latinSquare, "latinSquare cannot be null.");
 		requireNonNull(delimiter, "delimiter cannot be null.");
 		requireNonNull(placeholder, "placeholder cannot be null.");
 		return latinSquare.rows().values().stream().sorted(REVERSE_ROW_COMPARATOR).collect(of(
 				() -> new StringJoiner(delimiter),
 				(joiner, row) -> joiner.add(row.toXYI()),
-				(joiner1, joiner2) -> joiner1.merge(joiner2), 
-				StringJoiner::toString ));
+                StringJoiner::merge,
+				StringJoiner::toString
+		));
 	}
 	/* ============================================================================
 	 * toV()
@@ -642,7 +648,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if {@code cell} is {@code null}.
 	 */
-	public static final String toV(final Cell<?> cell) {
+	public static String toV(final Cell<?> cell) {
 		return toV(cell, DEFAULT_PLACEHOLDER);
 	}
 
@@ -661,7 +667,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toV(final Cell<?> cell, final String placeholder) {
+	public static String toV(final Cell<?> cell, final String placeholder) {
 		requireNonNull(cell, "cell cannot be null.");
 		requireNonNull(placeholder, "placeholder cannot be null.");
 		return cell.symbol().isPresent()? cell.symbol().get().value().toString() : placeholder;
@@ -685,7 +691,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if {@code cellGroup} is {@code null}.
 	 */
-	public static final String toV(final CellGroup<?> cellGroup) {
+	public static String toV(final CellGroup<?> cellGroup) {
 		return toV(cellGroup, DEFAULT_DELIMITER);
 	}
 
@@ -708,7 +714,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toV(final CellGroup<?> cellGroup, final String delimiter) {
+	public static String toV(final CellGroup<?> cellGroup, final String delimiter) {
 		return toV(cellGroup, delimiter, DEFAULT_PLACEHOLDER);
 	}
 
@@ -729,15 +735,16 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toV(final CellGroup<?> cellGroup, final String delimiter, final String placeholder) {
+	public static String toV(final CellGroup<?> cellGroup, final String delimiter, final String placeholder) {
 		requireNonNull(cellGroup, "cellGroup cannot be null.");
 		requireNonNull(delimiter, "delimiter cannot be null.");
 		requireNonNull(placeholder, "placeholder cannot be null.");
 		return cellGroup.cells().values().stream().sorted().collect(of(
 				() -> new StringJoiner(delimiter),
 				(joiner, cell) -> joiner.add(cell.toV()),
-				(joiner1, joiner2) -> joiner1.merge(joiner2), 
-				StringJoiner::toString ));
+                StringJoiner::merge,
+				StringJoiner::toString
+		));
 	}
 
 	/**
@@ -758,7 +765,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if {@code latinSquare} is {@code null}.
 	 */
-	public static final String toV(final LatinSquare<?> latinSquare) {
+	public static String toV(final LatinSquare<?> latinSquare) {
 		return toV(latinSquare, DEFAULT_DELIMITER);
 	}
 
@@ -781,7 +788,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toV(final LatinSquare<?> latinSquare, final String delimiter) {
+	public static String toV(final LatinSquare<?> latinSquare, final String delimiter) {
 		return toV(latinSquare, delimiter, DEFAULT_PLACEHOLDER);
 	}
 
@@ -802,15 +809,16 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toV(final LatinSquare<?> latinSquare, final String delimiter, final String placeholder) {
+	public static String toV(final LatinSquare<?> latinSquare, final String delimiter, final String placeholder) {
 		requireNonNull(latinSquare, "latinSquare cannot be null.");
 		requireNonNull(delimiter, "delimiter cannot be null.");
 		requireNonNull(placeholder, "placeholder cannot be null.");
 		return latinSquare.rows().values().stream().sorted(REVERSE_ROW_COMPARATOR).collect(of(
 				() -> new StringJoiner(delimiter),
 				(joiner, row) -> joiner.add(row.toV()),
-				(joiner1, joiner2) -> joiner1.merge(joiner2), 
-				StringJoiner::toString ));
+                StringJoiner::merge,
+				StringJoiner::toString
+		));
 	}
 	/* ============================================================================
 	 * toI()
@@ -833,7 +841,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if {@code cell} is {@code null}.
 	 */
-	public static final String toI(final Cell<?> cell) {
+	public static String toI(final Cell<?> cell) {
 		return toV(cell, DEFAULT_PLACEHOLDER);
 	}
 
@@ -852,7 +860,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toI(final Cell<?> cell, final String placeholder) {
+	public static String toI(final Cell<?> cell, final String placeholder) {
 		requireNonNull(cell, "cell cannot be null.");
 		requireNonNull(placeholder, "placeholder cannot be null.");
 		return cell.symbol().isPresent()? Integer.toString(cell.symbol().get().id()) : placeholder;
@@ -876,7 +884,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if {@code cellGroup} is {@code null}.
 	 */
-	public static final String toI(final CellGroup<?> cellGroup) {
+	public static String toI(final CellGroup<?> cellGroup) {
 		return toI(cellGroup, DEFAULT_DELIMITER);
 	}
 
@@ -899,7 +907,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toI(final CellGroup<?> cellGroup, final String delimiter) {
+	public static String toI(final CellGroup<?> cellGroup, final String delimiter) {
 		return toI(cellGroup, delimiter, DEFAULT_PLACEHOLDER);
 	}
 
@@ -920,15 +928,16 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toI(final CellGroup<?> cellGroup, final String delimiter, final String placeholder) {
+	public static String toI(final CellGroup<?> cellGroup, final String delimiter, final String placeholder) {
 		requireNonNull(cellGroup, "cellGroup cannot be null.");
 		requireNonNull(delimiter, "delimiter cannot be null.");
 		requireNonNull(placeholder, "placeholder cannot be null.");
 		return cellGroup.cells().values().stream().sorted().collect(of(
 				() -> new StringJoiner(delimiter),
 				(joiner, cell) -> joiner.add(cell.toI()),
-				(joiner1, joiner2) -> joiner1.merge(joiner2), 
-				StringJoiner::toString ));
+                StringJoiner::merge,
+				StringJoiner::toString
+		));
 	}
 
 	/**
@@ -949,7 +958,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if {@code latinSquare} is {@code null}.
 	 */
-	public static final String toI(final LatinSquare<?> latinSquare) {
+	public static String toI(final LatinSquare<?> latinSquare) {
 		return toV(latinSquare, DEFAULT_DELIMITER);
 	}
 
@@ -972,7 +981,7 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toI(final LatinSquare<?> latinSquare, final String delimiter) {
+	public static String toI(final LatinSquare<?> latinSquare, final String delimiter) {
 		return toV(latinSquare, delimiter, DEFAULT_PLACEHOLDER);
 	}
 
@@ -993,15 +1002,16 @@ public final class Formattables {
 	 * 
 	 * @throws NullPointerException if any of the arguments to this method is/are {@code null}.
 	 */
-	public static final String toI(final LatinSquare<?> latinSquare, final String delimiter, final String placeholder) {
+	public static String toI(final LatinSquare<?> latinSquare, final String delimiter, final String placeholder) {
 		requireNonNull(latinSquare, "latinSquare cannot be null.");
 		requireNonNull(delimiter, "delimiter cannot be null.");
 		requireNonNull(placeholder, "placeholder cannot be null.");
 		return latinSquare.rows().values().stream().sorted(REVERSE_ROW_COMPARATOR).collect(of(
 				() -> new StringJoiner(delimiter),
 				(joiner, row) -> joiner.add(row.toI()),
-				(joiner1, joiner2) -> joiner1.merge(joiner2), 
-				StringJoiner::toString ));
+                StringJoiner::merge,
+				StringJoiner::toString
+		));
 	}
 	
 	// private constructor to prevent instantiation of this class.
