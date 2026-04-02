@@ -2,11 +2,20 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
+checker-framework-gradle-plugin = "0.6.58"
+checkstyle = "10.12.5"
+gradle-nexus-publish-plugin = "2.0.0"
 junit-jupiter = "5.10.0"
 kori-events = "1.0.0"
-kori-utils = "1.1.0"
+kori-utils = "2.0.0-dev.1"
+spotless = "8.4.0"
 
 [libraries]
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
 kori-events = { module = "com.kori_47:events", version.ref = "kori-events" }
-kori-utils = { module = "com.kori_47:utils", version.ref = "kori-utils" }
+kori-utils = { module = "io.github.kennedykori:utils", version.ref = "kori-utils" }
+
+[plugins]
+checker-framework = { id = "org.checkerframework", version.ref = "checker-framework-gradle-plugin" }
+gradle-nexus-publish-plugin = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "gradle-nexus-publish-plugin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
